@@ -98,7 +98,6 @@ class Ui_MainWindow(object):
 
         print("path = "  + aim_path)
         # testPath = "../database/選修化學/上/"
-
         try:
             print(os.listdir(aim_path))
         except:

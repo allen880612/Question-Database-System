@@ -1,4 +1,3 @@
-
 class PathPaser():
 
     def __init__(self, _path):
@@ -6,10 +5,11 @@ class PathPaser():
 
     def GetPath(self):
         # 設定出示路徑
-        base_path = "../database/"
+        base_path = "database/"
         # 對輸入處理
         if self.path != "":
             path = base_path
+            #path = ""
             for dir in self.path:
                 path += dir + "/"
             print(path)

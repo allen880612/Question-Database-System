@@ -1,3 +1,5 @@
+import os
+
 class PathPaser():
 
     def __init__(self, _path):
@@ -16,6 +18,19 @@ class PathPaser():
             return path
 
         return False
+
+
+# 給目前路徑，回傳底下資料夾
+class FolderManager():
+    def __init__(self):
+        pass
+
+    def GetNextLevel(self, _path):
+        if os.path.isdir(_path):
+            return os.listdir(_path)
+        return False
+
+
 
 
 

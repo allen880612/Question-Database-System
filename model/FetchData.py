@@ -18,8 +18,8 @@ class WordManager():
         except:
             print("explosion")
         finally:
-            print("fuck your module")
-        # file = docx.Document("")
+            print("end of readWord")
+
 
 
 

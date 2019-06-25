@@ -74,6 +74,7 @@ class Ui_MainWindow(object):
     def InitGUI(self):
         self.btn_confirm.clicked.connect(self.Confirm)
 
+
     def Confirm(self):
         path = []
         # 選科目

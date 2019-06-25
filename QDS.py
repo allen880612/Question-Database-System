@@ -10,11 +10,3 @@ if __name__ == '__main__':
     myUi.setupUi(myMainWindow)
     myMainWindow.show()
     sys.exit(app.exec_())
-
-# if __name__ == '__main__':
-#     app = QApplication(sys.argv)
-#     myMainWindow = QMainWindow()
-#     myUi = mw.Ui_MainWindow()
-#     myUi.setupUi(myMainWindow)
-#     myMainWindow.show()
-#     sys.exit(app.exec_())

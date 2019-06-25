@@ -1,11 +1,13 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from controller import GET_PATH as gh
+from controller import GET_PATH as gp
 import os
 
 class Ui_MainWindow(object):
-    DATABASE = "database/"
-    fManager = gh.FolderManager()
     path = ""
+    DATABASE = "database/"
+    fManager = gp.FolderManager()
+    path2 = ["database/"]
+    wordPath = ""
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -13,10 +15,10 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(190, 50, 271, 71))
+        self.label.setGeometry(QtCore.QRect(50, 50, 480, 80))
         font = QtGui.QFont()
         font.setFamily("Consolas")
-        font.setPointSize(26)
+        font.setPointSize(20)
         font.setBold(True)
         font.setWeight(75)
         self.label.setFont(font)
@@ -99,6 +101,7 @@ class Ui_MainWindow(object):
         for fr in fullDir:
             print(fr)
 
+        self.btn_confirm.clicked.connect(self.Confirm)
         self.path = self.DATABASE
         self.cBox_dir1.addItems(self.fManager.GetNextLevel(self.DATABASE))
         self.cBox_dir1.activated[str].connect(self.RebuildDir2)
@@ -106,37 +109,77 @@ class Ui_MainWindow(object):
         self.cBox_word.activated[str].connect(self.GetWordPath)
 
         self.cBox_dir1.setEditable(True)
-        self.cBox_dir1.lineEdit().setText("請選擇科目")
         self.cBox_dir2.setEditable(True)
-        self.cBox_dir2.lineEdit().setText("請先選擇科目")
         self.cBox_word.setEditable(True)
+        self.cBox_dir1.lineEdit().setText("請選擇科目")
+        self.cBox_dir2.lineEdit().setText("請先選擇科目")
         self.cBox_word.lineEdit().setText("請選擇科目及分類")
 
     def RebuildDir2(self, text):
         dir = []
+        print("len 2 = " + str(len(self.path2)))
         self.cBox_dir2.clear()
-        self.path = self.DATABASE
-        self.path = os.path.join(self.path, text)
-        print(self.path)
-        print("dir2 = " + self.path)
-        dir = self.fManager.GetNextLevel(self.path)
+        # self.path = self.DATABASE
+        # self.path = os.path.join(self.path, text)
+        # print("dir2 = " + self.path)
+        # dir = self.fManager.GetNextLevel(self.path)
+        if len(self.path2) < 2:
+            self.path2.append(text)
+        else:
+            self.path2[1] = text
+        pd = self.path2[:2]
+        print(pd)
+        path = os.path.join(*pd)
+        print("dir2 = " + path)
+        dir = self.fManager.GetNextLevel(path)
+
         # 判斷路徑是否存在，且為資料夾
         if dir:
             self.cBox_dir2.addItems(dir)
+            self.cBox_dir2.setEditText("請選擇科目")
+            self.cBox_word.setEditText("請選擇題庫")
 
     def RebuildDir3(self, text):
         dir = []
         self.cBox_word.clear()
-        finalPath = os.path.join(self.path, text)
-        print("dir3 = " + finalPath)
-        dir = self.fManager.GetNextLevel(finalPath)
+        # finalPath = os.path.join(self.path, text)
+        # print("dir3 = " + finalPath)
+        # dir = self.fManager.GetNextLevel(finalPath)
+        if len(self.path2) < 3:
+            self.path2.append(text)
+        else:
+            self.path2[2] = text
+        pd = self.path2[:3]
+        print(pd)
+        path = os.path.join(*pd)
+        print("dir3 = " + path)
+        dir = self.fManager.GetNextLevel(path)
         # 判斷路徑是否存在，且為資料夾
         if dir:
             self.cBox_word.addItems(dir)
+            self.cBox_word.setEditText("請選擇題庫")
 
     def GetWordPath(self, text):
         print("Word name : " + text)
         self.label.setText(text)
+
+        if len(self.path2) < 4:
+            self.path2.append(text)
+        else:
+            self.path2[3] = text
+        print(self.path2)
+        self.wordPath = os.path.join(*self.path2)
+        # os.startfile(self.wordPath)
+        print("word path = " + self.wordPath)
+
+    def Confirm(self):
+        if os.path.isfile(self.wordPath):
+            os.startfile(self.wordPath)
+            print("open " + self.wordPath)
+        else:
+            self.label.setText("輸入不完全，或文件已損毀!")
+
+
 
 
 

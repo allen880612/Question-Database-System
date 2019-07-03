@@ -12,11 +12,7 @@
    'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyInstaller\\loader\\rthooks\\pyi_rth_qt5.py',
    'PYSOURCE'),
   ('QDS', 'D:\\QDS\\QDS.py', 'PYSOURCE')],
- [('ntpath',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\ntpath.py',
-   'PYMODULE'),
-  ('_strptime',
+ [('_strptime',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\_strptime.py',
    'PYMODULE'),
@@ -24,9 +20,21 @@
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\datetime.py',
    'PYMODULE'),
+  ('ntpath',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\ntpath.py',
+   'PYMODULE'),
+  ('stringprep',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\stringprep.py',
+   'PYMODULE'),
   ('fnmatch',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\fnmatch.py',
+   'PYMODULE'),
+  ('struct',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\struct.py',
    'PYMODULE'),
   ('_compat_pickle',
    'C:\\Program Files (x86)\\Microsoft Visual '
@@ -256,6 +264,10 @@
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\uu.py',
    'PYMODULE'),
+  ('quopri',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\quopri.py',
+   'PYMODULE'),
   ('email.feedparser',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\email\\feedparser.py',
@@ -303,6 +315,10 @@
   ('email.charset',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\email\\charset.py',
+   'PYMODULE'),
+  ('base64',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\base64.py',
    'PYMODULE'),
   ('email._encoded_words',
    'C:\\Program Files (x86)\\Microsoft Visual '
@@ -356,9 +372,17 @@
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\email\\message.py',
    'PYMODULE'),
+  ('bz2',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\bz2.py',
+   'PYMODULE'),
   ('lzma',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\lzma.py',
+   'PYMODULE'),
+  ('_compression',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\_compression.py',
    'PYMODULE'),
   ('gzip',
    'C:\\Program Files (x86)\\Microsoft Visual '
@@ -391,6 +415,10 @@
   ('pydoc',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\pydoc.py',
+   'PYMODULE'),
+  ('getopt',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\getopt.py',
    'PYMODULE'),
   ('pdb',
    'C:\\Program Files (x86)\\Microsoft Visual '
@@ -444,61 +472,9 @@
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\doctest.py',
    'PYMODULE'),
-  ('textwrap',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\textwrap.py',
-   'PYMODULE'),
-  ('argparse',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\argparse.py',
-   'PYMODULE'),
-  ('pprint',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\pprint.py',
-   'PYMODULE'),
-  ('pickle',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\pickle.py',
-   'PYMODULE'),
-  ('tracemalloc',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\tracemalloc.py',
-   'PYMODULE'),
-  ('quopri',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\quopri.py',
-   'PYMODULE'),
-  ('struct',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\struct.py',
-   'PYMODULE'),
   ('copy',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\copy.py',
-   'PYMODULE'),
-  ('gettext',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\gettext.py',
-   'PYMODULE'),
-  ('getopt',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\getopt.py',
-   'PYMODULE'),
-  ('base64',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\base64.py',
-   'PYMODULE'),
-  ('stringprep',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\stringprep.py',
-   'PYMODULE'),
-  ('_compression',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\_compression.py',
-   'PYMODULE'),
-  ('bz2',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\bz2.py',
    'PYMODULE'),
   ('stat',
    'C:\\Program Files (x86)\\Microsoft Visual '
@@ -548,6 +524,30 @@
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\os.py',
    'PYMODULE'),
+  ('textwrap',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\textwrap.py',
+   'PYMODULE'),
+  ('gettext',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\gettext.py',
+   'PYMODULE'),
+  ('argparse',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\argparse.py',
+   'PYMODULE'),
+  ('pprint',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\pprint.py',
+   'PYMODULE'),
+  ('pickle',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\pickle.py',
+   'PYMODULE'),
+  ('tracemalloc',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\tracemalloc.py',
+   'PYMODULE'),
   ('view.test', 'D:\\QDS\\view\\test.py', 'PYMODULE'),
   ('controller.GET_PATH', 'D:\\QDS\\controller\\GET_PATH.py', 'PYMODULE'),
   ('controller', 'D:\\QDS\\controller\\__init__.py', 'PYMODULE'),
@@ -556,21 +556,9 @@
    'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\__init__.py',
    'PYMODULE'),
   ('view', 'D:\\QDS\\view\\__init__.py', 'PYMODULE')],
- [('python36.dll',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\python36.dll',
-   'BINARY'),
-  ('api-ms-win-crt-heap-l1-1-0.dll',
-   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-crt-heap-l1-1-0.dll',
-   'BINARY'),
-  ('api-ms-win-crt-runtime-l1-1-0.dll',
+ [('api-ms-win-crt-runtime-l1-1-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
    '2.9\\miktex\\bin\\x64\\api-ms-win-crt-runtime-l1-1-0.dll',
-   'BINARY'),
-  ('api-ms-win-crt-math-l1-1-0.dll',
-   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-crt-math-l1-1-0.dll',
    'BINARY'),
   ('api-ms-win-crt-stdio-l1-1-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
@@ -580,13 +568,33 @@
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
    '2.9\\miktex\\bin\\x64\\api-ms-win-crt-locale-l1-1-0.dll',
    'BINARY'),
+  ('api-ms-win-crt-math-l1-1-0.dll',
+   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
+   '2.9\\miktex\\bin\\x64\\api-ms-win-crt-math-l1-1-0.dll',
+   'BINARY'),
+  ('api-ms-win-crt-heap-l1-1-0.dll',
+   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
+   '2.9\\miktex\\bin\\x64\\api-ms-win-crt-heap-l1-1-0.dll',
+   'BINARY'),
   ('VCRUNTIME140.dll',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\VCRUNTIME140.dll',
    'BINARY'),
-  ('api-ms-win-crt-process-l1-1-0.dll',
+  ('python36.dll',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\python36.dll',
+   'BINARY'),
+  ('ucrtbase.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-crt-process-l1-1-0.dll',
+   '2.9\\miktex\\bin\\x64\\ucrtbase.dll',
+   'BINARY'),
+  ('api-ms-win-crt-convert-l1-1-0.dll',
+   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
+   '2.9\\miktex\\bin\\x64\\api-ms-win-crt-convert-l1-1-0.dll',
+   'BINARY'),
+  ('api-ms-win-crt-string-l1-1-0.dll',
+   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
+   '2.9\\miktex\\bin\\x64\\api-ms-win-crt-string-l1-1-0.dll',
    'BINARY'),
   ('api-ms-win-crt-time-l1-1-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
@@ -596,53 +604,41 @@
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
    '2.9\\miktex\\bin\\x64\\api-ms-win-crt-environment-l1-1-0.dll',
    'BINARY'),
-  ('api-ms-win-crt-convert-l1-1-0.dll',
+  ('api-ms-win-crt-process-l1-1-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-crt-convert-l1-1-0.dll',
-   'BINARY'),
-  ('api-ms-win-crt-filesystem-l1-1-0.dll',
-   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-crt-filesystem-l1-1-0.dll',
+   '2.9\\miktex\\bin\\x64\\api-ms-win-crt-process-l1-1-0.dll',
    'BINARY'),
   ('api-ms-win-crt-conio-l1-1-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
    '2.9\\miktex\\bin\\x64\\api-ms-win-crt-conio-l1-1-0.dll',
    'BINARY'),
-  ('api-ms-win-crt-string-l1-1-0.dll',
+  ('api-ms-win-crt-filesystem-l1-1-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-crt-string-l1-1-0.dll',
+   '2.9\\miktex\\bin\\x64\\api-ms-win-crt-filesystem-l1-1-0.dll',
    'BINARY'),
-  ('ucrtbase.dll',
+  ('api-ms-win-core-synch-l1-2-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\ucrtbase.dll',
+   '2.9\\miktex\\bin\\x64\\api-ms-win-core-synch-l1-2-0.dll',
    'BINARY'),
-  ('api-ms-win-core-namedpipe-l1-1-0.dll',
+  ('api-ms-win-core-processthreads-l1-1-1.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-core-namedpipe-l1-1-0.dll',
-   'BINARY'),
-  ('api-ms-win-core-debug-l1-1-0.dll',
-   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-core-debug-l1-1-0.dll',
-   'BINARY'),
-  ('api-ms-win-core-libraryloader-l1-1-0.dll',
-   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-core-libraryloader-l1-1-0.dll',
+   '2.9\\miktex\\bin\\x64\\api-ms-win-core-processthreads-l1-1-1.dll',
    'BINARY'),
   ('api-ms-win-core-file-l2-1-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
    '2.9\\miktex\\bin\\x64\\api-ms-win-core-file-l2-1-0.dll',
    'BINARY'),
-  ('api-ms-win-core-heap-l1-1-0.dll',
+  ('api-ms-win-core-debug-l1-1-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-core-heap-l1-1-0.dll',
+   '2.9\\miktex\\bin\\x64\\api-ms-win-core-debug-l1-1-0.dll',
    'BINARY'),
-  ('api-ms-win-core-profile-l1-1-0.dll',
+  ('api-ms-win-core-errorhandling-l1-1-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-core-profile-l1-1-0.dll',
+   '2.9\\miktex\\bin\\x64\\api-ms-win-core-errorhandling-l1-1-0.dll',
    'BINARY'),
-  ('api-ms-win-core-string-l1-1-0.dll',
+  ('api-ms-win-core-util-l1-1-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-core-string-l1-1-0.dll',
+   '2.9\\miktex\\bin\\x64\\api-ms-win-core-util-l1-1-0.dll',
    'BINARY'),
   ('api-ms-win-core-timezone-l1-1-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
@@ -652,37 +648,13 @@
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
    '2.9\\miktex\\bin\\x64\\api-ms-win-core-console-l1-1-0.dll',
    'BINARY'),
-  ('api-ms-win-core-sysinfo-l1-1-0.dll',
+  ('api-ms-win-core-profile-l1-1-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-core-sysinfo-l1-1-0.dll',
+   '2.9\\miktex\\bin\\x64\\api-ms-win-core-profile-l1-1-0.dll',
    'BINARY'),
-  ('api-ms-win-core-rtlsupport-l1-1-0.dll',
+  ('api-ms-win-core-processenvironment-l1-1-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-core-rtlsupport-l1-1-0.dll',
-   'BINARY'),
-  ('api-ms-win-core-datetime-l1-1-0.dll',
-   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-core-datetime-l1-1-0.dll',
-   'BINARY'),
-  ('api-ms-win-core-localization-l1-2-0.dll',
-   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-core-localization-l1-2-0.dll',
-   'BINARY'),
-  ('api-ms-win-core-processthreads-l1-1-1.dll',
-   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-core-processthreads-l1-1-1.dll',
-   'BINARY'),
-  ('api-ms-win-core-util-l1-1-0.dll',
-   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-core-util-l1-1-0.dll',
-   'BINARY'),
-  ('api-ms-win-core-processthreads-l1-1-0.dll',
-   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-core-processthreads-l1-1-0.dll',
-   'BINARY'),
-  ('api-ms-win-core-memory-l1-1-0.dll',
-   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-core-memory-l1-1-0.dll',
+   '2.9\\miktex\\bin\\x64\\api-ms-win-core-processenvironment-l1-1-0.dll',
    'BINARY'),
   ('api-ms-win-core-handle-l1-1-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
@@ -692,37 +664,77 @@
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
    '2.9\\miktex\\bin\\x64\\api-ms-win-core-synch-l1-1-0.dll',
    'BINARY'),
-  ('api-ms-win-core-errorhandling-l1-1-0.dll',
+  ('api-ms-win-core-processthreads-l1-1-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-core-errorhandling-l1-1-0.dll',
+   '2.9\\miktex\\bin\\x64\\api-ms-win-core-processthreads-l1-1-0.dll',
    'BINARY'),
-  ('api-ms-win-core-processenvironment-l1-1-0.dll',
+  ('api-ms-win-core-heap-l1-1-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-core-processenvironment-l1-1-0.dll',
+   '2.9\\miktex\\bin\\x64\\api-ms-win-core-heap-l1-1-0.dll',
    'BINARY'),
-  ('api-ms-win-core-file-l1-1-0.dll',
+  ('api-ms-win-core-sysinfo-l1-1-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-core-file-l1-1-0.dll',
+   '2.9\\miktex\\bin\\x64\\api-ms-win-core-sysinfo-l1-1-0.dll',
    'BINARY'),
-  ('api-ms-win-core-synch-l1-2-0.dll',
+  ('api-ms-win-core-localization-l1-2-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-core-synch-l1-2-0.dll',
+   '2.9\\miktex\\bin\\x64\\api-ms-win-core-localization-l1-2-0.dll',
    'BINARY'),
-  ('api-ms-win-core-interlocked-l1-1-0.dll',
+  ('api-ms-win-core-namedpipe-l1-1-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
-   '2.9\\miktex\\bin\\x64\\api-ms-win-core-interlocked-l1-1-0.dll',
+   '2.9\\miktex\\bin\\x64\\api-ms-win-core-namedpipe-l1-1-0.dll',
+   'BINARY'),
+  ('api-ms-win-core-datetime-l1-1-0.dll',
+   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
+   '2.9\\miktex\\bin\\x64\\api-ms-win-core-datetime-l1-1-0.dll',
    'BINARY'),
   ('api-ms-win-core-file-l1-2-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
    '2.9\\miktex\\bin\\x64\\api-ms-win-core-file-l1-2-0.dll',
    'BINARY'),
-  ('PyQt5\\Qt\\plugins\\platforms\\qminimal.dll',
+  ('api-ms-win-core-string-l1-1-0.dll',
+   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
+   '2.9\\miktex\\bin\\x64\\api-ms-win-core-string-l1-1-0.dll',
+   'BINARY'),
+  ('api-ms-win-core-interlocked-l1-1-0.dll',
+   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
+   '2.9\\miktex\\bin\\x64\\api-ms-win-core-interlocked-l1-1-0.dll',
+   'BINARY'),
+  ('api-ms-win-core-memory-l1-1-0.dll',
+   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
+   '2.9\\miktex\\bin\\x64\\api-ms-win-core-memory-l1-1-0.dll',
+   'BINARY'),
+  ('api-ms-win-core-libraryloader-l1-1-0.dll',
+   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
+   '2.9\\miktex\\bin\\x64\\api-ms-win-core-libraryloader-l1-1-0.dll',
+   'BINARY'),
+  ('api-ms-win-core-file-l1-1-0.dll',
+   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
+   '2.9\\miktex\\bin\\x64\\api-ms-win-core-file-l1-1-0.dll',
+   'BINARY'),
+  ('api-ms-win-core-rtlsupport-l1-1-0.dll',
+   'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
+   '2.9\\miktex\\bin\\x64\\api-ms-win-core-rtlsupport-l1-1-0.dll',
+   'BINARY'),
+  ('PyQt5\\Qt\\plugins\\imageformats\\qjpeg.dll',
    'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\platforms\\qminimal.dll',
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\imageformats\\qjpeg.dll',
+   'BINARY'),
+  ('PyQt5\\Qt\\plugins\\imageformats\\qwebp.dll',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\imageformats\\qwebp.dll',
+   'BINARY'),
+  ('PyQt5\\Qt\\bin\\libGLESv2.dll',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\bin\\libGLESv2.dll',
    'BINARY'),
   ('PyQt5\\Qt\\plugins\\imageformats\\qtiff.dll',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\imageformats\\qtiff.dll',
+   'BINARY'),
+  ('PyQt5\\Qt\\plugins\\imageformats\\qico.dll',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\imageformats\\qico.dll',
    'BINARY'),
   ('PyQt5\\Qt\\bin\\d3dcompiler_47.dll',
    'C:\\Program Files (x86)\\Microsoft Visual '
@@ -732,42 +744,6 @@
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\bin\\opengl32sw.dll',
    'BINARY'),
-  ('PyQt5\\Qt\\plugins\\iconengines\\qsvgicon.dll',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\iconengines\\qsvgicon.dll',
-   'BINARY'),
-  ('PyQt5\\Qt\\bin\\libEGL.dll',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\bin\\libEGL.dll',
-   'BINARY'),
-  ('PyQt5\\Qt\\plugins\\platforms\\qwindows.dll',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\platforms\\qwindows.dll',
-   'BINARY'),
-  ('PyQt5\\Qt\\plugins\\imageformats\\qjpeg.dll',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\imageformats\\qjpeg.dll',
-   'BINARY'),
-  ('PyQt5\\Qt\\plugins\\imageformats\\qicns.dll',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\imageformats\\qicns.dll',
-   'BINARY'),
-  ('PyQt5\\Qt\\plugins\\platformthemes\\qflatpak.dll',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\platformthemes\\qflatpak.dll',
-   'BINARY'),
-  ('PyQt5\\Qt\\bin\\libGLESv2.dll',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\bin\\libGLESv2.dll',
-   'BINARY'),
-  ('PyQt5\\Qt\\plugins\\imageformats\\qsvg.dll',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\imageformats\\qsvg.dll',
-   'BINARY'),
-  ('PyQt5\\Qt\\plugins\\imageformats\\qico.dll',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\imageformats\\qico.dll',
-   'BINARY'),
   ('PyQt5\\Qt\\plugins\\imageformats\\qtga.dll',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\imageformats\\qtga.dll',
@@ -775,6 +751,22 @@
   ('PyQt5\\Qt\\plugins\\imageformats\\qgif.dll',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\imageformats\\qgif.dll',
+   'BINARY'),
+  ('PyQt5\\Qt\\plugins\\imageformats\\qicns.dll',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\imageformats\\qicns.dll',
+   'BINARY'),
+  ('PyQt5\\Qt\\plugins\\platforms\\qwebgl.dll',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\platforms\\qwebgl.dll',
+   'BINARY'),
+  ('PyQt5\\Qt\\plugins\\imageformats\\qsvg.dll',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\imageformats\\qsvg.dll',
+   'BINARY'),
+  ('PyQt5\\Qt\\plugins\\platformthemes\\qflatpak.dll',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\platformthemes\\qflatpak.dll',
    'BINARY'),
   ('PyQt5\\Qt\\plugins\\imageformats\\qwbmp.dll',
    'C:\\Program Files (x86)\\Microsoft Visual '
@@ -784,21 +776,33 @@
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\styles\\qwindowsvistastyle.dll',
    'BINARY'),
-  ('PyQt5\\Qt\\plugins\\imageformats\\qwebp.dll',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\imageformats\\qwebp.dll',
-   'BINARY'),
   ('PyQt5\\Qt\\plugins\\platforms\\qoffscreen.dll',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\platforms\\qoffscreen.dll',
    'BINARY'),
-  ('PyQt5\\Qt\\plugins\\platforms\\qwebgl.dll',
+  ('PyQt5\\Qt\\plugins\\platforms\\qwindows.dll',
    'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\platforms\\qwebgl.dll',
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\platforms\\qwindows.dll',
+   'BINARY'),
+  ('PyQt5\\Qt\\plugins\\platforms\\qminimal.dll',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\platforms\\qminimal.dll',
+   'BINARY'),
+  ('PyQt5\\Qt\\plugins\\iconengines\\qsvgicon.dll',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\plugins\\iconengines\\qsvgicon.dll',
+   'BINARY'),
+  ('PyQt5\\Qt\\bin\\libEGL.dll',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\bin\\libEGL.dll',
    'BINARY'),
   ('_ssl',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\DLLs\\_ssl.pyd',
+   'EXTENSION'),
+  ('unicodedata',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\DLLs\\unicodedata.pyd',
    'EXTENSION'),
   ('pyexpat',
    'C:\\Program Files (x86)\\Microsoft Visual '
@@ -808,6 +812,10 @@
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\DLLs\\_hashlib.pyd',
    'EXTENSION'),
+  ('_bz2',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\DLLs\\_bz2.pyd',
+   'EXTENSION'),
   ('_lzma',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\DLLs\\_lzma.pyd',
@@ -815,14 +823,6 @@
   ('_socket',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\DLLs\\_socket.pyd',
-   'EXTENSION'),
-  ('unicodedata',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\DLLs\\unicodedata.pyd',
-   'EXTENSION'),
-  ('_bz2',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\DLLs\\_bz2.pyd',
    'EXTENSION'),
   ('select',
    'C:\\Program Files (x86)\\Microsoft Visual '
@@ -844,37 +844,21 @@
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\QtWidgets.pyd',
    'EXTENSION'),
-  ('Qt5Gui.dll',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\bin\\qt5gui.dll',
-   'BINARY'),
   ('Qt5Core.dll',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\bin\\qt5core.dll',
+   'BINARY'),
+  ('Qt5Gui.dll',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\bin\\qt5gui.dll',
    'BINARY'),
   ('api-ms-win-crt-utility-l1-1-0.dll',
    'C:\\Users\\Me\\AppData\\Local\\Programs\\MiKTeX '
    '2.9\\miktex\\bin\\x64\\api-ms-win-crt-utility-l1-1-0.dll',
    'BINARY'),
-  ('Qt5Svg.dll',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\bin\\qt5svg.dll',
-   'BINARY'),
-  ('libGLESv2.dll',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\bin\\libGLESv2.dll',
-   'BINARY'),
-  ('Qt5DBus.dll',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\bin\\qt5dbus.dll',
-   'BINARY'),
   ('MSVCP140.dll',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\bin\\MSVCP140.dll',
-   'BINARY'),
-  ('Qt5Widgets.dll',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\bin\\qt5widgets.dll',
    'BINARY'),
   ('Qt5Quick.dll',
    'C:\\Program Files (x86)\\Microsoft Visual '
@@ -887,6 +871,22 @@
   ('Qt5Network.dll',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\bin\\qt5network.dll',
+   'BINARY'),
+  ('Qt5Svg.dll',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\bin\\qt5svg.dll',
+   'BINARY'),
+  ('Qt5DBus.dll',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\bin\\qt5dbus.dll',
+   'BINARY'),
+  ('Qt5Widgets.dll',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\bin\\qt5widgets.dll',
+   'BINARY'),
+  ('libGLESv2.dll',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\bin\\libGLESv2.dll',
    'BINARY'),
   ('python3.dll',
    'C:\\Program Files (x86)\\Microsoft Visual '
@@ -903,6 +903,46 @@
  [],
  [],
  [('base_library.zip', 'D:\\QDS\\build\\QDS\\base_library.zip', 'DATA'),
+  ('PyQt5\\Qt\\translations\\qtbase_da.qm',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_da.qm',
+   'DATA'),
+  ('PyQt5\\Qt\\translations\\qtbase_ar.qm',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_ar.qm',
+   'DATA'),
+  ('PyQt5\\Qt\\translations\\qtbase_ja.qm',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_ja.qm',
+   'DATA'),
+  ('PyQt5\\Qt\\translations\\qtbase_en.qm',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_en.qm',
+   'DATA'),
+  ('PyQt5\\Qt\\translations\\qtbase_pl.qm',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_pl.qm',
+   'DATA'),
+  ('PyQt5\\Qt\\translations\\qtbase_ru.qm',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_ru.qm',
+   'DATA'),
+  ('PyQt5\\Qt\\translations\\qtbase_de.qm',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_de.qm',
+   'DATA'),
+  ('PyQt5\\Qt\\translations\\qtbase_uk.qm',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_uk.qm',
+   'DATA'),
+  ('PyQt5\\Qt\\translations\\qtbase_lv.qm',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_lv.qm',
+   'DATA'),
+  ('PyQt5\\Qt\\translations\\qtbase_fi.qm',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_fi.qm',
+   'DATA'),
   ('PyQt5\\Qt\\translations\\qtbase_es.qm',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_es.qm',
@@ -911,84 +951,44 @@
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_bg.qm',
    'DATA'),
-  ('PyQt5\\Qt\\translations\\qtbase_fi.qm',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_fi.qm',
-   'DATA'),
-  ('PyQt5\\Qt\\translations\\qtbase_de.qm',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_de.qm',
-   'DATA'),
-  ('PyQt5\\Qt\\translations\\qtbase_pl.qm',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_pl.qm',
-   'DATA'),
-  ('PyQt5\\Qt\\bin\\qt.conf',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\bin\\qt.conf',
-   'DATA'),
-  ('PyQt5\\Qt\\translations\\qtbase_ja.qm',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_ja.qm',
-   'DATA'),
   ('PyQt5\\Qt\\translations\\qtbase_gd.qm',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_gd.qm',
-   'DATA'),
-  ('PyQt5\\Qt\\translations\\qtbase_da.qm',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_da.qm',
-   'DATA'),
-  ('PyQt5\\Qt\\translations\\qtbase_lv.qm',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_lv.qm',
-   'DATA'),
-  ('PyQt5\\Qt\\translations\\qtbase_en.qm',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_en.qm',
-   'DATA'),
-  ('PyQt5\\Qt\\translations\\qtbase_uk.qm',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_uk.qm',
-   'DATA'),
-  ('PyQt5\\Qt\\translations\\qtbase_cs.qm',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_cs.qm',
    'DATA'),
   ('PyQt5\\Qt\\translations\\qtbase_hu.qm',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_hu.qm',
    'DATA'),
-  ('PyQt5\\Qt\\translations\\qtbase_sk.qm',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_sk.qm',
-   'DATA'),
   ('PyQt5\\Qt\\translations\\qtbase_ko.qm',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_ko.qm',
+   'DATA'),
+  ('PyQt5\\Qt\\translations\\qtbase_cs.qm',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_cs.qm',
+   'DATA'),
+  ('PyQt5\\Qt\\translations\\qtbase_he.qm',
+   'C:\\Program Files (x86)\\Microsoft Visual '
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_he.qm',
    'DATA'),
   ('PyQt5\\Qt\\translations\\qtbase_fr.qm',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_fr.qm',
    'DATA'),
-  ('PyQt5\\Qt\\translations\\qtbase_it.qm',
+  ('PyQt5\\Qt\\translations\\qtbase_sk.qm',
    'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_it.qm',
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_sk.qm',
    'DATA'),
-  ('PyQt5\\Qt\\translations\\qtbase_ru.qm',
+  ('PyQt5\\Qt\\bin\\qt.conf',
    'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_ru.qm',
-   'DATA'),
-  ('PyQt5\\Qt\\translations\\qtbase_ar.qm',
-   'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_ar.qm',
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\bin\\qt.conf',
    'DATA'),
   ('PyQt5\\Qt\\translations\\qtbase_ca.qm',
    'C:\\Program Files (x86)\\Microsoft Visual '
    'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_ca.qm',
    'DATA'),
-  ('PyQt5\\Qt\\translations\\qtbase_he.qm',
+  ('PyQt5\\Qt\\translations\\qtbase_it.qm',
    'C:\\Program Files (x86)\\Microsoft Visual '
-   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_he.qm',
+   'Studio\\Shared\\Python36_64\\lib\\site-packages\\PyQt5\\Qt\\translations\\qtbase_it.qm',
    'DATA')],
  [])

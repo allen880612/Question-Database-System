@@ -1,8 +1,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from controller import GET_PATH as gp
 from controller import GET_QUESTION as gq
+import random
 import os
-
+from docx import Document
+from docx.shared import Inches
 
 class Ui_MainWindow(object):
     path = ""
@@ -162,6 +164,18 @@ class Ui_MainWindow(object):
         if self.excel.IsLoad():
             level = "第五層"
             questionType = "基本型"
+            questionNumber = 10 #預設隨機選10題
             questionList = self.excel.GetFilteredQuestion(level, questionType) #取得過濾後的題目
+            questionList = random.sample(questionList, questionNumber) # 將題目不重複隨機選擇 k 題
             print(questionList)
+            self.BulidWord(questionList) #建造word
         #excel
+
+    def BulidWord(self, questionList):
+        word = Document()
+        word.add_heading("Database", 0) #新增那個醜醜藍字
+        for i in range(0, len(questionList)):
+            questionIndex = "(" + str(i + 1) + ") " #題號字串
+            word.add_paragraph(questionIndex + questionList[i]) #題號 + 題目 一題作為一個段落
+        #word.add_page_break() #應該是強制換行
+        word.save("word/test.docx") #存檔 (存在word資料夾)

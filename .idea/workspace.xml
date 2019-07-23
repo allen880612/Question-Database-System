@@ -2,17 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2ec86b10-6659-4fed-aa23-b2ff95c9fced" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Question System.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Question System.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/QDS.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/基礎化學/~$章 常見的化學反應.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/基礎化學/一/why.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/基礎化學/一/~$章 常見的化學反應.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/temp_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/temp_test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/view/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/test.ui" beforeDir="false" afterPath="$PROJECT_DIR$/view/test.ui" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,11 +19,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/QDS.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="242">
-              <caret line="11" column="25" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
-              <folding>
-                <element signature="e#0#10#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="44">
+              <caret line="2" selection-start-line="2" selection-end-line="2" />
             </state>
           </provider>
         </entry>
@@ -40,35 +28,23 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/view/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="401">
-              <caret line="40" column="59" lean-forward="true" selection-start-line="40" selection-start-column="59" selection-end-line="40" selection-end-column="59" />
+            <state relative-caret-position="388">
+              <caret line="158" column="47" lean-forward="true" selection-start-line="158" selection-start-column="47" selection-end-line="158" selection-end-column="47" />
+              <folding>
+                <element signature="e#0#42#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/view/temp_test.py">
+        <entry file="file://$PROJECT_DIR$/controller/GET_QUESTION.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="291">
-              <caret line="56" column="57" lean-forward="true" selection-start-line="12" selection-start-column="8" selection-end-line="56" selection-end-column="57" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/view/readWordTest.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="16" selection-start-line="16" selection-end-line="16" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/controller/GET_PATH.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="594">
-              <caret line="27" column="20" selection-start-line="27" selection-start-column="8" selection-end-line="27" selection-end-column="20" />
+            <state relative-caret-position="-234">
+              <caret line="9" column="24" lean-forward="true" selection-start-line="9" selection-start-column="24" selection-end-line="9" selection-end-column="24" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -76,8 +52,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/FetchData.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="440">
-              <caret line="21" selection-start-line="21" selection-end-line="21" />
+            <state relative-caret-position="242">
+              <caret line="12" column="37" selection-start-line="12" selection-start-column="37" selection-end-line="12" selection-end-column="37" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/controller/GET_PATH.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="132">
+              <caret line="6" selection-start-line="6" selection-end-line="6" />
             </state>
           </provider>
         </entry>
@@ -97,6 +82,7 @@
       <find>data</find>
       <find>get</find>
       <find>AGDAP</find>
+      <find>gp</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -118,6 +104,8 @@
         <option value="$PROJECT_DIR$/view/temp_test.py" />
         <option value="$PROJECT_DIR$/QDS.py" />
         <option value="$PROJECT_DIR$/view/readWordTest.py" />
+        <option value="$PROJECT_DIR$/controller/GET_QUESTION" />
+        <option value="$PROJECT_DIR$/controller/GET_QUESTION.py" />
         <option value="$PROJECT_DIR$/view/test.py" />
       </list>
     </option>
@@ -133,12 +121,28 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="QSD" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QSD" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
       <pane id="Scope">
         <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
           <expand>
             <path>
               <item name="QDS" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="D:\QDS" type="442cc68d:ScopeViewTreeModel$RootNode" />
+            </path>
+            <path>
+              <item name="QDS" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="D:\QDS" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="controller" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="QDS" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
@@ -154,23 +158,12 @@
           <select />
         </subPane>
       </pane>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="QSD" type="b2602c69:ProjectViewProjectNode" />
-              <item name="QSD" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/view" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Language Defaults" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -352,14 +345,14 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1488" height="878" extended-state="6" />
+    <frame x="-7" y="-7" width="1486" height="878" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49731904" visible="true" weight="0.14187329" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49731904" visible="true" weight="0.14137931" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" sideWeight="0.50268096" side_tool="true" weight="0.14187329" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3069705" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3324397" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3994638" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -396,48 +389,67 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/view/readWordTest.py">
+    <entry file="file://$PROJECT_DIR$/view/temp_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
+        <state relative-caret-position="652">
+          <caret line="56" column="57" selection-start-line="12" selection-start-column="8" selection-end-line="56" selection-end-column="57" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/controller/GET_PATH.py">
+    <entry file="file://$PROJECT_DIR$/view/readWordTest.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
-          <caret line="27" column="20" selection-start-line="27" selection-start-column="8" selection-end-line="27" selection-end-column="20" />
+        <state relative-caret-position="176">
+          <caret line="9" column="25" lean-forward="true" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controller/GET_QUESTION" />
+    <entry file="file://$PROJECT_DIR$/controller/新文字文件.txt" />
+    <entry file="file://C:/Program Files (x86)/Microsoft Visual Studio/Shared/Python36_64/Lib/site-packages/pandas/io/excel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7986">
+          <caret line="390" column="21" lean-forward="true" selection-start-line="390" selection-start-column="21" selection-end-line="390" selection-end-column="21" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/model/FetchData.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="440">
-          <caret line="21" selection-start-line="21" selection-end-line="21" />
+        <state relative-caret-position="242">
+          <caret line="12" column="37" selection-start-line="12" selection-start-column="37" selection-end-line="12" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controller/GET_PATH.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/QDS.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="11" column="25" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="44">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/view/temp_test.py">
+    <entry file="file://$PROJECT_DIR$/controller/GET_QUESTION.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="291">
-          <caret line="56" column="57" lean-forward="true" selection-start-line="12" selection-start-column="8" selection-end-line="56" selection-end-column="57" />
+        <state relative-caret-position="-234">
+          <caret line="9" column="24" lean-forward="true" selection-start-line="9" selection-start-column="24" selection-end-line="9" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/view/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="401">
-          <caret line="40" column="59" lean-forward="true" selection-start-line="40" selection-start-column="59" selection-end-line="40" selection-end-column="59" />
+        <state relative-caret-position="388">
+          <caret line="158" column="47" lean-forward="true" selection-start-line="158" selection-start-column="47" selection-end-line="158" selection-end-column="47" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

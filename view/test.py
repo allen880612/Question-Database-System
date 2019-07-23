@@ -1,6 +1,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from controller import GET_PATH as gp
+from controller import GET_QUESTION as gq
 import os
+
 
 class Ui_MainWindow(object):
     path = ""
@@ -8,6 +10,11 @@ class Ui_MainWindow(object):
     fManager = gp.FolderManager()
     path2 = ["database/"]
     wordPath = ""
+
+    #excel
+    excelPath = "database/盈虧問題v2.xlsx"
+    excel = gq.ExcelManager(excelPath)
+    #endexcel
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -151,9 +158,10 @@ class Ui_MainWindow(object):
         else:
             self.label.setText("輸入不完全，或文件已損毀!")
 
-
-
-
-
-
-
+        #excel
+        if self.excel.IsLoad():
+            level = "第五層"
+            questionType = "基本型"
+            questionList = self.excel.GetFilteredQuestion(level, questionType) #取得過濾後的題目
+            print(questionList)
+        #excel

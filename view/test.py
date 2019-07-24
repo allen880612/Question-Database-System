@@ -3,8 +3,9 @@ from controller import GET_PATH as gp
 from controller import GET_QUESTION as gq
 import random
 import os
-from docx import Document
-from docx.shared import Inches
+import docx
+#from docx import Document
+#from docx.shared import Inches
 
 class Ui_MainWindow(object):
     path = ""
@@ -172,10 +173,25 @@ class Ui_MainWindow(object):
         #excel
 
     def BulidWord(self, questionList):
-        word = Document()
+        word = docx.Document()
         word.add_heading("Database", 0) #新增那個醜醜藍字
+
+        #新增題目 style
+        questionStyle = word.styles.add_style("question", docx.enum.style.WD_STYLE_TYPE.PARAGRAPH) #新增一樣式 (樣式名稱, 樣式類型)
+        questionStyle.font.size = docx.shared.Pt(12) #更改此樣式的文字大小
+        questionStyle.font.name = "Times New Roman" #設定英文字體
+        # where am I? who am I???
+        questionStyle._element.rPr.rFonts.set(docx.oxml.ns.qn("w:eastAsia"), "細明體") #設定中文字體
+        # 設定凸排, su go i ne, my Python
+        questionStyle.paragraph_format.first_line_indent = docx.shared.Pt(-18) # 設定首縮排/凸排 (正值 = 縮排, 負值 = 凸排)
+        questionStyle.paragraph_format.left_indent = docx.shared.Pt(18) # ↓注意，重點來了，設定"整個段落"縮排  (正常來說應該不用設定，但是設定凸排的時候，他會順便把整個段落也往左移動，所以要他媽的移回來)
+
+
+        #新增題目
         for i in range(0, len(questionList)):
-            questionIndex = "(" + str(i + 1) + ") " #題號字串
-            word.add_paragraph(questionIndex + questionList[i]) #題號 + 題目 一題作為一個段落
-        #word.add_page_break() #應該是強制換行
+            questionIndex = "(" + str(i + 1) + ") " #題號
+            paragraph = word.add_paragraph(questionIndex + questionList[i], style = "question") #題號 + 題目 一題作為一個段落
+            paragraph.alignment = 3 #設定段落對齊 0 = 靠左, 1 = 置中, 2 = 靠右, 3 = 左右對齊 (WD_PARAGRAPH_ALIGNMENT)
+
+        #word.add_page_break() #應該是強制換頁
         word.save("word/test.docx") #存檔 (存在word資料夾)

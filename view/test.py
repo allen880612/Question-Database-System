@@ -163,13 +163,13 @@ class Ui_MainWindow(object):
 
         #excel
         if self.excel.IsLoad():
-            level = "第五層"
-            questionType = "基本型"
+            questionType = ["數學"]
             questionNumber = 10 #預設隨機選10題
-            questionList = self.excel.GetFilteredQuestion(level, questionType) #取得過濾後的題目
+            questionList = self.excel.GetFilteredQuestion(questionType) #取得過濾後的題目
             questionList = random.sample(questionList, questionNumber) # 將題目不重複隨機選擇 k 題
             print(questionList)
             self.BulidWord(questionList) #建造word
+            self.excel.CreateDictForLevel()
         #excel
 
     def BulidWord(self, questionList):

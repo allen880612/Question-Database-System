@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from controller import GET_PATH as gp
 from controller import GET_QUESTION as gq
+from view import ComboboxView as cbview
 import random
 import os
 import docx
@@ -19,9 +20,14 @@ class Ui_MainWindow(object):
     excel = gq.ExcelManager(excelPath)
     #endexcel
 
+    #region 創建下拉式選單
+    comboboxView = cbview.ComboboxManager(excel.GetOriginalDataFrame())
+    comboboxSelectOption = []
+    #endregion
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(640, 480)
+        MainWindow.resize(860, 480)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.label = QtWidgets.QLabel(self.centralwidget)
@@ -34,29 +40,59 @@ class Ui_MainWindow(object):
         self.label.setFont(font)
         self.label.setObjectName("label")
         self.btn_confirm = QtWidgets.QPushButton(self.centralwidget)
-        self.btn_confirm.setGeometry(QtCore.QRect(160, 300, 75, 23))
+        self.btn_confirm.setGeometry(QtCore.QRect(70, 340, 75, 23))
         self.btn_confirm.setObjectName("btn_confirm")
         self.cBox_dir1 = QtWidgets.QComboBox(self.centralwidget)
-        self.cBox_dir1.setGeometry(QtCore.QRect(60, 200, 121, 21))
+        self.cBox_dir1.setGeometry(QtCore.QRect(60, 140, 121, 21))
         self.cBox_dir1.setObjectName("cBox_dir1")
         self.cBox_dir2 = QtWidgets.QComboBox(self.centralwidget)
-        self.cBox_dir2.setGeometry(QtCore.QRect(210, 200, 121, 21))
+        self.cBox_dir2.setGeometry(QtCore.QRect(210, 140, 121, 21))
         self.cBox_dir2.setObjectName("cBox_dir2")
         self.cBox_word = QtWidgets.QComboBox(self.centralwidget)
-        self.cBox_word.setGeometry(QtCore.QRect(360, 200, 191, 21))
+        self.cBox_word.setGeometry(QtCore.QRect(360, 140, 191, 21))
         self.cBox_word.setObjectName("cBox_word")
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(60, 180, 91, 16))
+        self.label_2.setGeometry(QtCore.QRect(60, 120, 91, 16))
         self.label_2.setObjectName("label_2")
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setGeometry(QtCore.QRect(210, 180, 81, 16))
+        self.label_3.setGeometry(QtCore.QRect(210, 120, 81, 16))
         self.label_3.setObjectName("label_3")
         self.label_4 = QtWidgets.QLabel(self.centralwidget)
-        self.label_4.setGeometry(QtCore.QRect(360, 180, 71, 16))
+        self.label_4.setGeometry(QtCore.QRect(360, 120, 71, 16))
         self.label_4.setObjectName("label_4")
+        self.cBox_level2 = QtWidgets.QComboBox(self.centralwidget)
+        self.cBox_level2.setGeometry(QtCore.QRect(200, 230, 121, 21))
+        self.cBox_level2.setObjectName("cBox_level2")
+        self.label_level2 = QtWidgets.QLabel(self.centralwidget)
+        self.label_level2.setGeometry(QtCore.QRect(200, 205, 71, 21))
+        self.label_level2.setObjectName("label_level2")
+        self.cBox_level3 = QtWidgets.QComboBox(self.centralwidget)
+        self.cBox_level3.setGeometry(QtCore.QRect(340, 230, 121, 21))
+        self.cBox_level3.setObjectName("cBox_level3")
+        self.label_level3 = QtWidgets.QLabel(self.centralwidget)
+        self.label_level3.setGeometry(QtCore.QRect(340, 205, 71, 21))
+        self.label_level3.setObjectName("label_level3")
+        self.cBox_level4 = QtWidgets.QComboBox(self.centralwidget)
+        self.cBox_level4.setGeometry(QtCore.QRect(480, 230, 121, 21))
+        self.cBox_level4.setObjectName("cBox_level4")
+        self.label_level4 = QtWidgets.QLabel(self.centralwidget)
+        self.label_level4.setGeometry(QtCore.QRect(480, 205, 71, 21))
+        self.label_level4.setObjectName("label_level4")
+        self.cBox_level5 = QtWidgets.QComboBox(self.centralwidget)
+        self.cBox_level5.setGeometry(QtCore.QRect(620, 230, 121, 21))
+        self.cBox_level5.setObjectName("cBox_level5")
+        self.label_level5 = QtWidgets.QLabel(self.centralwidget)
+        self.label_level5.setGeometry(QtCore.QRect(620, 205, 71, 21))
+        self.label_level5.setObjectName("label_level5")
+        self.label_level1 = QtWidgets.QLabel(self.centralwidget)
+        self.label_level1.setGeometry(QtCore.QRect(60, 200, 119, 23))
+        self.label_level1.setObjectName("label_level1")
+        self.cBox_level1 = QtWidgets.QComboBox(self.centralwidget)
+        self.cBox_level1.setGeometry(QtCore.QRect(60, 230, 119, 20))
+        self.cBox_level1.setObjectName("cBox_level1")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 640, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 860, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -76,6 +112,11 @@ class Ui_MainWindow(object):
         self.label_2.setText(_translate("MainWindow", "資料夾 一層"))
         self.label_3.setText(_translate("MainWindow", "資料夾 二層"))
         self.label_4.setText(_translate("MainWindow", "Word"))
+        self.label_level1.setText(_translate("MainWindow", "資料夾 一層"))
+        self.label_level2.setText(_translate("MainWindow", "資料夾 二層"))
+        self.label_level3.setText(_translate("MainWindow", "資料夾 三層"))
+        self.label_level4.setText(_translate("MainWindow", "資料夾 四層"))
+        self.label_level5.setText(_translate("MainWindow", "資料夾 五層"))
 
     def InitGUI(self):
         # 先放著，之後應該會用到
@@ -96,6 +137,33 @@ class Ui_MainWindow(object):
         self.cBox_dir1.lineEdit().setText("請選擇科目")
         self.cBox_dir2.lineEdit().setText("請先選擇科目")
         self.cBox_word.lineEdit().setText("請選擇科目及分類")
+
+        #region 下拉式選單
+        defaultString = self.comboboxView.GetNoSelectString()
+        self.cBox_level1.addItems(self.comboboxView.GetDictValue(defaultString))
+        self.cBox_level1.activated[str].connect(self.SelectOption)
+        self.cBox_level2.activated[str].connect(self.SelectOption)
+        self.cBox_level3.activated[str].connect(self.SelectOption)
+        self.cBox_level4.activated[str].connect(self.SelectOption)
+        self.cBox_level5.activated[str].connect(self.SelectOption)
+
+
+        self.cBox_level1.setEditable(True)
+        self.cBox_level2.setEditable(True)
+        self.cBox_level3.setEditable(True)
+        self.cBox_level4.setEditable(True)
+        self.cBox_level5.setEditable(True)
+
+        self.cBox_level1.lineEdit().setText("選擇第一層")
+        self.cBox_level2.lineEdit().setText("選擇第二層")
+        self.cBox_level3.lineEdit().setText("選擇第三層")
+        self.cBox_level4.lineEdit().setText("選擇第四層")
+        self.cBox_level5.lineEdit().setText("選擇第五層")
+        #endregion
+
+    def SelectOption(self, text):
+        self.comboboxSelectOption.append(text)
+
 
     def RebuildDir2(self, text):
         dir = []
@@ -169,7 +237,6 @@ class Ui_MainWindow(object):
             questionList = random.sample(questionList, questionNumber) # 將題目不重複隨機選擇 k 題
             print(questionList)
             self.BulidWord(questionList) #建造word
-            self.excel.CreateDictForLevel()
         #excel
 
     def BulidWord(self, questionList):

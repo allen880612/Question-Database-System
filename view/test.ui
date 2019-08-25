@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
+    <width>860</width>
     <height>480</height>
    </rect>
   </property>
@@ -38,8 +38,8 @@
    <widget class="QPushButton" name="btn_confirm">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>300</y>
+      <x>70</x>
+      <y>340</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -52,7 +52,7 @@
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>200</y>
+      <y>140</y>
       <width>121</width>
       <height>21</height>
      </rect>
@@ -62,7 +62,7 @@
     <property name="geometry">
      <rect>
       <x>210</x>
-      <y>200</y>
+      <y>140</y>
       <width>121</width>
       <height>21</height>
      </rect>
@@ -72,7 +72,7 @@
     <property name="geometry">
      <rect>
       <x>360</x>
-      <y>200</y>
+      <y>140</y>
       <width>191</width>
       <height>21</height>
      </rect>
@@ -82,7 +82,7 @@
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>180</y>
+      <y>120</y>
       <width>91</width>
       <height>16</height>
      </rect>
@@ -95,7 +95,7 @@
     <property name="geometry">
      <rect>
       <x>210</x>
-      <y>180</y>
+      <y>120</y>
       <width>81</width>
       <height>16</height>
      </rect>
@@ -108,7 +108,7 @@
     <property name="geometry">
      <rect>
       <x>360</x>
-      <y>180</y>
+      <y>120</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -117,14 +117,129 @@
      <string>Word</string>
     </property>
    </widget>
+   <widget class="QComboBox" name="cBox_level2">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>230</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_level2">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>205</y>
+      <width>71</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>資料夾 二層</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="cBox_level3">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>230</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_level3">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>205</y>
+      <width>71</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>資料夾 三層</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="cBox_level4">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>230</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_level4">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>205</y>
+      <width>71</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>資料夾 四層</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="cBox_level5">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>230</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_level5">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>205</y>
+      <width>71</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>資料夾 五層</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_level1">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>200</y>
+      <width>119</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>資料夾 一層</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="cBox_level1">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>230</y>
+      <width>119</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>640</width>
-     <height>25</height>
+     <width>860</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>

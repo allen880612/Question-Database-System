@@ -165,8 +165,11 @@ class Ui_MainWindow(object):
     def SelectLevel1(self, text):
         #comboboxSelectOption = 目前選到的層級 (之後做成key)
         self.comboboxSelectOption = [self.cBox_level1.currentText()]
-        if self.cBox_level2: #如果level2已經有東西了，先刪除再新增Items
-            self.cBox_level2.clear()
+        #先刪除後面的下拉選單的items再重新加入
+        self.cBox_level2.clear()
+        self.cBox_level3.clear()
+        self.cBox_level4.clear()
+        self.cBox_level5.clear()
         self.cBox_level2.addItems(self.comboboxView.GetDictValue(text))
         self.cBox_level2.setEditText("選擇第二層")
         self.cBox_level3.setEditText("選擇第三層")
@@ -175,8 +178,10 @@ class Ui_MainWindow(object):
 
     def SelectLevel2(self, text):
         self.comboboxSelectOption = [self.cBox_level1.currentText(), self.cBox_level2.currentText()]
-        if self.cBox_level3:
-            self.cBox_level3.clear()
+
+        self.cBox_level3.clear()
+        self.cBox_level4.clear()
+        self.cBox_level5.clear()
         self.cBox_level3.addItems(self.comboboxView.GetDictValue(MyLibrary.CreateDictKey(self.comboboxSelectOption)))
         self.cBox_level3.setEditText("選擇第三層")
         self.cBox_level4.setEditText("選擇第四層")
@@ -184,16 +189,17 @@ class Ui_MainWindow(object):
 
     def SelectLevel3(self, text):
         self.comboboxSelectOption = [self.cBox_level1.currentText(), self.cBox_level2.currentText(), self.cBox_level3.currentText()]
-        if self.cBox_level4:
-            self.cBox_level4.clear()
+
+        self.cBox_level4.clear()
+        self.cBox_level5.clear()
         self.cBox_level4.addItems(self.comboboxView.GetDictValue(MyLibrary.CreateDictKey(self.comboboxSelectOption)))
         self.cBox_level4.setEditText("選擇第四層")
         self.cBox_level5.setEditText("選擇第五層")
 
     def SelectLevel4(self, text):
         self.comboboxSelectOption = [self.cBox_level1.currentText(), self.cBox_level2.currentText(), self.cBox_level3.currentText(), self.cBox_level4.currentText()]
-        if self.cBox_level5:
-            self.cBox_level5.clear()
+
+        self.cBox_level5.clear()
         self.cBox_level5.addItems(self.comboboxView.GetDictValue(MyLibrary.CreateDictKey(self.comboboxSelectOption)))
         self.cBox_level5.setEditText("選擇第五層")
 
@@ -203,17 +209,13 @@ class Ui_MainWindow(object):
 
     def ClearCombobox(self):
         self.comboboxSelectOption.clear()
-        if self.cBox_level1:
-            self.cBox_level1.clear()
-        if self.cBox_level2:
-            self.cBox_level2.clear()
-        if self.cBox_level3:
-            self.cBox_level3.clear()
-        if self.cBox_level4:
-            self.cBox_level4.clear()
-        if self.cBox_level5:
-            self.cBox_level5.clear()
+        self.cBox_level1.clear()
+        self.cBox_level2.clear()
+        self.cBox_level3.clear()
+        self.cBox_level4.clear()
+        self.cBox_level5.clear()
 
+        self.cBox_level1.addItems(self.comboboxView.GetDictValue(self.comboboxView.GetNoSelectString())) # add default items
         self.cBox_level1.lineEdit().setText("選擇第一層")
         self.cBox_level2.lineEdit().setText("選擇第二層")
         self.cBox_level3.lineEdit().setText("選擇第三層")
@@ -290,17 +292,21 @@ class Ui_MainWindow(object):
             questionType = self.comboboxSelectOption #搜尋的條件
             if questionType: #存在搜尋條件才做
                 questionNumber = 10 #預設隨機選10題
-                questionList = self.excel.GetFilteredQuestion(questionType) #取得過濾後的題目
-                questionList = random.sample(questionList, questionNumber) # 將題目不重複隨機選擇 k 題
+                questionAnswerList = self.excel.GetFilteredQuestion(questionType) #取得過濾後的題目
+                questionAnswerList = random.sample(questionAnswerList, min(questionNumber, len(questionAnswerList))) # 將題目不重複隨機選擇 k 題 (0 <= k <= 篩選後的題目數量)
+                questionList = self.DeleteAnswer(questionAnswerList) #刪除答案(【*】)
                 print(questionType)
+                print(questionAnswerList)
                 print(questionList)
-                self.BulidWord(questionList) #建造word
+                self.BulidWord(questionAnswerList, "answer") #建造word
+                self.BulidWord(questionList, "question")  # 建造word
                 self.ClearCombobox() #清除選擇的combobox
+                print("done")
             else:
                 self.label.setText("未選擇條件")
         #excel
 
-    def BulidWord(self, questionList):
+    def BulidWord(self, questionList, fileName):
         word = docx.Document()
         word.add_heading("Database", 0) #新增那個醜醜藍字
 
@@ -322,4 +328,25 @@ class Ui_MainWindow(object):
             paragraph.alignment = 3 #設定段落對齊 0 = 靠左, 1 = 置中, 2 = 靠右, 3 = 左右對齊 (WD_PARAGRAPH_ALIGNMENT)
 
         #word.add_page_break() #應該是強制換頁
-        word.save("word/test.docx") #存檔 (存在word資料夾)
+        savePath = "word/" + fileName + ".docx"
+        word.save(savePath) #存檔 (存在word資料夾)
+
+        # 土法煉鋼，不知道效率怎樣
+    def DeleteAnswer(self, answerList):
+        questionList = []
+        for str in answerList:
+            newQuestion = ""
+            addMode = True  # Mode = True > add a char, False > add a space
+            for ch in str:
+                if addMode == True or ch == '】':
+                    newQuestion += ch
+                elif addMode == False:
+                    newQuestion += ' '
+
+                if ch == '【':
+                    addMode = False
+                elif ch == '】':
+                    addMode = True
+            questionList.append(newQuestion)
+
+        return questionList

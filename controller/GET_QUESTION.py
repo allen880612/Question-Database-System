@@ -46,9 +46,27 @@ class ExcelManager():
         return questionList'''
 
 
+    def GetFilteredImage(self, questionType):
+        # df.loc[('bar', 'two'), 'A'] tuple法不能用，因為數學、應用題那些不屬於index
+        flagList1 = ["第一層", "第二層", "第三層", "第四層", "第五層"]
+        #flagType = ["數學", "應用題", "典型應用題", "盈虧問題", "基本型"]
+        # flag = self.dataframe[flagList1] == flagType
+        flag = True
+        for i in range(0, len(questionType)):
+            tempFlag = (self.dataframe[flagList1[i]] == questionType[i])
+            flag = flag & tempFlag
+        # & & &&& 過濾器法
+        image = self.dataframe[flag]["圖"] #question = 過濾後的題目 (type(question) = Series)
+        print(image)
+        imageList = []
+        for i in image:
+            imageList.append(i.split(' '))
+        print(imageList)
+        return imageList
+
     #是否成功讀取excel
     def IsLoad(self):
         return self.isLoad
 
     def GetOriginalDataFrame(self):
-        return  self.dataframe
+        return self.dataframe

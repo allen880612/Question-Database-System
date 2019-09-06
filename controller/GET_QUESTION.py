@@ -49,6 +49,8 @@ class ExcelManager():
     def GetFilteredImage(self, questionType):
         # df.loc[('bar', 'two'), 'A'] tuple法不能用，因為數學、應用題那些不屬於index
         flagList1 = ["第一層", "第二層", "第三層", "第四層", "第五層"]
+        imagePath = "database\\" + "\\".join(questionType) # base path
+        # print(imagePath)
         #flagType = ["數學", "應用題", "典型應用題", "盈虧問題", "基本型"]
         # flag = self.dataframe[flagList1] == flagType
         flag = True
@@ -57,11 +59,13 @@ class ExcelManager():
             flag = flag & tempFlag
         # & & &&& 過濾器法
         image = self.dataframe[flag]["圖"] #question = 過濾後的題目 (type(question) = Series)
-        print(image)
         imageList = []
-        for i in image:
-            imageList.append(i.split(' '))
-        print(imageList)
+        for im in list(image):
+            tempImage = im.split(' ')
+            if im != "NOIMAGE":
+                for i in range(0, len(tempImage)):
+                    tempImage[i] = imagePath + "\\" + tempImage[i] # 遍歷補路徑
+            imageList.append(tempImage)
         return imageList
 
     #是否成功讀取excel

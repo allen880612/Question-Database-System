@@ -322,7 +322,7 @@ class Ui_MainWindow(object):
         questionStyle.paragraph_format.left_indent = docx.shared.Pt(18) # ↓注意，重點來了，設定"整個段落"縮排  (正常來說應該不用設定，但是設定凸排的時候，他會順便把整個段落也往左移動，所以要他媽的移回來)
 
         imageList = self.excel.GetFilteredImage(self.comboboxSelectOption)
-        print(imageList)
+        #print(imageList)
         #print(os.getcwd())
         #新增題目
         for i in range(0, len(questionList)):

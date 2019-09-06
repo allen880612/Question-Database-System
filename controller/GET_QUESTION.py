@@ -6,6 +6,7 @@ class ExcelManager():
     def __init__(self, _path):
         self.path = _path #excel的路徑
         self.dataframe = [] #excel的資料表格
+        self.filleredDataframe = []
         self.isLoad = False
 
         print("\n-----------------------------")
@@ -24,41 +25,27 @@ class ExcelManager():
 
         print("\n-----------------")
 
+    #過濾表格
+    def GetFilteredDataframe(self, questionType):
+        # df.loc[('bar', 'two'), 'A'] tuple法不能用，因為數學、應用題那些不屬於index
+        flagList1 = ["第一層", "第二層", "第三層", "第四層", "第五層"]
+        # flagType = ["數學", "應用題", "典型應用題", "盈虧問題", "基本型"]
+        # flag = self.dataframe[flagList1] == flagType
+        flag = True
+        for i in range(0, len(questionType)):
+            tempFlag = (self.dataframe[flagList1[i]] == questionType[i])
+            flag = flag & tempFlag
+        # & & &&& 過濾器法
+        self.filleredDataframe = self.dataframe[flag] #過濾後的題目 (type() = dataframe)
+
     #取得excel中指定的題目
-    def GetFilteredQuestion(self, questionType):
-        # df.loc[('bar', 'two'), 'A'] tuple法不能用，因為數學、應用題那些不屬於index
-        flagList1 = ["第一層", "第二層", "第三層", "第四層", "第五層"]
-        #flagType = ["數學", "應用題", "典型應用題", "盈虧問題", "基本型"]
-        # flag = self.dataframe[flagList1] == flagType
-        flag = True
-        for i in range(0, len(questionType)):
-            tempFlag = (self.dataframe[flagList1[i]] == questionType[i])
-            flag = flag & tempFlag
-        # & & &&& 過濾器法
-        question = self.dataframe[flag]["題目"] #question = 過濾後的題目 (type(question) = Series)
-        return list(question) #Convert to list
+    def GetFilteredQuestion(self):
+        return list(self.filleredDataframe["題目"]) #Convert to list
 
-        '''flag = self.dataframe[level] == questionType #過濾器條件
-        filter_dataframe = self.dataframe[flag] #過濾後的資料表格
-        questionList = filter_dataframe["題目"]
-        questionList = list(questionList) #串列化過濾後的表格
-        #print(len(questionList))
-        return questionList'''
-
-
+    #取得圖
     def GetFilteredImage(self, questionType):
-        # df.loc[('bar', 'two'), 'A'] tuple法不能用，因為數學、應用題那些不屬於index
-        flagList1 = ["第一層", "第二層", "第三層", "第四層", "第五層"]
-        imagePath = "database\\" + "\\".join(questionType) # base path
-        # print(imagePath)
-        #flagType = ["數學", "應用題", "典型應用題", "盈虧問題", "基本型"]
-        # flag = self.dataframe[flagList1] == flagType
-        flag = True
-        for i in range(0, len(questionType)):
-            tempFlag = (self.dataframe[flagList1[i]] == questionType[i])
-            flag = flag & tempFlag
-        # & & &&& 過濾器法
-        image = self.dataframe[flag]["圖"] #question = 過濾後的題目 (type(question) = Series)
+        imagePath = "database\\" + "\\".join(questionType)  # base path
+        image = self.filleredDataframe["圖"]
         imageList = []
         for im in list(image):
             tempImage = im.split(' ')

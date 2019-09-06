@@ -292,8 +292,9 @@ class Ui_MainWindow(object):
             #questionType = ["數學"]
             questionType = self.comboboxSelectOption #搜尋的條件
             if questionType: #存在搜尋條件才做
+                self.excel.GetFilteredDataframe(questionType)
                 questionNumber = 10 #預設隨機選10題
-                questionAnswerList = self.excel.GetFilteredQuestion(questionType) #取得過濾後的題目
+                questionAnswerList = self.excel.GetFilteredQuestion() #取得過濾後的題目
                 questionAnswerList = random.sample(questionAnswerList, min(questionNumber, len(questionAnswerList))) # 將題目不重複隨機選擇 k 題 (0 <= k <= 篩選後的題目數量)
                 questionList = self.DeleteAnswer(questionAnswerList) #刪除答案(【*】)
                 print(questionType)
@@ -350,7 +351,7 @@ class Ui_MainWindow(object):
         savePath = "word/" + fileName + ".docx"
         word.save(savePath) #存檔 (存在word資料夾)
 
-        # 土法煉鋼，不知道效率怎樣
+    # 土法煉鋼，不知道效率怎樣
     def DeleteAnswer(self, answerList):
         questionList = []
         for str in answerList:

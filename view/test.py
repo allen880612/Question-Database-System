@@ -44,24 +44,6 @@ class Ui_MainWindow(object):
         self.btn_confirm = QtWidgets.QPushButton(self.centralwidget)
         self.btn_confirm.setGeometry(QtCore.QRect(70, 340, 75, 23))
         self.btn_confirm.setObjectName("btn_confirm")
-        self.cBox_dir1 = QtWidgets.QComboBox(self.centralwidget)
-        self.cBox_dir1.setGeometry(QtCore.QRect(60, 140, 121, 21))
-        self.cBox_dir1.setObjectName("cBox_dir1")
-        self.cBox_dir2 = QtWidgets.QComboBox(self.centralwidget)
-        self.cBox_dir2.setGeometry(QtCore.QRect(210, 140, 121, 21))
-        self.cBox_dir2.setObjectName("cBox_dir2")
-        self.cBox_word = QtWidgets.QComboBox(self.centralwidget)
-        self.cBox_word.setGeometry(QtCore.QRect(360, 140, 191, 21))
-        self.cBox_word.setObjectName("cBox_word")
-        self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(60, 120, 91, 16))
-        self.label_2.setObjectName("label_2")
-        self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setGeometry(QtCore.QRect(210, 120, 81, 16))
-        self.label_3.setObjectName("label_3")
-        self.label_4 = QtWidgets.QLabel(self.centralwidget)
-        self.label_4.setGeometry(QtCore.QRect(360, 120, 71, 16))
-        self.label_4.setObjectName("label_4")
         self.cBox_level2 = QtWidgets.QComboBox(self.centralwidget)
         self.cBox_level2.setGeometry(QtCore.QRect(200, 230, 121, 21))
         self.cBox_level2.setObjectName("cBox_level2")
@@ -111,9 +93,6 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "Question Database"))
         self.label.setText(_translate("MainWindow", "請選擇試題範圍"))
         self.btn_confirm.setText(_translate("MainWindow", "確定"))
-        self.label_2.setText(_translate("MainWindow", "資料夾 一層"))
-        self.label_3.setText(_translate("MainWindow", "資料夾 二層"))
-        self.label_4.setText(_translate("MainWindow", "Word"))
         self.label_level1.setText(_translate("MainWindow", "資料夾 一層"))
         self.label_level2.setText(_translate("MainWindow", "資料夾 二層"))
         self.label_level3.setText(_translate("MainWindow", "資料夾 三層"))
@@ -127,18 +106,6 @@ class Ui_MainWindow(object):
             print(fr)
 
         self.btn_confirm.clicked.connect(self.Confirm)
-        self.path = self.DATABASE
-        self.cBox_dir1.addItems(self.fManager.GetNextLevel(self.DATABASE))
-        self.cBox_dir1.activated[str].connect(self.RebuildDir2)
-        self.cBox_dir2.activated[str].connect(self.RebuildDir3)
-        self.cBox_word.activated[str].connect(self.GetWordPath)
-
-        self.cBox_dir1.setEditable(True)
-        self.cBox_dir2.setEditable(True)
-        self.cBox_word.setEditable(True)
-        self.cBox_dir1.lineEdit().setText("請選擇科目")
-        self.cBox_dir2.lineEdit().setText("請先選擇科目")
-        self.cBox_word.lineEdit().setText("請選擇科目及分類")
 
         #region 下拉式選單
         defaultString = self.comboboxView.GetNoSelectString()
@@ -223,69 +190,7 @@ class Ui_MainWindow(object):
         self.cBox_level4.lineEdit().setText("選擇第四層")
         self.cBox_level5.lineEdit().setText("選擇第五層")
 
-    def RebuildDir2(self, text):
-        dir = []
-        print("len 2 = " + str(len(self.path2)))
-        self.cBox_dir2.clear()
-        # self.path = self.DATABASE
-        # self.path = os.path.join(self.path, text)
-        # print("dir2 = " + self.path)
-        # dir = self.fManager.GetNextLevel(self.path)
-        if len(self.path2) < 2:
-            self.path2.append(text)
-        else:
-            self.path2[1] = text
-        pd = self.path2[:2]
-        print(pd)
-        path = os.path.join(*pd)
-        print("dir2 = " + path)
-        dir = self.fManager.GetNextLevel(path)
-
-        # 判斷路徑是否存在，且為資料夾
-        if dir:
-            self.cBox_dir2.addItems(dir)
-            self.cBox_dir2.setEditText("請選擇科目")
-            self.cBox_word.setEditText("請選擇題庫")
-
-    def RebuildDir3(self, text):
-        dir = []
-        self.cBox_word.clear()
-        # finalPath = os.path.join(self.path, text)
-        # print("dir3 = " + finalPath)
-        # dir = self.fManager.GetNextLevel(finalPath)
-        if len(self.path2) < 3:
-            self.path2.append(text)
-        else:
-            self.path2[2] = text
-        pd = self.path2[:3]
-        print(pd)
-        path = os.path.join(*pd)
-        print("dir3 = " + path)
-        dir = self.fManager.GetNextLevel(path)
-        # 判斷路徑是否存在，且為資料夾
-        if dir:
-            self.cBox_word.addItems(dir)
-            self.cBox_word.setEditText("請選擇題庫")
-
-    def GetWordPath(self, text):
-        print("Word name : " + text)
-        self.label.setText(text)
-
-        if len(self.path2) < 4:
-            self.path2.append(text)
-        else:
-            self.path2[3] = text
-        print(self.path2)
-        self.wordPath = os.path.join(*self.path2)
-        # os.startfile(self.wordPath)
-        print("word path = " + self.wordPath)
-
     def Confirm(self):
-        if os.path.isfile(self.wordPath):
-            os.startfile(self.wordPath)
-            print("open " + self.wordPath)
-        else:
-            self.label.setText("輸入不完全，或文件已損毀!")
 
         #excel
         if self.excel.IsLoad():
@@ -310,7 +215,9 @@ class Ui_MainWindow(object):
 
     def BulidWord(self, questionList, fileName):
         word = docx.Document()
-        word.add_heading("Database", 0) #新增那個醜醜藍字
+        heading = " - ".join(self.comboboxSelectOption)
+        word.add_heading(heading, 0) #新增那個醜醜藍字
+        # word.add_heading("Database", 0) #新增那個醜醜藍字
 
         #新增題目 style
         questionStyle = word.styles.add_style("question", docx.enum.style.WD_STYLE_TYPE.PARAGRAPH) #新增一樣式 (樣式名稱, 樣式類型)
@@ -330,16 +237,19 @@ class Ui_MainWindow(object):
             questionIndex = "(" + str(i + 1) + ") " #題號
             paragraph = word.add_paragraph(questionIndex + questionList[i], style = "question")
             #paragraph = word.add_paragraph(questionIndex + questionList[i], style = "question") #題號 + 題目 一題作為一個段落
-            paragraph.alignment = 3 #設定段落對齊 0 = 靠左, 1 = 置中, 2 = 靠右, 3 = 左右對齊 (WD_PARAGRAPH_ALIGNMENT)
+            paragraph.alignment = 0 #設定段落對齊 0 = 靠左, 1 = 置中, 2 = 靠右, 3 = 左右對齊 (WD_PARAGRAPH_ALIGNMENT)
 
             try:
                 # if not np.isnan(imageList[i]):
                 if imageList[i][0] != "NOIMAGE":
                     print(imageList[i])
-                    run = word.paragraphs[i + 1].add_run()
-                    run.add_break() #不換段換行
+                    #run = word.paragraphs[i + 1].add_run()
+                    imageParagraph = word.add_paragraph() # 為了讓圖片靠右，直接新增一個段落，方便用alignment
+                    imageParagraph.alignment = 2
+                    run = imageParagraph.add_run()
+                    #run.add_break() #不換段換行
                     for image in imageList[i]:
-                        run.add_picture(image)
+                        run.add_picture(image, height=docx.shared.Cm(2.6))
             except:
                 print("Insert image fail!")
                 # print(imageList[i])

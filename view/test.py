@@ -198,22 +198,33 @@ class Ui_MainWindow(object):
             questionType = self.comboboxSelectOption #搜尋的條件
             if questionType: #存在搜尋條件才做
                 self.excel.GetFilteredDataframe(questionType)
-                questionNumber = 10 #預設隨機選10題
-                questionAnswerList = self.excel.GetFilteredQuestion() #取得過濾後的題目
-                questionAnswerList = random.sample(questionAnswerList, min(questionNumber, len(questionAnswerList))) # 將題目不重複隨機選擇 k 題 (0 <= k <= 篩選後的題目數量)
-                questionList = self.DeleteAnswer(questionAnswerList) #刪除答案(【*】)
+                questionNumber = 10  # 預設隨機選10題
+                qList = self.excel.GetQuestionList()  # 取得過濾後的題目
+                qList = random.sample(qList, min(questionNumber, len(qList)))  # 將題目不重複隨機選擇 k 題 (0 <= k <= 篩選後的題目數量)
                 print(questionType)
-                print(questionAnswerList)
-                print(questionList)
-                self.BulidWord(questionAnswerList, "answer") #建造word
-                self.BulidWord(questionList, "question")  # 建造word
-                self.ClearCombobox() #清除選擇的combobox
+                print(qList)
+                self.BulidWord(qList, "answer", True)  # 建造word 保留答案
+                self.BulidWord(qList, "question", False)  # 建造word 刪除答案
+                self.ClearCombobox()  # 清除選擇的combobox
                 print("done")
+                # self.excel.GetFilteredDataframe(questionType)
+                # questionNumber = 10 #預設隨機選10題
+                # questionAnswerList = self.excel.GetQuestionList() #取得過濾後的題目
+                # # questionAnswerList = self.excel.GetFilteredQuestion() #取得過濾後的題目
+                # questionAnswerList = random.sample(questionAnswerList, min(questionNumber, len(questionAnswerList))) # 將題目不重複隨機選擇 k 題 (0 <= k <= 篩選後的題目數量)
+                # questionList = self.DeleteAnswer(questionAnswerList) #刪除答案(【*】)
+                # print(questionType)
+                # print(questionAnswerList)
+                # print(questionList)
+                # self.BulidWord(questionAnswerList, "answer") #建造word
+                # self.BulidWord(questionList, "question")  # 建造word
+                # self.ClearCombobox() #清除選擇的combobox
+                # print("done")
             else:
                 self.label.setText("未選擇條件")
         #excel
 
-    def BulidWord(self, questionList, fileName):
+    def BulidWord(self, qList, fileName, haveAnswer):
         word = docx.Document()
         heading = " - ".join(self.comboboxSelectOption)
         word.add_heading(heading, 0) #新增那個醜醜藍字
@@ -229,27 +240,38 @@ class Ui_MainWindow(object):
         questionStyle.paragraph_format.first_line_indent = docx.shared.Pt(-18) # 設定首縮排/凸排 (正值 = 縮排, 負值 = 凸排)
         questionStyle.paragraph_format.left_indent = docx.shared.Pt(18) # ↓注意，重點來了，設定"整個段落"縮排  (正常來說應該不用設定，但是設定凸排的時候，他會順便把整個段落也往左移動，所以要他媽的移回來)
 
-        imageList = self.excel.GetFilteredImage(self.comboboxSelectOption)
-        #print(imageList)
-        #print(os.getcwd())
+        #imageList = self.excel.GetFilteredImage(self.comboboxSelectOption)
         #新增題目
-        for i in range(0, len(questionList)):
+        for i in range(0, len(qList)):
             questionIndex = "(" + str(i + 1) + ") " #題號
-            paragraph = word.add_paragraph(questionIndex + questionList[i], style = "question")
+            if haveAnswer:
+                question = qList[i].GetQuestionAnswer()
+            else:
+                question = qList[i].GetQuestion()
+            paragraph = word.add_paragraph(questionIndex + question, style = "question")
             #paragraph = word.add_paragraph(questionIndex + questionList[i], style = "question") #題號 + 題目 一題作為一個段落
             paragraph.alignment = 0 #設定段落對齊 0 = 靠左, 1 = 置中, 2 = 靠右, 3 = 左右對齊 (WD_PARAGRAPH_ALIGNMENT)
-
             try:
-                # if not np.isnan(imageList[i]):
-                if imageList[i][0] != "NOIMAGE":
-                    print(imageList[i])
+                # print("have", qList[i].HaveImage())
+                # print("image", qList[i].GetImage())
+                if qList[i].HaveImage() and qList[i].GetImage():
+                    print(qList[i].GetImage())
                     #run = word.paragraphs[i + 1].add_run()
                     imageParagraph = word.add_paragraph() # 為了讓圖片靠右，直接新增一個段落，方便用alignment
                     imageParagraph.alignment = 2
                     run = imageParagraph.add_run()
                     #run.add_break() #不換段換行
-                    for image in imageList[i]:
+                    for image in qList[i].GetImage():
                         run.add_picture(image, height=docx.shared.Cm(2.6))
+                # if imageList[i][0] != "NOIMAGE":
+                #     print(imageList[i])
+                #     #run = word.paragraphs[i + 1].add_run()
+                #     imageParagraph = word.add_paragraph() # 為了讓圖片靠右，直接新增一個段落，方便用alignment
+                #     imageParagraph.alignment = 2
+                #     run = imageParagraph.add_run()
+                #     #run.add_break() #不換段換行
+                #     for image in imageList[i]:
+                #         run.add_picture(image, height=docx.shared.Cm(2.6))
             except:
                 print("Insert image fail!")
                 # print(imageList[i])
@@ -261,22 +283,22 @@ class Ui_MainWindow(object):
         savePath = "word/" + fileName + ".docx"
         word.save(savePath) #存檔 (存在word資料夾)
 
-    # 土法煉鋼，不知道效率怎樣
-    def DeleteAnswer(self, answerList):
-        questionList = []
-        for str in answerList:
-            newQuestion = ""
-            addMode = True  # Mode = True > add a char, False > add a space
-            for ch in str:
-                if addMode == True or ch == '】':
-                    newQuestion += ch
-                elif addMode == False:
-                    newQuestion += ' '
-
-                if ch == '【':
-                    addMode = False
-                elif ch == '】':
-                    addMode = True
-            questionList.append(newQuestion)
-
-        return questionList
+    # # 土法煉鋼，不知道效率怎樣
+    # def DeleteAnswer(self, answerList):
+    #     questionList = []
+    #     for str in answerList:
+    #         newQuestion = ""
+    #         addMode = True  # Mode = True > add a char, False > add a space
+    #         for ch in str:
+    #             if addMode == True or ch == '】':
+    #                 newQuestion += ch
+    #             elif addMode == False:
+    #                 newQuestion += ' '
+    #
+    #             if ch == '【':
+    #                 addMode = False
+    #             elif ch == '】':
+    #                 addMode = True
+    #         questionList.append(newQuestion)
+    #
+    #     return questionList

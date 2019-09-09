@@ -10,3 +10,68 @@ def CreateDictKey(keyList):
         return keyList[0]
     else:
         return tuple(keyList)
+
+
+class Question(object):
+    def __init__(self, question, images, imgPath):
+        self.__questionAnswer = question
+        self.__haveImage = True
+        self.__question = self.DeleteAnswer(question)
+        self.__image = self.PaserImage(images, imgPath)
+
+    def PaserImage(self, images, imgPath):
+        # 篩掉無圖片的
+        if images == "NOIMAGE":
+            self.__haveImage = False
+            # print("parser direct", self.__haveImage) # wtf
+            # self.SetHaveImage(False)
+            # print("parser set", self.__haveImage)  # wtf
+            return False
+        # 用空格分多圖片路徑，存至list
+        imageList = []
+        tmpPaths = images.split(' ')
+        for img in tmpPaths:
+            imageList.append(imgPath + "\\" + img)  # 遍歷補路徑
+        return imageList
+
+    def GetImage(self):
+        return self.__image
+
+    def HaveImage(self):
+        return self.__haveImage
+
+    def SetHaveImage(self, flag):
+        self.__haveImage = flag
+
+    def GetQuestionAnswer(self):
+        return self.__questionAnswer
+
+    def GetQuestion(self):
+        return self.__question
+
+    def DeleteAnswer(self, str):
+        newQuestion = ""
+        addMode = True  # Mode = True > add a char, False > add a space
+
+        for ch in str:
+            if addMode == True or ch == '】':
+                newQuestion += ch
+            elif addMode == False:
+                newQuestion += ' '
+
+            if ch == '【':
+                addMode = False
+            elif ch == '】':
+                addMode = True
+        return newQuestion
+
+#建構篩選好的問題List
+def CreatQuestionList(df, questionType):
+    questionList = []
+    imagePath = "database\\" + "\\".join(questionType)  # base path
+    for index, row in df.iterrows():
+        questionList.append(Question(row["題目"], row["圖"], imagePath))
+        # print(row["題目"], row["圖"])
+    # for q in questionList:
+    #     print(q.GetQuestion(), q.GetImage())
+    return questionList

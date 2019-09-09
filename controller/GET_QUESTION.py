@@ -8,7 +8,8 @@ class ExcelManager():
         self.dataframe = [] #excel的資料表格
         self.filleredDataframe = []
         self.isLoad = False
-
+        self.qaList = []
+        self.qList = []
         print("\n-----------------------------")
         self.ReadExcel()
 
@@ -37,23 +38,30 @@ class ExcelManager():
             flag = flag & tempFlag
         # & & &&& 過濾器法
         self.filleredDataframe = self.dataframe[flag] #過濾後的題目 (type() = dataframe)
+        quesImage_df = self.filleredDataframe.loc[:, ["題目", "圖"]]
+        self.qList = MyLibrary.CreatQuestionList(quesImage_df.reset_index(), questionType) #建構question list
+        print("GetFilteredDataframe done")
 
-    #取得excel中指定的題目
-    def GetFilteredQuestion(self):
-        return list(self.filleredDataframe["題目"]) #Convert to list
+    def GetQuestionList(self):
+        return self.qList
 
-    #取得圖
-    def GetFilteredImage(self, questionType):
-        imagePath = "database\\" + "\\".join(questionType)  # base path
-        image = self.filleredDataframe["圖"]
-        imageList = []
-        for im in list(image):
-            tempImage = im.split(' ')
-            if im != "NOIMAGE":
-                for i in range(0, len(tempImage)):
-                    tempImage[i] = imagePath + "\\" + tempImage[i] # 遍歷補路徑
-            imageList.append(tempImage)
-        return imageList
+
+    # #取得excel中指定的題目
+    # def GetFilteredQuestion(self):
+    #     return list(self.filleredDataframe["題目"]) #Convert to list
+    #
+    # #取得圖
+    # def GetFilteredImage(self, questionType):
+    #     imagePath = "database\\" + "\\".join(questionType)  # base path
+    #     image = self.filleredDataframe["圖"]
+    #     imageList = []
+    #     for im in list(image):
+    #         tempImage = im.split(' ')
+    #         if im != "NOIMAGE":
+    #             for i in range(0, len(tempImage)):
+    #                 tempImage[i] = imagePath + "\\" + tempImage[i] # 遍歷補路徑
+    #         imageList.append(tempImage)
+    #     return imageList
 
     #是否成功讀取excel
     def IsLoad(self):

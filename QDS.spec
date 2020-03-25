@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['QDS.py'],
-             pathex=['D:\\QDS'],
+             pathex=['G:\\Question DataBase System'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -29,4 +29,4 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           runtime_tmpdir=None,
-          console=False )
+          console=True )

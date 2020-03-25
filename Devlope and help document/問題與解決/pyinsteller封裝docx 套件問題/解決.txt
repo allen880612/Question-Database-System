@@ -1,0 +1,18 @@
+此問題來自pyinstaller沒有將docx下的template中之default.docx，
+加入封裝檔，導致新增word要寫檔時，找不到default.docx。
+
+所以我們在新建word物件時 docx.Document後
+必須給參數，而不是讓他抓預設值 -> docx.Document(docx=self.TEMPLATE_WORD_PATH)
+並且在database底下，添加 default.docx，作為預設的word template。
+
+(並且要修改 .spec檔，將data後加上 如下：
+datas=[('database\\default.docx', '.')])
+
+------------------------------------------------------------
+真的無法使用時，就用更糟糕的硬解法，
+
+注意：因為硬設路徑，將變成只能在該台電腦使用!!!
+
+
+我們只需將 python底下 Lib\site-packages\docx\opc\phy_pkg.py
+在抓不到檔時將其導至python 預設的default路徑即可，

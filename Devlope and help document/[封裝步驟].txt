@@ -1,0 +1,8 @@
+1. 開啟CMD (保險用管理權限開)，並移至QDS.py之目錄底下
+   (可以直接 cd /d 後面給整串絕對路徑，如cd /d D:/Question Database System)
+
+2. pyinstaller -F QDS.py 
+   (暫時沒測 -w 只有視窗是否能夠正確運行，反正有CMD，也比較清楚現在在幹嘛)
+
+3. 封裝完成後，exe檔會在dest底下，要測試 一定 要把它拿出來，放在跟database同層，
+   要移去他處的話，目前必要的資料夾為 database、word。

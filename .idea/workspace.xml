@@ -3,8 +3,24 @@
   <component name="ChangeListManager">
     <list default="true" id="2ec86b10-6659-4fed-aa23-b2ff95c9fced" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/QDS.exe" beforeDir="false" afterPath="$PROJECT_DIR$/QDS.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/QDS.spec" beforeDir="false" afterPath="$PROJECT_DIR$/QDS.spec" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/QDS/Analysis-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/build/QDS/Analysis-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/QDS/EXE-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/build/QDS/EXE-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/QDS/PKG-00.pkg" beforeDir="false" afterPath="$PROJECT_DIR$/build/QDS/PKG-00.pkg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/QDS/PKG-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/build/QDS/PKG-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/QDS/PYZ-00.pyz" beforeDir="false" afterPath="$PROJECT_DIR$/build/QDS/PYZ-00.pyz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/QDS/PYZ-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/build/QDS/PYZ-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/QDS/QDS.exe.manifest" beforeDir="false" afterPath="$PROJECT_DIR$/build/QDS/QDS.exe.manifest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/QDS/base_library.zip" beforeDir="false" afterPath="$PROJECT_DIR$/build/QDS/base_library.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/QDS/warn-QDS.txt" beforeDir="false" afterPath="$PROJECT_DIR$/build/QDS/warn-QDS.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/QDS/xref-QDS.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/QDS/xref-QDS.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/view/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/word/test.docx" beforeDir="false" afterPath="$PROJECT_DIR$/word/test.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/why.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/word/answer.docx" beforeDir="false" afterPath="$PROJECT_DIR$/word/answer.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/word/question.docx" beforeDir="false" afterPath="$PROJECT_DIR$/word/question.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/可以做的事.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/更新與問題.txt" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -20,8 +36,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/controller/GET_QUESTION.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="145">
-              <caret line="32" column="58" lean-forward="true" selection-start-line="32" selection-start-column="58" selection-end-line="32" selection-end-column="58" />
+            <state relative-caret-position="870">
+              <caret line="32" column="58" selection-start-line="32" selection-start-column="58" selection-end-line="32" selection-end-column="58" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -32,10 +48,10 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/view/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="348">
-              <caret line="259" column="74" lean-forward="true" selection-start-line="259" selection-start-column="74" selection-end-line="259" selection-end-column="74" />
+            <state relative-caret-position="522">
+              <caret line="145" column="45" lean-forward="true" selection-start-line="145" selection-start-column="45" selection-end-line="145" selection-end-column="45" />
               <folding>
-                <element signature="e#246#272#0" />
+                <element signature="e#0#42#0" expanded="true" />
                 <element signature="e#563#578#0" />
                 <element signature="e#740#3914#0" />
                 <element signature="e#3965#4571#0" />
@@ -88,6 +104,7 @@
       <find>Delete</find>
       <find>imageList</find>
       <find>Delete repeat</find>
+      <find>docx.Document</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -115,6 +132,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -141,7 +159,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -299,10 +316,10 @@
     <list>
       <item itemvalue="Python.API_GET_DATE_AP" />
       <item itemvalue="Python.FetchData" />
+      <item itemvalue="Python.MyLibrary" />
       <item itemvalue="Python.QDS" />
       <item itemvalue="Python.readWordTest" />
       <item itemvalue="Python.test" />
-      <item itemvalue="Python.MyLibrary" />
     </list>
     <recent_temporary>
       <list>
@@ -416,6 +433,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/controller/GET_QUESTION.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="870">
+          <caret line="32" column="58" selection-start-line="32" selection-start-column="58" selection-end-line="32" selection-end-column="58" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/model/MyLibrary.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="725">
@@ -423,22 +450,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/controller/GET_QUESTION.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="145">
-          <caret line="32" column="58" lean-forward="true" selection-start-line="32" selection-start-column="58" selection-end-line="32" selection-end-column="58" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/view/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="348">
-          <caret line="259" column="74" lean-forward="true" selection-start-line="259" selection-start-column="74" selection-end-line="259" selection-end-column="74" />
+        <state relative-caret-position="522">
+          <caret line="145" column="45" lean-forward="true" selection-start-line="145" selection-start-column="45" selection-end-line="145" selection-end-column="45" />
           <folding>
-            <element signature="e#246#272#0" />
+            <element signature="e#0#42#0" expanded="true" />
             <element signature="e#563#578#0" />
             <element signature="e#740#3914#0" />
             <element signature="e#3965#4571#0" />

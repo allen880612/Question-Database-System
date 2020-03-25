@@ -16,6 +16,7 @@ class Ui_MainWindow(object):
     fManager = gp.FolderManager()
     path2 = ["database/"]
     wordPath = ""
+    TEMPLATE_WORD_PATH = "database/default.docx"
 
     #excel
     excelPath = "database/盈虧問題v2.xlsx"
@@ -225,7 +226,7 @@ class Ui_MainWindow(object):
         #excel
 
     def BulidWord(self, qList, fileName, haveAnswer):
-        word = docx.Document()
+        word = docx.Document(docx=self.TEMPLATE_WORD_PATH)  # 另一個坑，為了讓方裝後也能抓到default.docx，必須指定
         heading = " - ".join(self.comboboxSelectOption)
         word.add_heading(heading, 0) #新增那個醜醜藍字
         # word.add_heading("Database", 0) #新增那個醜醜藍字

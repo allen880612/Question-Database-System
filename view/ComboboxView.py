@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from model import MyLibrary
-class ComboboxManager():
+class ComboboxView():
     def __init__(self, _dataframe):
         self.dataframe = _dataframe
         # 使用者選單用

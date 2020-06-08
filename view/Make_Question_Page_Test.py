@@ -2,12 +2,12 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMainWindow
 from controller import GET_PATH as gp
 from view import ComboboxView as cbview
-from view.UI import Make_Question_UI as mq_UI
+from view.UI import Make_Question_UI_Test as mq_UI
 from model import MyLibrary, ExcelModel
 import random
 import os
 import docx
-
+from functools import partial
 
 class MakeQuestionPage(QMainWindow):
 
@@ -25,6 +25,8 @@ class MakeQuestionPage(QMainWindow):
 
         self.ui = mq_UI.MakeQuestionPage_UI()
         self.ui.setupUi(self)
+        self.cBoxNum = len(self.ui.cBoxList)
+        self.cBoxList2 = self.ui.cBoxList
         self.InitGUI()
 
     #region Excel
@@ -39,98 +41,50 @@ class MakeQuestionPage(QMainWindow):
 
     #region UI 設定
     def InitGUI(self):
-        # 先放著，之後應該會用到
-        fullDir = os.walk(self.DATABASE)
-        for fr in fullDir:
-            print(fr)
 
         self.ui.btn_confirm.clicked.connect(self.Confirm)
-
         #region 下拉式選單
         defaultString = self.comboboxView.GetNoSelectString()
-        self.ui.cBox_level1.addItems(self.comboboxView.GetDictValue(defaultString))
-        self.ui.cBox_level1.activated[str].connect(self.SelectLevel1)
-        self.ui.cBox_level2.activated[str].connect(self.SelectLevel2)
-        self.ui.cBox_level3.activated[str].connect(self.SelectLevel3)
-        self.ui.cBox_level4.activated[str].connect(self.SelectLevel4)
-        self.ui.cBox_level5.activated[str].connect(self.SelectLevel5)
+        self.cBoxList2[0].addItems(self.comboboxView.GetDictValue(defaultString))
 
-
-        self.ui.cBox_level1.setEditable(True)
-        self.ui.cBox_level2.setEditable(True)
-        self.ui.cBox_level3.setEditable(True)
-        self.ui.cBox_level4.setEditable(True)
-        self.ui.cBox_level5.setEditable(True)
-
-        self.ui.cBox_level1.lineEdit().setText("選擇第一層")
-        self.ui.cBox_level2.lineEdit().setText("選擇第二層")
-        self.ui.cBox_level3.lineEdit().setText("選擇第三層")
-        self.ui.cBox_level4.lineEdit().setText("選擇第四層")
-        self.ui.cBox_level5.lineEdit().setText("選擇第五層")
+        for i in range(5):
+            self.cBoxList2[i].activated[str].connect(partial(self.SelectLevel, i))
+            self.cBoxList2[i].setEditable(True)
+            self.cBoxList2[i].lineEdit().setText("選擇第" + str(i+1) + "層")
         #endregion
     #endregion
 
     #region 函式區
-    def SelectLevel1(self, text):
-        #comboboxSelectOption = 目前選到的層級 (之後做成key)
-        self.comboboxSelectOption = [self.ui.cBox_level1.currentText()]
-        #先刪除後面的下拉選單的items再重新加入
-        self.ui.cBox_level2.clear()
-        self.ui.cBox_level3.clear()
-        self.ui.cBox_level4.clear()
-        self.ui.cBox_level5.clear()
-        self.ui.cBox_level2.addItems(self.comboboxView.GetDictValue(MyLibrary.CreateDictKey(self.comboboxSelectOption)))
-        # self.ui.cBox_level2.addItems(self.comboboxView.GetDictValue(text))
-        self.ui.cBox_level2.setEditText("選擇第二層")
-        self.ui.cBox_level3.setEditText("選擇第三層")
-        self.ui.cBox_level4.setEditText("選擇第四層")
-        self.ui.cBox_level5.setEditText("選擇第五層")
 
-    def SelectLevel2(self, text):
-        self.comboboxSelectOption = [self.ui.cBox_level1.currentText(), self.ui.cBox_level2.currentText()]
-
-        self.ui.cBox_level3.clear()
-        self.ui.cBox_level4.clear()
-        self.ui.cBox_level5.clear()
-        self.ui.cBox_level3.addItems(self.comboboxView.GetDictValue(MyLibrary.CreateDictKey(self.comboboxSelectOption)))
-        self.ui.cBox_level3.setEditText("選擇第三層")
-        self.ui.cBox_level4.setEditText("選擇第四層")
-        self.ui.cBox_level5.setEditText("選擇第五層")
-
-    def SelectLevel3(self, text):
-        self.comboboxSelectOption = [self.ui.cBox_level1.currentText(), self.ui.cBox_level2.currentText(), self.ui.cBox_level3.currentText()]
-
-        self.ui.cBox_level4.clear()
-        self.ui.cBox_level5.clear()
-        self.ui.cBox_level4.addItems(self.comboboxView.GetDictValue(MyLibrary.CreateDictKey(self.comboboxSelectOption)))
-        self.ui.cBox_level4.setEditText("選擇第四層")
-        self.ui.cBox_level5.setEditText("選擇第五層")
-
-    def SelectLevel4(self, text):
-        self.comboboxSelectOption = [self.ui.cBox_level1.currentText(), self.ui.cBox_level2.currentText(), self.ui.cBox_level3.currentText(), self.ui.cBox_level4.currentText()]
-
-        self.ui.cBox_level5.clear()
-        self.ui.cBox_level5.addItems(self.comboboxView.GetDictValue(MyLibrary.CreateDictKey(self.comboboxSelectOption)))
-        self.ui.cBox_level5.setEditText("選擇第五層")
-
-    def SelectLevel5(self, text):
-        self.comboboxSelectOption = [self.ui.cBox_level1.currentText(), self.ui.cBox_level2.currentText(), self.ui.cBox_level3.currentText(), self.ui.cBox_level4.currentText(), self.ui.cBox_level5.currentText()]
-        print(self.comboboxSelectOption)
+    def SelectLevel(self, index, text):
+        self.UpdateSelectOption(index)      # 更新ComboboxSelectOption = 目前選到的層級 (之後做成key)
+        self.UpdateComboBox(index, text)    # 先刪除後面的下拉選單的items再重新加入
 
     def ClearCombobox(self):
         self.comboboxSelectOption.clear()
-        self.ui.cBox_level1.clear()
-        self.ui.cBox_level2.clear()
-        self.ui.cBox_level3.clear()
-        self.ui.cBox_level4.clear()
-        self.ui.cBox_level5.clear()
+        self.cBoxList2[0].addItems(self.comboboxView.GetDictValue(self.comboboxView.GetNoSelectString()))  # add default items
 
-        self.ui.cBox_level1.addItems(self.comboboxView.GetDictValue(self.comboboxView.GetNoSelectString())) # add default items
-        self.ui.cBox_level1.lineEdit().setText("選擇第一層")
-        self.ui.cBox_level2.lineEdit().setText("選擇第二層")
-        self.ui.cBox_level3.lineEdit().setText("選擇第三層")
-        self.ui.cBox_level4.lineEdit().setText("選擇第四層")
-        self.ui.cBox_level5.lineEdit().setText("選擇第五層")
+        for i in range(1, self.cBoxNum):
+            self.cBoxList2[i].lineEdit().setText("選擇第" + str(i + 1) + "層")
+
+    def UpdateSelectOption(self, index):
+        self.comboboxSelectOption.clear()
+        for i in range(index+1):
+            self.comboboxSelectOption.append(self.cBoxList2[i].currentText())
+
+    def UpdateComboBox(self, index, text):
+        # 更新所選文字
+        self.cBoxList2[index].setEditText(text)
+
+        # 清除所選之後的選擇
+        for i in range(self.cBoxNum-1, index):
+            self.cBoxList2[i].clear()
+            self.cBoxList2[i].lineEdit().setText("選擇第" + str(i+1) + "層")
+
+        # 非末項，更新後一選項選擇
+        if index != self.cBoxNum - 1:
+            self.cBoxList2[index+1].addItems(self.comboboxView.GetDictValue(MyLibrary.CreateDictKey(self.comboboxSelectOption)))
+            self.cBoxList2[index+1].lineEdit().setText("選擇第" + str(index+2) + "層")
 
     def Confirm(self):
 

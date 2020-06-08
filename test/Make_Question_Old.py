@@ -24,7 +24,7 @@ class Ui_MainWindow(object):
     #endexcel
 
     #region 創建下拉式選單
-    comboboxView = cbview.ComboboxManager(model.GetOriginalDataFrame())
+    comboboxView = cbview.ComboboxView(model.GetOriginalDataFrame())
     comboboxSelectOption = []
     #endregion
 

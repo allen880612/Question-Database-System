@@ -17,6 +17,10 @@ class MakeQuestionPage_UI(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
+        self.cBoxList = [QtWidgets.QComboBox(self.centralwidget) for _ in range(5)]
+        for i in range(5):
+            self.CreateComboBox(i)
+
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(270, 70, 271, 71))
         font = QtGui.QFont()
@@ -24,47 +28,37 @@ class MakeQuestionPage_UI(object):
         font.setPointSize(26)
         font.setBold(True)
         font.setWeight(75)
+
         self.label.setFont(font)
         self.label.setObjectName("label")
         self.btn_confirm = QtWidgets.QPushButton(self.centralwidget)
         self.btn_confirm.setGeometry(QtCore.QRect(624, 300, 121, 31))
         self.btn_confirm.setObjectName("btn_confirm")
-        self.cBox_level2 = QtWidgets.QComboBox(self.centralwidget)
-        self.cBox_level2.setGeometry(QtCore.QRect(200, 200, 121, 21))
-        self.cBox_level2.setObjectName("cBox_level2")
+
         self.label_level2 = QtWidgets.QLabel(self.centralwidget)
         self.label_level2.setGeometry(QtCore.QRect(200, 175, 121, 21))
         self.label_level2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_level2.setObjectName("label_level2")
-        self.cBox_level3 = QtWidgets.QComboBox(self.centralwidget)
-        self.cBox_level3.setGeometry(QtCore.QRect(340, 200, 121, 21))
-        self.cBox_level3.setObjectName("cBox_level3")
+
         self.label_level3 = QtWidgets.QLabel(self.centralwidget)
         self.label_level3.setGeometry(QtCore.QRect(340, 175, 121, 21))
         self.label_level3.setAlignment(QtCore.Qt.AlignCenter)
         self.label_level3.setObjectName("label_level3")
-        self.cBox_level4 = QtWidgets.QComboBox(self.centralwidget)
-        self.cBox_level4.setGeometry(QtCore.QRect(480, 200, 121, 21))
-        self.cBox_level4.setObjectName("cBox_level4")
+
         self.label_level4 = QtWidgets.QLabel(self.centralwidget)
         self.label_level4.setGeometry(QtCore.QRect(480, 175, 121, 21))
         self.label_level4.setAlignment(QtCore.Qt.AlignCenter)
         self.label_level4.setObjectName("label_level4")
-        self.cBox_level5 = QtWidgets.QComboBox(self.centralwidget)
-        self.cBox_level5.setGeometry(QtCore.QRect(620, 200, 121, 21))
-        self.cBox_level5.setObjectName("cBox_level5")
+
         self.label_level5 = QtWidgets.QLabel(self.centralwidget)
         self.label_level5.setGeometry(QtCore.QRect(620, 175, 121, 21))
         self.label_level5.setAlignment(QtCore.Qt.AlignCenter)
         self.label_level5.setObjectName("label_level5")
+
         self.label_level1 = QtWidgets.QLabel(self.centralwidget)
         self.label_level1.setGeometry(QtCore.QRect(60, 170, 119, 23))
         self.label_level1.setAlignment(QtCore.Qt.AlignCenter)
         self.label_level1.setObjectName("label_level1")
-        self.cBox_level1 = QtWidgets.QComboBox(self.centralwidget)
-        self.cBox_level1.setGeometry(QtCore.QRect(60, 200, 119, 20))
-        self.cBox_level1.setObjectName("cBox_level1")
-
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -84,5 +78,11 @@ class MakeQuestionPage_UI(object):
         self.label_level4.setText(_translate("MainWindow", "主題"))
         self.label_level5.setText(_translate("MainWindow", "單元"))
         self.label_level1.setText(_translate("MainWindow", "科目"))
+
+    def CreateComboBox(self, i):
+
+        self.cBoxList[i] = QtWidgets.QComboBox(self.centralwidget)
+        self.cBoxList[i].setGeometry(QtCore.QRect(60 + i*140, 200, 120, 20))
+        self.cBoxList[i].setObjectName("cBox_level" + str(i+1))
 
 

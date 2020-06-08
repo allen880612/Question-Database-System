@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'AddQuestion.ui'
+# Form implementation generated from reading ui file 'add_edit_question_ui.ui'
 #
 # Created by: PyQt5 UI code generator 5.12.2
 #
@@ -9,7 +9,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Add_Edit_Question_Page_UI(object):
+class AddEditQuestionPage_UI(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(907, 512)
@@ -47,6 +47,7 @@ class Add_Edit_Question_Page_UI(object):
         self.label_question_type_2.setObjectName("label_question_type_2")
         self.gridLayout_2.addWidget(self.label_question_type_2, 0, 2, 1, 1)
         self.label_question_type_4 = QtWidgets.QLabel(self.gridLayoutWidget)
+        self.label_question_type_4.setAlignment(QtCore.Qt.AlignCenter)
         self.label_question_type_4.setObjectName("label_question_type_4")
         self.gridLayout_2.addWidget(self.label_question_type_4, 0, 4, 1, 1)
         self.comboBox_question_1 = QtWidgets.QComboBox(self.gridLayoutWidget)
@@ -144,7 +145,7 @@ class Add_Edit_Question_Page_UI(object):
         self.label_question_type_1.setText(_translate("MainWindow", "題型 - 一"))
         self.label_question_type_0.setText(_translate("MainWindow", "科目"))
         self.label_question_type_2.setText(_translate("MainWindow", "題型 - 二"))
-        self.label_question_type_4.setText(_translate("MainWindow", "題型 - 三"))
+        self.label_question_type_4.setText(_translate("MainWindow", "單元"))
         self.label_image_preview_text.setText(_translate("MainWindow", "圖片預覽"))
         self.label_image_list.setText(_translate("MainWindow", "圖片列表"))
         self.label_image_preview.setText(_translate("MainWindow", "TextLabel"))

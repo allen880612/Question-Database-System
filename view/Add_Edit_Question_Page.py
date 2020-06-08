@@ -1,13 +1,13 @@
 from PyQt5.QtWidgets import QMainWindow
-from view.UI import add_edit_question_ui
+from view.UI import Add_Edit_Question_UI
 import os
 
-class CreateEditQuestionPage(QMainWindow):
+class AddEditQuestionPage(QMainWindow):
 
     def __init__(self):
-        super(CreateEditQuestionPage, self).__init__()
+        super(AddEditQuestionPage, self).__init__()
 
-        self.ui = add_edit_question_ui.Add_Edit_Question_Page_UI()
+        self.ui = Add_Edit_Question_UI.AddEditQuestionPage_UI()
         self.ui.setupUi(self)
         self.Initialize()
 

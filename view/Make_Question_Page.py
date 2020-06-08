@@ -2,7 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMainWindow
 from controller import GET_PATH as gp
 from view import ComboboxView as cbview
-from view.UI import make_question_ui as mq_UI
+from view.UI import Make_Question_UI as mq_UI
 from model import MyLibrary, ExcelModel
 import random
 import os
@@ -23,7 +23,7 @@ class MakeQuestionPage(QMainWindow):
     def __init__(self):
         super(MakeQuestionPage, self).__init__()
 
-        self.ui = mq_UI.Make_Question_Page_UI()
+        self.ui = mq_UI.MakeQuestionPage_UI()
         self.ui.setupUi(self)
         self.InitGUI()
 

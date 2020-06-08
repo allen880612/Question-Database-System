@@ -82,7 +82,10 @@
        <item row="0" column="4">
         <widget class="QLabel" name="label_question_type_4">
          <property name="text">
-          <string>題型 - 三</string>
+          <string>單元</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>

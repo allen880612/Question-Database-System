@@ -1,15 +1,13 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QIcon, QPixmap, QImage
 from PyQt5.QtWidgets import QMainWindow
-from view.UI import AddQuestion
+from view.UI import add_edit_question_ui
 import os
 
-class Craeate_question(QMainWindow):
+class CreateEditQuestionPage(QMainWindow):
 
-    def __init__(self,):
-        super(Craeate_question, self).__init__()
+    def __init__(self):
+        super(CreateEditQuestionPage, self).__init__()
 
-        self.ui = AddQuestion.Add_question_UI()
+        self.ui = add_edit_question_ui.Add_Edit_Question_Page_UI()
         self.ui.setupUi(self)
         self.Initialize()
 

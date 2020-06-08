@@ -2,7 +2,8 @@ import pandas as pd
 from model import MyLibrary
 import os
 
-class ExcelManager():
+
+class ExcelModel():
     def __init__(self, _path):
         self.path = _path #excel的路徑
         self.dataframe = [] #excel的資料表格
@@ -63,7 +64,7 @@ class ExcelManager():
     #         imageList.append(tempImage)
     #     return imageList
 
-    #是否成功讀取excel
+    # 是否成功讀取excel
     def IsLoad(self):
         return self.isLoad
 

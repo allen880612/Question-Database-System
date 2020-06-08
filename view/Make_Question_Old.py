@@ -1,12 +1,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from controller import GET_PATH as gp
-from controller import GET_QUESTION as gq
 from view import ComboboxView as cbview
-from model import MyLibrary
+from model import MyLibrary, ExcelModel
 import random
 import os
 import docx
-import numpy as np
+
+
 #from docx import Document
 #from docx.shared import Inches
 
@@ -16,14 +16,15 @@ class Ui_MainWindow(object):
     fManager = gp.FolderManager()
     path2 = ["database/"]
     wordPath = ""
+    TEMPLATE_WORD_PATH = "database/default.docx"
 
     #excel
     excelPath = "database/盈虧問題v2.xlsx"
-    excel = gq.ExcelManager(excelPath)
+    model = ExcelModel.ExcelModel(excelPath)
     #endexcel
 
     #region 創建下拉式選單
-    comboboxView = cbview.ComboboxManager(excel.GetOriginalDataFrame())
+    comboboxView = cbview.ComboboxManager(model.GetOriginalDataFrame())
     comboboxSelectOption = []
     #endregion
 
@@ -44,24 +45,6 @@ class Ui_MainWindow(object):
         self.btn_confirm = QtWidgets.QPushButton(self.centralwidget)
         self.btn_confirm.setGeometry(QtCore.QRect(70, 340, 75, 23))
         self.btn_confirm.setObjectName("btn_confirm")
-        self.cBox_dir1 = QtWidgets.QComboBox(self.centralwidget)
-        self.cBox_dir1.setGeometry(QtCore.QRect(60, 140, 121, 21))
-        self.cBox_dir1.setObjectName("cBox_dir1")
-        self.cBox_dir2 = QtWidgets.QComboBox(self.centralwidget)
-        self.cBox_dir2.setGeometry(QtCore.QRect(210, 140, 121, 21))
-        self.cBox_dir2.setObjectName("cBox_dir2")
-        self.cBox_word = QtWidgets.QComboBox(self.centralwidget)
-        self.cBox_word.setGeometry(QtCore.QRect(360, 140, 191, 21))
-        self.cBox_word.setObjectName("cBox_word")
-        self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(60, 120, 91, 16))
-        self.label_2.setObjectName("label_2")
-        self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setGeometry(QtCore.QRect(210, 120, 81, 16))
-        self.label_3.setObjectName("label_3")
-        self.label_4 = QtWidgets.QLabel(self.centralwidget)
-        self.label_4.setGeometry(QtCore.QRect(360, 120, 71, 16))
-        self.label_4.setObjectName("label_4")
         self.cBox_level2 = QtWidgets.QComboBox(self.centralwidget)
         self.cBox_level2.setGeometry(QtCore.QRect(200, 230, 121, 21))
         self.cBox_level2.setObjectName("cBox_level2")
@@ -111,9 +94,6 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "Question Database"))
         self.label.setText(_translate("MainWindow", "請選擇試題範圍"))
         self.btn_confirm.setText(_translate("MainWindow", "確定"))
-        self.label_2.setText(_translate("MainWindow", "資料夾 一層"))
-        self.label_3.setText(_translate("MainWindow", "資料夾 二層"))
-        self.label_4.setText(_translate("MainWindow", "Word"))
         self.label_level1.setText(_translate("MainWindow", "資料夾 一層"))
         self.label_level2.setText(_translate("MainWindow", "資料夾 二層"))
         self.label_level3.setText(_translate("MainWindow", "資料夾 三層"))
@@ -127,18 +107,6 @@ class Ui_MainWindow(object):
             print(fr)
 
         self.btn_confirm.clicked.connect(self.Confirm)
-        self.path = self.DATABASE
-        self.cBox_dir1.addItems(self.fManager.GetNextLevel(self.DATABASE))
-        self.cBox_dir1.activated[str].connect(self.RebuildDir2)
-        self.cBox_dir2.activated[str].connect(self.RebuildDir3)
-        self.cBox_word.activated[str].connect(self.GetWordPath)
-
-        self.cBox_dir1.setEditable(True)
-        self.cBox_dir2.setEditable(True)
-        self.cBox_word.setEditable(True)
-        self.cBox_dir1.lineEdit().setText("請選擇科目")
-        self.cBox_dir2.lineEdit().setText("請先選擇科目")
-        self.cBox_word.lineEdit().setText("請選擇科目及分類")
 
         #region 下拉式選單
         defaultString = self.comboboxView.GetNoSelectString()
@@ -223,94 +191,45 @@ class Ui_MainWindow(object):
         self.cBox_level4.lineEdit().setText("選擇第四層")
         self.cBox_level5.lineEdit().setText("選擇第五層")
 
-    def RebuildDir2(self, text):
-        dir = []
-        print("len 2 = " + str(len(self.path2)))
-        self.cBox_dir2.clear()
-        # self.path = self.DATABASE
-        # self.path = os.path.join(self.path, text)
-        # print("dir2 = " + self.path)
-        # dir = self.fManager.GetNextLevel(self.path)
-        if len(self.path2) < 2:
-            self.path2.append(text)
-        else:
-            self.path2[1] = text
-        pd = self.path2[:2]
-        print(pd)
-        path = os.path.join(*pd)
-        print("dir2 = " + path)
-        dir = self.fManager.GetNextLevel(path)
-
-        # 判斷路徑是否存在，且為資料夾
-        if dir:
-            self.cBox_dir2.addItems(dir)
-            self.cBox_dir2.setEditText("請選擇科目")
-            self.cBox_word.setEditText("請選擇題庫")
-
-    def RebuildDir3(self, text):
-        dir = []
-        self.cBox_word.clear()
-        # finalPath = os.path.join(self.path, text)
-        # print("dir3 = " + finalPath)
-        # dir = self.fManager.GetNextLevel(finalPath)
-        if len(self.path2) < 3:
-            self.path2.append(text)
-        else:
-            self.path2[2] = text
-        pd = self.path2[:3]
-        print(pd)
-        path = os.path.join(*pd)
-        print("dir3 = " + path)
-        dir = self.fManager.GetNextLevel(path)
-        # 判斷路徑是否存在，且為資料夾
-        if dir:
-            self.cBox_word.addItems(dir)
-            self.cBox_word.setEditText("請選擇題庫")
-
-    def GetWordPath(self, text):
-        print("Word name : " + text)
-        self.label.setText(text)
-
-        if len(self.path2) < 4:
-            self.path2.append(text)
-        else:
-            self.path2[3] = text
-        print(self.path2)
-        self.wordPath = os.path.join(*self.path2)
-        # os.startfile(self.wordPath)
-        print("word path = " + self.wordPath)
-
     def Confirm(self):
-        if os.path.isfile(self.wordPath):
-            os.startfile(self.wordPath)
-            print("open " + self.wordPath)
-        else:
-            self.label.setText("輸入不完全，或文件已損毀!")
 
         #excel
-        if self.excel.IsLoad():
+        if self.model.IsLoad():
             #questionType = ["數學"]
             questionType = self.comboboxSelectOption #搜尋的條件
             if questionType: #存在搜尋條件才做
-                self.excel.GetFilteredDataframe(questionType)
-                questionNumber = 10 #預設隨機選10題
-                questionAnswerList = self.excel.GetFilteredQuestion() #取得過濾後的題目
-                questionAnswerList = random.sample(questionAnswerList, min(questionNumber, len(questionAnswerList))) # 將題目不重複隨機選擇 k 題 (0 <= k <= 篩選後的題目數量)
-                questionList = self.DeleteAnswer(questionAnswerList) #刪除答案(【*】)
+                self.model.GetFilteredDataframe(questionType)
+                questionNumber = 10  # 預設隨機選10題
+                qList = self.model.GetQuestionList()  # 取得過濾後的題目
+                qList = random.sample(qList, min(questionNumber, len(qList)))  # 將題目不重複隨機選擇 k 題 (0 <= k <= 篩選後的題目數量)
                 print(questionType)
-                print(questionAnswerList)
-                print(questionList)
-                self.BulidWord(questionAnswerList, "answer") #建造word
-                self.BulidWord(questionList, "question")  # 建造word
-                self.ClearCombobox() #清除選擇的combobox
+                print(qList)
+                self.BulidWord(qList, "answer", True)  # 建造word 保留答案
+                self.BulidWord(qList, "question", False)  # 建造word 刪除答案
+                self.ClearCombobox()  # 清除選擇的combobox
                 print("done")
+                # self.excel.GetFilteredDataframe(questionType)
+                # questionNumber = 10 #預設隨機選10題
+                # questionAnswerList = self.excel.GetQuestionList() #取得過濾後的題目
+                # # questionAnswerList = self.excel.GetFilteredQuestion() #取得過濾後的題目
+                # questionAnswerList = random.sample(questionAnswerList, min(questionNumber, len(questionAnswerList))) # 將題目不重複隨機選擇 k 題 (0 <= k <= 篩選後的題目數量)
+                # questionList = self.DeleteAnswer(questionAnswerList) #刪除答案(【*】)
+                # print(questionType)
+                # print(questionAnswerList)
+                # print(questionList)
+                # self.BulidWord(questionAnswerList, "answer") #建造word
+                # self.BulidWord(questionList, "question")  # 建造word
+                # self.ClearCombobox() #清除選擇的combobox
+                # print("done")
             else:
                 self.label.setText("未選擇條件")
         #excel
 
-    def BulidWord(self, questionList, fileName):
-        word = docx.Document()
-        word.add_heading("Database", 0) #新增那個醜醜藍字
+    def BulidWord(self, qList, fileName, haveAnswer):
+        word = docx.Document(docx=self.TEMPLATE_WORD_PATH)  # 另一個坑，為了讓方裝後也能抓到default.docx，必須指定
+        heading = " - ".join(self.comboboxSelectOption)
+        word.add_heading(heading, 0) #新增那個醜醜藍字
+        # word.add_heading("Database", 0) #新增那個醜醜藍字
 
         #新增題目 style
         questionStyle = word.styles.add_style("question", docx.enum.style.WD_STYLE_TYPE.PARAGRAPH) #新增一樣式 (樣式名稱, 樣式類型)
@@ -322,24 +241,38 @@ class Ui_MainWindow(object):
         questionStyle.paragraph_format.first_line_indent = docx.shared.Pt(-18) # 設定首縮排/凸排 (正值 = 縮排, 負值 = 凸排)
         questionStyle.paragraph_format.left_indent = docx.shared.Pt(18) # ↓注意，重點來了，設定"整個段落"縮排  (正常來說應該不用設定，但是設定凸排的時候，他會順便把整個段落也往左移動，所以要他媽的移回來)
 
-        imageList = self.excel.GetFilteredImage(self.comboboxSelectOption)
-        #print(imageList)
-        #print(os.getcwd())
+        #imageList = self.excel.GetFilteredImage(self.comboboxSelectOption)
         #新增題目
-        for i in range(0, len(questionList)):
+        for i in range(0, len(qList)):
             questionIndex = "(" + str(i + 1) + ") " #題號
-            paragraph = word.add_paragraph(questionIndex + questionList[i], style = "question")
+            if haveAnswer:
+                question = qList[i].GetQuestionAnswer()
+            else:
+                question = qList[i].GetQuestion()
+            paragraph = word.add_paragraph(questionIndex + question, style = "question")
             #paragraph = word.add_paragraph(questionIndex + questionList[i], style = "question") #題號 + 題目 一題作為一個段落
-            paragraph.alignment = 3 #設定段落對齊 0 = 靠左, 1 = 置中, 2 = 靠右, 3 = 左右對齊 (WD_PARAGRAPH_ALIGNMENT)
-
+            paragraph.alignment = 0 #設定段落對齊 0 = 靠左, 1 = 置中, 2 = 靠右, 3 = 左右對齊 (WD_PARAGRAPH_ALIGNMENT)
             try:
-                # if not np.isnan(imageList[i]):
-                if imageList[i][0] != "NOIMAGE":
-                    print(imageList[i])
-                    run = word.paragraphs[i + 1].add_run()
-                    run.add_break() #不換段換行
-                    for image in imageList[i]:
-                        run.add_picture(image)
+                # print("have", qList[i].HaveImage())
+                # print("image", qList[i].GetImage())
+                if qList[i].HaveImage() and qList[i].GetImage():
+                    print(qList[i].GetImage())
+                    #run = word.paragraphs[i + 1].add_run()
+                    imageParagraph = word.add_paragraph() # 為了讓圖片靠右，直接新增一個段落，方便用alignment
+                    imageParagraph.alignment = 2
+                    run = imageParagraph.add_run()
+                    #run.add_break() #不換段換行
+                    for image in qList[i].GetImage():
+                        run.add_picture(image, height=docx.shared.Cm(2.6))
+                # if imageList[i][0] != "NOIMAGE":
+                #     print(imageList[i])
+                #     #run = word.paragraphs[i + 1].add_run()
+                #     imageParagraph = word.add_paragraph() # 為了讓圖片靠右，直接新增一個段落，方便用alignment
+                #     imageParagraph.alignment = 2
+                #     run = imageParagraph.add_run()
+                #     #run.add_break() #不換段換行
+                #     for image in imageList[i]:
+                #         run.add_picture(image, height=docx.shared.Cm(2.6))
             except:
                 print("Insert image fail!")
                 # print(imageList[i])
@@ -351,22 +284,22 @@ class Ui_MainWindow(object):
         savePath = "word/" + fileName + ".docx"
         word.save(savePath) #存檔 (存在word資料夾)
 
-    # 土法煉鋼，不知道效率怎樣
-    def DeleteAnswer(self, answerList):
-        questionList = []
-        for str in answerList:
-            newQuestion = ""
-            addMode = True  # Mode = True > add a char, False > add a space
-            for ch in str:
-                if addMode == True or ch == '】':
-                    newQuestion += ch
-                elif addMode == False:
-                    newQuestion += ' '
-
-                if ch == '【':
-                    addMode = False
-                elif ch == '】':
-                    addMode = True
-            questionList.append(newQuestion)
-
-        return questionList
+    # # 土法煉鋼，不知道效率怎樣
+    # def DeleteAnswer(self, answerList):
+    #     questionList = []
+    #     for str in answerList:
+    #         newQuestion = ""
+    #         addMode = True  # Mode = True > add a char, False > add a space
+    #         for ch in str:
+    #             if addMode == True or ch == '】':
+    #                 newQuestion += ch
+    #             elif addMode == False:
+    #                 newQuestion += ' '
+    #
+    #             if ch == '【':
+    #                 addMode = False
+    #             elif ch == '】':
+    #                 addMode = True
+    #         questionList.append(newQuestion)
+    #
+    #     return questionList

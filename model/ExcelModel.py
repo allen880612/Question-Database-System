@@ -46,6 +46,11 @@ class ExcelModel():
     def GetQuestionList(self):
         return self.qList
 
+    # 直接拿題目列表
+    def GetQuestionList(self, questionType):
+        self.GetFilteredDataframe(questionType)
+        return self.qList
+
 
     # #取得excel中指定的題目
     # def GetFilteredQuestion(self):

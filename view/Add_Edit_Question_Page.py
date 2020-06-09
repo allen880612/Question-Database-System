@@ -110,16 +110,17 @@ class AddEditQuestionPage(QMainWindow):
 
     # 選擇題目 - 更新題目右側資訊
     def SelectQuestion(self, item):
-        nowSlectQuestion = item.text()
+        # nowSlectQuestion = item.text()
+        # self.ui.text_edit_question.setPlainText(item.text())
 
-        # nowSlectIndex = self.ui.list_weight_question.currentIndex()
-        # print(nowSlectIndex, type(nowSlectIndex))
-        # nowSlectQuestion = self.questionList[nowSlectIndex]
+        nowSlectIndex = self.ui.list_weight_question.currentRow()
+        print(nowSlectIndex, type(nowSlectIndex))
+        nowSlectQuestion = self.questionList[nowSlectIndex]
+        self.ui.text_edit_question.setPlainText(nowSlectQuestion.GetQuestion())
 
-        self.ui.text_edit_question.setPlainText(item.text())
-        # self.ui.text_edit_question.setPlainText(nowSlectQuestion.GetQuestion())
-        #
-        # for i in range(len(self.questionList)):
-        #     path = self.questionList[i].GetImage()
-        #     img_name = pathlib.PurePath(path).name
-        #     self.ui.list_weight_image.addItem(img_name)
+        self.ui.list_weight_image.clear()
+        path = nowSlectQuestion.GetImage()
+        if path:
+            for p in path:
+                img_name = pathlib.PurePath(p).name
+                self.ui.list_weight_image.addItem(img_name)

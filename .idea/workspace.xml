@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2ec86b10-6659-4fed-aa23-b2ff95c9fced" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/QDS.py" beforeDir="false" afterPath="$PROJECT_DIR$/QDS.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/ExcelModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/ExcelModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/view/Add_Edit_Question_Page.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/Add_Edit_Question_Page.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/Make_Question_Page_Test.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/Make_Question_Page_Test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/UI/Add_Edit_Question_UI.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/UI/Add_Edit_Question_UI.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/UI/Add_Edit_Question_UI.ui" beforeDir="false" afterPath="$PROJECT_DIR$/view/UI/Add_Edit_Question_UI.ui" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -45,8 +41,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/view/Add_Edit_Question_Page.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="116" column="61" lean-forward="true" selection-start-line="116" selection-start-column="61" selection-end-line="116" selection-end-column="61" />
+            <state relative-caret-position="440">
+              <caret line="120" column="41" lean-forward="true" selection-start-line="120" selection-start-column="41" selection-end-line="120" selection-end-column="41" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
               </folding>
@@ -629,8 +625,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/view/Add_Edit_Question_Page.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="116" column="61" lean-forward="true" selection-start-line="116" selection-start-column="61" selection-end-line="116" selection-end-column="61" />
+        <state relative-caret-position="440">
+          <caret line="120" column="41" lean-forward="true" selection-start-line="120" selection-start-column="41" selection-end-line="120" selection-end-column="41" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
           </folding>

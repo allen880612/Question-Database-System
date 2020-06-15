@@ -71,6 +71,7 @@ class MakeQuestionPage(QMainWindow):
 
         # 非末項，更新後一選項選擇
         if index != self.cBoxNum - 1:
+            self.cBoxList[index + 1].clear()
             self.cBoxList[index + 1].addItems(self.comboboxView.GetDictValue(MyLibrary.CreateDictKey(self.comboboxSelectOption)))
             self.cBoxList[index + 1].lineEdit().setText("選擇第" + str(index + 2) + "層")
 
@@ -81,9 +82,10 @@ class MakeQuestionPage(QMainWindow):
             #questionType = ["數學"]
             questionType = self.comboboxSelectOption #搜尋的條件
             if questionType: #存在搜尋條件才做
-                self.model.GetFilteredDataframe(questionType)
+                # self.model.GetFilteredDataframe(questionType)
                 questionNumber = 10  # 預設隨機選10題
-                qList = self.model.GetQuestionList()  # 取得過濾後的題目
+                # qList = self.model.GetQuestionList()  # 取得過濾後的題目
+                qList = self.model.GetQuestionList(questionType)  # 取得過濾後的題目
                 qList = random.sample(qList, min(questionNumber, len(qList)))  # 將題目不重複隨機選擇 k 題 (0 <= k <= 篩選後的題目數量)
                 print(questionType)
                 print(qList)

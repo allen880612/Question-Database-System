@@ -64,6 +64,16 @@ class AddEditQuestionPage(QMainWindow):
     def GetAddButtonEnable(self):
         flag = True
         # print(f"text={not len(self.ui.text_edit_question.toPlainText()) == 0}")
+        flag &= (not len(self.ui.text_edit_question.toPlainText()) == 0)
+        # print(f"cBox={len(self.comboboxSelectOption) == self.cBoxNum}")
+        flag &= (len(self.comboboxSelectOption) == self.cBoxNum)
+        # print(f"flag={flag}")
+        return flag
+
+    # 編輯按鈕是否可以按下
+    def GetEditButtonEnable(self):
+        flag = True
+        # print(f"text={not len(self.ui.text_edit_question.toPlainText()) == 0}")
         flag = flag and (not len(self.ui.text_edit_question.toPlainText()) == 0)
         # print(f"cBox={len(self.comboboxSelectOption) == self.cBoxNum}")
         flag = flag and (len(self.comboboxSelectOption) == self.cBoxNum)

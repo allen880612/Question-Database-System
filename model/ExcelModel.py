@@ -6,7 +6,7 @@ import os
 class ExcelModel():
     def __init__(self, _path):
         self.path = _path #excel的路徑
-        self.dataframe = [] #excel的資料表格
+        self.dataframe = pd.DataFrame() #excel的資料表格
         self.filleredDataframe = []
         self.isLoad = False
         self.qaList = []
@@ -55,6 +55,12 @@ class ExcelModel():
     def AddQuestion(self, questionInfo):
         self.dataframe = self.dataframe.append(questionInfo, ignore_index=True)
         print(self.dataframe.tail(1))
+        self.WriteToExcel()
+
+    # 寫檔到Excel
+    def WriteToExcel(self):
+        print(os.getcwd(), self.path)
+        self.dataframe.to_excel(self.path, index=False)
 
     # #取得excel中指定的題目
     # def GetFilteredQuestion(self):

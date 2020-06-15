@@ -21,6 +21,7 @@ class Question(object):
 
     def PaserImage(self, images, imgPath):
         # 篩掉無圖片的
+        # if not images:
         if images == "NOIMAGE":
             self.__haveImage = False
             # print("parser direct", self.__haveImage) # wtf

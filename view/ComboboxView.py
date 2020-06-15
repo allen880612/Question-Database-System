@@ -7,19 +7,20 @@ class ComboboxView():
         self.DefaultString_NoSelect = "NOSELECT"  # 預設未選擇字串
         self.QDSLevel = {}  # QDS的資料層級選單 (下拉式選單用)
         self.QDSLevel[self.DefaultString_NoSelect] = []  # 預設字串先給空
-        #
 
+        self.levelList = list(self.dataframe.columns)[0:5]
+        print(self.levelList)
         self.CreateDictForLevel()
 
     # 創建 下拉選單用的字典
     def CreateDictForLevel(self):
         #region step1: 取得不重複的前五項
         testlist = [] #資料表的前五項 (數學, 應用題, 典型應用題, 配合題, 基本型) etc...
-        levelList = ["第一層", "第二層", "第三層", "第四層", "第五層"]
+        # levelList = ["第一層", "第二層", "第三層", "第四層", "第五層"]
         # self.dataframe.shape[0] 取得列數, shape[1] 取得行數
         for nowrow in range(0, self.dataframe.shape[0]):
             rowLevelName = []
-            for level in levelList:
+            for level in self.levelList:
                 rowLevelName.append(self.dataframe.loc[nowrow][level]) #第 k 列 的前五項 加入list
             testlist.append(tuple(rowLevelName)) #將前五項做成tuple
 
@@ -64,7 +65,7 @@ class ComboboxView():
         return self.QDSLevel
 
     def GetDictValue(self, findkey):
-        return self.QDSLevel[findkey]
+        return self.QDSLevel.get(findkey, False)
 
     def GetNoSelectString(self):
         return self.DefaultString_NoSelect

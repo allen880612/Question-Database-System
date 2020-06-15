@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>960</width>
-    <height>502</height>
+    <height>480</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,82 +20,39 @@
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_question_list">
-        <property name="text">
-         <string>題目列表</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <layout class="QVBoxLayout" name="verticalLayout_5">
+      <item row="4" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QLabel" name="label_3">
+         <widget class="QPushButton" name="button_add_question_mode">
           <property name="text">
-           <string>題目內容</string>
+           <string>新增題目</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPlainTextEdit" name="text_edit_question"/>
+         <widget class="QPushButton" name="button_edit_question_mode">
+          <property name="text">
+           <string>修改題目</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
-      <item row="2" column="0">
+      <item row="3" column="0">
        <widget class="QListWidget" name="list_weight_question"/>
       </item>
-      <item row="1" column="1">
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="1" column="1">
-         <widget class="QComboBox" name="cBox_lv2"/>
-        </item>
-        <item row="0" column="2">
-         <widget class="QLabel" name="label_lv3">
-          <property name="text">
-           <string>題型 - 二</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="label_lv2">
-          <property name="text">
-           <string>題型 - 一</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QComboBox" name="cBox_lv1"/>
-        </item>
-        <item row="1" column="2">
-         <widget class="QComboBox" name="cBox_lv3"/>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_lv1">
-          <property name="text">
-           <string>科目</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="2" column="2">
+      <item row="3" column="2">
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <layout class="QGridLayout" name="gridLayout_3">
           <item row="6" column="0">
            <widget class="QLabel" name="label_image_preview_text">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>圖片預覽</string>
             </property>
@@ -127,16 +84,16 @@
           <item row="4" column="1">
            <layout class="QVBoxLayout" name="verticalLayout_3">
             <item>
-             <widget class="QPushButton" name="button_delete_image">
+             <widget class="QPushButton" name="button_import_image">
               <property name="text">
-               <string>刪除圖片</string>
+               <string>匯入圖片</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="button_import_image">
+             <widget class="QPushButton" name="button_delete_image">
               <property name="text">
-               <string>匯入圖片</string>
+               <string>刪除圖片</string>
               </property>
              </widget>
             </item>
@@ -157,6 +114,18 @@
           </item>
           <item row="7" column="1">
            <widget class="QPushButton" name="button_add_question">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>100</width>
+              <height>40</height>
+             </size>
+            </property>
             <property name="text">
              <string>新增題目</string>
             </property>
@@ -166,23 +135,31 @@
         </item>
        </layout>
       </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_add_edit_question">
-        <property name="font">
-         <font>
-          <family>微軟正黑體 Light</family>
-          <pointsize>18</pointsize>
-         </font>
-        </property>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_question_list">
         <property name="text">
-         <string>新增題目</string>
+         <string>題目列表</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
+      <item row="3" column="1">
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>題目內容</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPlainTextEdit" name="text_edit_question"/>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="2">
        <layout class="QGridLayout" name="gridLayout_4">
         <item row="0" column="0">
          <widget class="QLabel" name="label_lv4">
@@ -209,6 +186,65 @@
         </item>
         <item row="1" column="1">
          <widget class="QComboBox" name="cBox_lv5"/>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_add_edit_question">
+        <property name="font">
+         <font>
+          <family>微軟正黑體 Light</family>
+          <pointsize>18</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>新增題目</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="1" column="1">
+         <widget class="QComboBox" name="cBox_lv2"/>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_lv1">
+          <property name="text">
+           <string>科目</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="label_lv2">
+          <property name="text">
+           <string>題型 - 一</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QComboBox" name="cBox_lv1"/>
+        </item>
+        <item row="0" column="2">
+         <widget class="QLabel" name="label_lv3">
+          <property name="text">
+           <string>題型 - 二</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QComboBox" name="cBox_lv3"/>
         </item>
        </layout>
       </item>

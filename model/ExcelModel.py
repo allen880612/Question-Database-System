@@ -51,6 +51,10 @@ class ExcelModel():
         self.GetFilteredDataframe(questionType)
         return self.qList
 
+    # 添加問題
+    def AddQuestion(self, questionInfo):
+        self.dataframe = self.dataframe.append(questionInfo, ignore_index=True)
+        print(self.dataframe.tail(1))
 
     # #取得excel中指定的題目
     # def GetFilteredQuestion(self):

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>860</width>
-    <height>480</height>
+    <width>818</width>
+    <height>472</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -178,8 +178,20 @@
      </rect>
     </property>
    </widget>
+   <widget class="QPushButton" name="btn_edeit_add">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>300</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>修改 / 編輯題目</string>
+    </property>
+   </widget>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

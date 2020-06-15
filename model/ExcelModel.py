@@ -64,7 +64,7 @@ class ExcelModel():
 
     # #取得excel中指定的題目
     # def GetFilteredQuestion(self):
-    #     return list(self.filleredDataframe["題目"]) #Convert to list
+    #   74  return list(self.filleredDataframe["題目"]) #Convert to list
     #
     # #取得圖
     # def GetFilteredImage(self, questionType):

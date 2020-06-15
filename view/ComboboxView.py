@@ -1,16 +1,21 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from model import MyLibrary
 class ComboboxView():
-    def __init__(self, _dataframe):
-        self.dataframe = _dataframe
+    def __init__(self, _model):
+        self.model = _model
+
         # 使用者選單用
         self.DefaultString_NoSelect = "NOSELECT"  # 預設未選擇字串
         self.QDSLevel = {}  # QDS的資料層級選單 (下拉式選單用)
         self.QDSLevel[self.DefaultString_NoSelect] = []  # 預設字串先給空
 
-        self.levelList = list(self.dataframe.columns)[0:5]
+        self.levelList = list(self.model.GetOriginalDataFrame().columns)[0:5]
         print(self.levelList)
         self.CreateDictForLevel()
+
+    @property
+    def dataframe(self):
+        return self.model.GetOriginalDataFrame()
 
     # 創建 下拉選單用的字典
     def CreateDictForLevel(self):

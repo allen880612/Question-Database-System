@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'make_question_ui.ui'
+# Form implementation generated from reading ui file 'Make_Question_UI.ui'
 #
 # Created by: PyQt5 UI code generator 5.12.2
 #
@@ -11,12 +11,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 class MakeQuestionPage_UI(object):
     def setupUi(self, MainWindow):
-
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(860, 480)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(270, 70, 271, 71))
         font = QtGui.QFont()
@@ -64,8 +62,9 @@ class MakeQuestionPage_UI(object):
         self.cBox_level1 = QtWidgets.QComboBox(self.centralwidget)
         self.cBox_level1.setGeometry(QtCore.QRect(60, 200, 119, 20))
         self.cBox_level1.setObjectName("cBox_level1")
-
-
+        self.btn_edeit_add = QtWidgets.QPushButton(self.centralwidget)
+        self.btn_edeit_add.setGeometry(QtCore.QRect(60, 300, 121, 31))
+        self.btn_edeit_add.setObjectName("btn_edeit_add")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -84,5 +83,6 @@ class MakeQuestionPage_UI(object):
         self.label_level4.setText(_translate("MainWindow", "主題"))
         self.label_level5.setText(_translate("MainWindow", "單元"))
         self.label_level1.setText(_translate("MainWindow", "科目"))
+        self.btn_edeit_add.setText(_translate("MainWindow", "修改 / 編輯題目"))
 
 

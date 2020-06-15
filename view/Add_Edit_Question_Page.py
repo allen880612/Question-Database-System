@@ -23,7 +23,7 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.setupUi(self)
 
         self.model = _model
-        self.comboboxView = cbView.ComboboxView(self.model.GetOriginalDataFrame())
+        self.comboboxView = cbView.ComboboxView(self.model)
         self.cBoxList = [self.ui.cBox_lv1, self.ui.cBox_lv2, self.ui.cBox_lv3, self.ui.cBox_lv4, self.ui.cBox_lv5]
         self.cBoxNum = len(self.cBoxList)
 
@@ -165,6 +165,7 @@ class AddEditQuestionPage(QMainWindow):
         self.model.AddQuestion(dict_q)
         self.ui.text_edit_question.clear()
         self.ui.list_weight_image.clear()
+        self.comboboxView.CreateDictForLevel()
 
     # 獲取題目資訊，建立題目類別
     def CreateQuestion(self):

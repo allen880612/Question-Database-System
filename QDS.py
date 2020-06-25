@@ -33,6 +33,8 @@ if __name__ == '__main__':
 
     MakeQuestionPage.ui.btn_edeit_add.clicked.connect(Show_AddEditQuestionPage)
     AddEditQuestionPage.ui.button_make_question.clicked.connect(Show_MakeQuestionPage)
-    Show_MakeQuestionPage()
+    
+    #Show_MakeQuestionPage()
+    Show_AddEditQuestionPage()
 
     sys.exit(app.exec_())

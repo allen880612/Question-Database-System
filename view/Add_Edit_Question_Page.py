@@ -1,5 +1,6 @@
 from functools import partial
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QFileDialog
+from PyQt5.QtGui import QPixmap
 from model import MyLibrary
 from view.UI import Add_Edit_Question_UI
 from view import ComboboxView as cbView
@@ -16,6 +17,7 @@ class AddEditQuestionPage(QMainWindow):
     MODE_EDIT_QUESTION = "edit_question"
     mode = ""
 
+    # 建構子
     def __init__(self, _model):
         super(AddEditQuestionPage, self).__init__()
 
@@ -29,6 +31,7 @@ class AddEditQuestionPage(QMainWindow):
 
         self.Initialize()
 
+    # 初始化
     def Initialize(self):
         self.ConnectEvent()
         self.LoadComboBox()
@@ -36,6 +39,7 @@ class AddEditQuestionPage(QMainWindow):
         self.UpdateUI()
         self.mode = self.MODE_ADD_QUESTION
 
+    # 註冊事件
     def ConnectEvent(self):
         self.ui.button_add_question.clicked.connect(self.CreateQuestion)
         self.ui.button_import_image.clicked.connect(self.ImportImage)
@@ -45,6 +49,7 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.button_edit_question_mode.clicked.connect(self.ClickEditMode)
         self.ui.button_add_question_mode.clicked.connect(self.ClickAddMode)
 
+    # 初始化UI
     def InitUI(self):
         # 預設為新增模式
         self.ui.button_add_question_mode.setEnabled(False)
@@ -177,10 +182,19 @@ class AddEditQuestionPage(QMainWindow):
         # print(dict_q)
         self.AddQuestion(dict_q)
 
-    # 引入圖片
-    def ImportImage(self):
+    # 格式化圖片
+    def FormatImage(self, imgPath):
+        
         pass
 
+
+    # 引入圖片
+    def ImportImage(self):
+        img_path = QFileDialog.getOpenFileName(self, '插入圖片', 'c\\', 'Image files (*.jpg *.png)')
+        file_name = img_path[0]
+        pixmap = QPixmap(file_name)
+        self.ui.label_image_preview.setPixmap(QPixmap(pixmap))
+        
     # 刪除圖片
     def DeleteImage(self):
         pass

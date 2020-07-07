@@ -52,6 +52,7 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.text_edit_question.textChanged.connect(self.UpdateUI)
         self.ui.button_edit_question_mode.clicked.connect(self.ClickEditMode)
         self.ui.button_add_question_mode.clicked.connect(self.ClickAddMode)
+        self.ui.list_weight_image.currentItemChanged.connect(self.SelectImage) # 選擇圖片
 
     # 初始化UI
     def InitUI(self):
@@ -110,6 +111,7 @@ class AddEditQuestionPage(QMainWindow):
         self.mode = self.MODE_EDIT_QUESTION
         self.ui.list_weight_image.clear()
         self.LoadQuestionList()
+        self.ui.label_image_preview.clear() # 清空預覽圖片
 
     # 切換至新增模式
     def ClickAddMode(self):
@@ -119,6 +121,7 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.text_edit_question.clear()
         self.ui.list_weight_image.clear()
         self.ui.list_weight_question.clear()
+        self.ui.label_image_preview.clear() # 清空預覽圖片
 
     # 清除所有下拉式選單內容
     def ClearCombobox(self):
@@ -182,20 +185,21 @@ class AddEditQuestionPage(QMainWindow):
     def CreateQuestion(self):
         # list = ['數學', '應用題', '典型應用題', '燕尾定理', '胖子', 2, '操你媽', 'NOIMAGE']
         q_info = copy.deepcopy(self.comboboxSelectOption)
-        q_info.append(len(self.questionList) + 2)
+        q_info.append(self.GetQuestionIndex())
         q_info.append(self.ui.text_edit_question.toPlainText())
-        #q_info.append(self.GetImageIndex(str(question_index))) # 新增&加入圖片
-        q_info.append(self.GetImageIndex("1")) # 新增&加入圖片
+        q_info.append(self.GetImageIndex(str(self.GetQuestionIndex()))) # 新增&加入圖片
         dict_q = dict(zip(self.model.GetOriginalDataFrame().columns, q_info))
 
         # print(dict_q)
         self.AddQuestion(dict_q)
 
+    # 取得題號
+    def GetQuestionIndex(self):
+        return len(self.questionList)
+
     # 格式化圖片
     def FormatImage(self, imgPath):
-        
         pass
-
 
     # 引入圖片
     def ImportImage(self):
@@ -212,6 +216,7 @@ class AddEditQuestionPage(QMainWindow):
         self.imageListPath.append(self.temp_importImage)
         self.ui.list_weight_image.addItem(str(image_id))
         self.temp_importImage = ""
+        self.ui.label_image_preview.clear() # 清空預覽圖片
         self.UpdateUI()
 
     # 刪除圖片
@@ -243,7 +248,22 @@ class AddEditQuestionPage(QMainWindow):
                 str_image_index += " "
 
         return str_image_index
-        
+       
+    # 選擇圖片 - 更新預覽圖片
+    def SelectImage(self, item):
+        nowSelectImageIndex = self.ui.list_weight_image.currentRow() # Get Current Row Index
+
+        # 沒東東 -> return
+        if nowSelectImageIndex == -1:
+            return
+
+        # 編輯模式中 -> 點選圖片 > 預覽圖片
+        if self.mode == self.MODE_EDIT_QUESTION:
+            dir_path = MyLibrary.GetFolderPathByList(self.comboboxSelectOption)
+            image_name = item.text()
+            dir_path = os.path.join(dir_path, image_name)
+            self.ui.label_image_preview.setPixmap(QPixmap(dir_path)) # 設置圖片
+            
 
     # 選擇題目 - 更新題目右側資訊
     def SelectQuestion(self, item):
@@ -256,6 +276,7 @@ class AddEditQuestionPage(QMainWindow):
             return
 
         nowSlectQuestion = self.questionList[nowSlectIndex]
+        self.ui.label_image_preview.clear() # 清空預覽圖片
         self.ui.text_edit_question.setPlainText(nowSlectQuestion.GetQuestionAnswer())
 
         text = str(self.ui.text_edit_question.toPlainText())

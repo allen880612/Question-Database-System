@@ -1,3 +1,5 @@
+import os
+
 #刪除串列中重複的元素 (然後照加入順序排)
 def DeleteRepeatElement(oldList):
     newList = list(set(oldList))  # 以集合刪除重複tuple
@@ -76,3 +78,10 @@ def CreatQuestionList(df, questionType):
     # for q in questionList:
     #     print(q.GetQuestion(), q.GetImage())
     return questionList
+
+# 依照list 取得資料夾路徑
+def GetFolderPathByList(dir_list):
+    dir_path = "database"
+    for dir in dir_list:
+        dir_path = os.path.join(dir_path, dir)
+    return dir_path

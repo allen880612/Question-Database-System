@@ -91,6 +91,13 @@
              </widget>
             </item>
             <item>
+             <widget class="QPushButton" name="button_addToList_image">
+              <property name="text">
+               <string>新增至列表</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="button_delete_image">
               <property name="text">
                <string>刪除圖片</string>

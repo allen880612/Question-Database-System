@@ -61,6 +61,9 @@ class AddEditQuestionPage_UI(object):
         self.button_import_image = QtWidgets.QPushButton(self.centralwidget)
         self.button_import_image.setObjectName("button_import_image")
         self.verticalLayout_3.addWidget(self.button_import_image)
+        self.button_addToList_image = QtWidgets.QPushButton(self.centralwidget)
+        self.button_addToList_image.setObjectName("pushButton")
+        self.verticalLayout_3.addWidget(self.button_addToList_image)
         self.button_delete_image = QtWidgets.QPushButton(self.centralwidget)
         self.button_delete_image.setObjectName("button_delete_image")
         self.verticalLayout_3.addWidget(self.button_delete_image)
@@ -168,6 +171,7 @@ class AddEditQuestionPage_UI(object):
         self.label_image_list.setText(_translate("MainWindow", "圖片列表"))
         self.label_image_preview.setText(_translate("MainWindow", "TextLabel"))
         self.button_import_image.setText(_translate("MainWindow", "匯入圖片"))
+        self.button_addToList_image.setText(_translate("MainWindow", "新增至列表"))
         self.button_delete_image.setText(_translate("MainWindow", "刪除圖片"))
         self.button_add_question.setText(_translate("MainWindow", "新增題目"))
         self.label_question_list.setText(_translate("MainWindow", "題目列表"))
@@ -179,5 +183,3 @@ class AddEditQuestionPage_UI(object):
         self.label_lv1.setText(_translate("MainWindow", "科目"))
         self.label_add_edit_question.setText(_translate("MainWindow", "新增題目"))
         self.button_make_question.setText(_translate("MainWindow", "出題"))
-
-

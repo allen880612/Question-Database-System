@@ -7,12 +7,15 @@ from view import ComboboxView as cbView
 import pathlib
 import copy
 import os
+import shutil #複製圖片用
 
 
 class AddEditQuestionPage(QMainWindow):
 
     comboboxSelectOption = []
     questionList = []
+    imageListPath = []
+    temp_importImage = ""
     MODE_ADD_QUESTION = "add_question"
     MODE_EDIT_QUESTION = "edit_question"
     mode = ""
@@ -43,6 +46,7 @@ class AddEditQuestionPage(QMainWindow):
     def ConnectEvent(self):
         self.ui.button_add_question.clicked.connect(self.CreateQuestion)
         self.ui.button_import_image.clicked.connect(self.ImportImage)
+        self.ui.button_addToList_image.clicked.connect(self.AddToImageList)
         self.ui.button_delete_image.clicked.connect(self.DeleteImage)
         self.ui.list_weight_question.currentItemChanged.connect(self.SelectQuestion)
         self.ui.text_edit_question.textChanged.connect(self.UpdateUI)
@@ -89,6 +93,8 @@ class AddEditQuestionPage(QMainWindow):
     def UpdateUI(self):
         # 空白題目 不該被新增 /修改
         self.ui.button_add_question.setEnabled(self.GetAddButtonEnable())
+        # 未引入圖片 不能新增
+        self.ui.button_addToList_image.setEnabled(self.temp_importImage != "")
 
     # 選取下拉式 - 更新
     def SelectComboBox(self, index, text):
@@ -174,11 +180,14 @@ class AddEditQuestionPage(QMainWindow):
 
     # 獲取題目資訊，建立題目類別
     def CreateQuestion(self):
+        # list = ['數學', '應用題', '典型應用題', '燕尾定理', '胖子', 2, '操你媽', 'NOIMAGE']
         q_info = copy.deepcopy(self.comboboxSelectOption)
         q_info.append(len(self.questionList) + 2)
         q_info.append(self.ui.text_edit_question.toPlainText())
-        q_info.append("NOIMAGE")
+        #q_info.append(self.GetImageIndex(str(question_index))) # 新增&加入圖片
+        q_info.append(self.GetImageIndex("1")) # 新增&加入圖片
         dict_q = dict(zip(self.model.GetOriginalDataFrame().columns, q_info))
+
         # print(dict_q)
         self.AddQuestion(dict_q)
 
@@ -191,13 +200,50 @@ class AddEditQuestionPage(QMainWindow):
     # 引入圖片
     def ImportImage(self):
         img_path = QFileDialog.getOpenFileName(self, '插入圖片', 'c\\', 'Image files (*.jpg *.png)')
-        file_name = img_path[0]
+        file_name = img_path[0] #img_path[0] = absolate path of image
         pixmap = QPixmap(file_name)
         self.ui.label_image_preview.setPixmap(QPixmap(pixmap))
-        
+        self.temp_importImage = file_name
+        self.UpdateUI() # 更新UI
+
+    # 新增至圖片列表
+    def AddToImageList(self):
+        image_id = self.ui.list_weight_image.count() + 1
+        self.imageListPath.append(self.temp_importImage)
+        self.ui.list_weight_image.addItem(str(image_id))
+        self.temp_importImage = ""
+        self.UpdateUI()
+
     # 刪除圖片
     def DeleteImage(self):
         pass
+
+    # 取得圖片 題號 + 編號
+    def GetImageIndex(self, question_index):
+        # imageListPath 為空 -> 沒圖片
+        if self.imageListPath == []:
+            return "NOIMAGE"
+
+        # 創建儲存圖片用資料夾
+        dir_path = "database"
+        for dir in self.comboboxSelectOption:
+            dir_path = os.path.join(dir_path, dir)
+        print("new path: " + dir_path)
+        if not os.path.exists(dir_path): # 如果資料夾不存在 才建立資料夾
+            os.makedirs(dir_path)
+
+        # 搬運圖片至資料夾 & 製造回傳字串
+        str_image_index = ""
+        for i in range(len(self.imageListPath)):
+            file_extensionName = os.path.splitext(self.imageListPath[i])[-1] # 取得副檔名 
+            newFileName = question_index + "_" + str(i + 1) + file_extensionName # 製造新檔名 (題號_圖片編號.副檔名)
+            shutil.copy(self.imageListPath[i], os.path.join(dir_path, newFileName)) # 搬運圖片
+            str_image_index += newFileName # 製造回傳字串
+            if i + 1 < len(self.imageListPath):
+                str_image_index += " "
+
+        return str_image_index
+        
 
     # 選擇題目 - 更新題目右側資訊
     def SelectQuestion(self, item):

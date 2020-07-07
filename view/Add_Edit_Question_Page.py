@@ -180,6 +180,8 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.text_edit_question.clear()
         self.ui.list_weight_image.clear()
         self.comboboxView.CreateDictForLevel()
+        self.temp_importImage = "" # 清除上一提的圖片
+        self.imageListPath = [] # 清除上一提的圖片
 
     # 獲取題目資訊，建立題目類別
     def CreateQuestion(self):
@@ -195,7 +197,9 @@ class AddEditQuestionPage(QMainWindow):
 
     # 取得題號
     def GetQuestionIndex(self):
-        return len(self.questionList)
+        qList = self.model.GetQuestionList(self.comboboxSelectOption)
+        print(qList)
+        return len(qList)
 
     # 格式化圖片
     def FormatImage(self, imgPath):
@@ -240,8 +244,12 @@ class AddEditQuestionPage(QMainWindow):
         # 搬運圖片至資料夾 & 製造回傳字串
         str_image_index = ""
         for i in range(len(self.imageListPath)):
-            file_extensionName = os.path.splitext(self.imageListPath[i])[-1] # 取得副檔名 
-            newFileName = question_index + "_" + str(i + 1) + file_extensionName # 製造新檔名 (題號_圖片編號.副檔名)
+            file_extensionName = os.path.splitext(self.imageListPath[i])[-1] # 取得副檔名
+            newFileName = "" # 製造新檔名 (題號_圖片編號.副檔名)
+            if len(self.imageListPath) == 1:
+                newFileName = question_index + file_extensionName # 題號.副檔名
+            else:
+                newFileName = question_index + "_" + str(i + 1) + file_extensionName # 題號_圖片編號.副檔名
             shutil.copy(self.imageListPath[i], os.path.join(dir_path, newFileName)) # 搬運圖片
             str_image_index += newFileName # 製造回傳字串
             if i + 1 < len(self.imageListPath):

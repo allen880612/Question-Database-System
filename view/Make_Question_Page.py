@@ -80,6 +80,11 @@ class MakeQuestionPage(QMainWindow):
 
         #excel
         if self.model.IsLoad():
+            if not MyLibrary.IskWordOpen("word/answer.docx") or not MyLibrary.IskWordOpen("word/question.docx"):
+                # do the dialog for alert
+                print("The Word Is Open")
+                return
+
             #questionType = ["數學"]
             questionType = self.comboboxSelectOption #搜尋的條件
             if questionType: #存在搜尋條件才做
@@ -138,7 +143,7 @@ class MakeQuestionPage(QMainWindow):
                         run.add_picture(image, height=docx.shared.Cm(2.6))
             except:
                 print("Insert image fail!")
-
+        
         savePath = "word/" + fileName + ".docx"
         word.save(savePath) #存檔 (存在word資料夾)
     #endregion

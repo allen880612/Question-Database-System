@@ -1,4 +1,5 @@
 import os
+import docx
 
 #刪除串列中重複的元素 (然後照加入順序排)
 def DeleteRepeatElement(oldList):
@@ -85,3 +86,14 @@ def GetFolderPathByList(dir_list):
     for dir in dir_list:
         dir_path = os.path.join(dir_path, dir)
     return dir_path
+
+# Word 是否被打開
+def IskWordOpen(file_path):
+    word = docx.Document(file_path)
+    flag = True
+    try:
+        word.save(file_path)
+    except:
+        flag = False
+    print(flag)
+    return flag

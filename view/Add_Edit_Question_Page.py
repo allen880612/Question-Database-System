@@ -44,7 +44,7 @@ class AddEditQuestionPage(QMainWindow):
 
     # 註冊事件
     def ConnectEvent(self):
-        self.ui.button_add_question.clicked.connect(self.CreateQuestion)
+        self.ui.button_add_question.clicked.connect(self.ClickAddQuestionButton)
         self.ui.button_import_image.clicked.connect(self.ImportImage)
         self.ui.button_addToList_image.clicked.connect(self.AddToImageList)
         self.ui.button_delete_image.clicked.connect(self.DeleteImage)
@@ -84,7 +84,7 @@ class AddEditQuestionPage(QMainWindow):
     def GetEditButtonEnable(self):
         flag = True
         # print(f"text={not len(self.ui.text_edit_question.toPlainText()) == 0}")
-        flag = flag and (not len(self.ui.text_edit_question.toPlainText()) == 0)
+        # flag = flag and (not len(self.ui.text_edit_question.toPlainText()) == 0)
         # print(f"cBox={len(self.comboboxSelectOption) == self.cBoxNum}")
         flag = flag and (len(self.comboboxSelectOption) == self.cBoxNum)
         print(f"flag={flag}")
@@ -94,6 +94,8 @@ class AddEditQuestionPage(QMainWindow):
     def UpdateUI(self):
         # 空白題目 不該被新增 /修改
         self.ui.button_add_question.setEnabled(self.GetAddButtonEnable())
+        # 未選擇單元 不該能修改
+        self.ui.button_edit_question_mode.setEnabled(self.GetEditButtonEnable())
         # 未引入圖片 不能新增
         self.ui.button_addToList_image.setEnabled(self.temp_importImage != "")
 
@@ -122,6 +124,11 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.list_weight_image.clear()
         self.ui.list_weight_question.clear()
         self.ui.label_image_preview.clear() # 清空預覽圖片
+
+    # 點擊 新增題目 按鈕
+    def ClickAddQuestionButton(self):
+        if self.mode == self.MODE_ADD_QUESTION:
+            self.CreateQuestion()
 
     # 清除所有下拉式選單內容
     def ClearCombobox(self):

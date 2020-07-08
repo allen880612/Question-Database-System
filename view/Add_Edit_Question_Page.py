@@ -202,14 +202,20 @@ class AddEditQuestionPage(QMainWindow):
         return len(qList)
 
     # 格式化圖片
-    def FormatImage(self, imgPath):
-        pass
+    def FormatImage(self, pixmap):
+        # pixmap = pixmap.scaled(256, 256, Qt.KeepAspectRatio) # Need from PyQt5.QtCore import Qt
+        if pixmap.size().width() >= pixmap.size().height():
+            pixmap = pixmap.scaledToWidth(256)
+        else:
+            pixmap = pixmap.scaledToHeight(256)
+        return pixmap
 
     # 引入圖片
     def ImportImage(self):
         img_path = QFileDialog.getOpenFileName(self, '插入圖片', 'c\\', 'Image files (*.jpg *.png)')
         file_name = img_path[0] #img_path[0] = absolate path of image
         pixmap = QPixmap(file_name)
+        pixmap = self.FormatImage(pixmap)
         self.ui.label_image_preview.setPixmap(QPixmap(pixmap))
         self.temp_importImage = file_name
         self.UpdateUI() # 更新UI

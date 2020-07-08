@@ -225,7 +225,22 @@ class AddEditQuestionPage(QMainWindow):
 
     # 刪除圖片
     def DeleteImage(self):
-        pass
+        nowSelectImageIndex = self.ui.list_weight_image.currentRow() # Get Current Row Index
+        
+        # 沒東東 -> return
+        if nowSelectImageIndex == -1:
+            return
+
+        # 新增模式中 -> 刪除圖片 
+        if self.mode == self.MODE_ADD_QUESTION:
+            # 更改後面的圖片的texts
+            for i in range(nowSelectImageIndex + 1, self.ui.list_weight_image.count()):
+                self.ui.list_weight_image.item(i).setText(str(i))
+                
+            self.ui.list_weight_image.takeItem(nowSelectImageIndex) # 刪除Item
+            self.imageListPath.pop(nowSelectImageIndex) # 刪除指定索引
+            # self.ui.label_image_preview.clear()
+
 
     # 取得圖片 題號 + 編號
     def GetImageIndex(self, question_index):
@@ -260,9 +275,10 @@ class AddEditQuestionPage(QMainWindow):
     # 選擇圖片 - 更新預覽圖片
     def SelectImage(self, item):
         nowSelectImageIndex = self.ui.list_weight_image.currentRow() # Get Current Row Index
-
+        print(nowSelectImageIndex)
         # 沒東東 -> return
         if nowSelectImageIndex == -1:
+            self.ui.label_image_preview.clear()
             return
 
         # 編輯模式中 -> 點選圖片 > 預覽圖片
@@ -271,7 +287,12 @@ class AddEditQuestionPage(QMainWindow):
             image_name = item.text()
             dir_path = os.path.join(dir_path, image_name)
             self.ui.label_image_preview.setPixmap(QPixmap(dir_path)) # 設置圖片
-            
+       
+        # 新增模式中 -> 點選圖片 > 預覽圖片
+        if self.mode == self.MODE_ADD_QUESTION:
+            image_path = self.imageListPath[nowSelectImageIndex]
+            self.ui.label_image_preview.setPixmap(QPixmap(image_path))
+
 
     # 選擇題目 - 更新題目右側資訊
     def SelectQuestion(self, item):

@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QMessageBox
 from view import ComboboxView as cbview
 from view.UI import Make_Question_UI_Test as mq_UI_Test
 from view.UI import Make_Question_UI as mq_UI
@@ -81,8 +81,7 @@ class MakeQuestionPage(QMainWindow):
         #excel
         if self.model.IsLoad():
             if not MyLibrary.IskWordOpen("word/answer.docx") or not MyLibrary.IskWordOpen("word/question.docx"):
-                # do the dialog for alert
-                print("The Word Is Open")
+                QMessageBox.information(self, "警告", "Word開啟中！\n請關閉Word後再試一次", QMessageBox.Yes)
                 return
 
             #questionType = ["數學"]

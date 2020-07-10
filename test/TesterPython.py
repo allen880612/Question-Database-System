@@ -1,6 +1,7 @@
 import docx
 import os
-
+from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMessageBox
+ 
 def test1():
 	tList = [1, 2, 3]
 	print(tList)
@@ -18,4 +19,4 @@ def test2():
 	return flag
 
 if __name__ == '__main__':
-	test2()
+	test3()

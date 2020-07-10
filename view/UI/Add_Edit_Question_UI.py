@@ -62,7 +62,7 @@ class AddEditQuestionPage_UI(object):
         self.button_import_image.setObjectName("button_import_image")
         self.verticalLayout_3.addWidget(self.button_import_image)
         self.button_addToList_image = QtWidgets.QPushButton(self.centralwidget)
-        self.button_addToList_image.setObjectName("pushButton")
+        self.button_addToList_image.setObjectName("button_addToList_image")
         self.verticalLayout_3.addWidget(self.button_addToList_image)
         self.button_delete_image = QtWidgets.QPushButton(self.centralwidget)
         self.button_delete_image.setObjectName("button_delete_image")
@@ -153,6 +153,9 @@ class AddEditQuestionPage_UI(object):
         self.button_make_question = QtWidgets.QPushButton(self.centralwidget)
         self.button_make_question.setObjectName("button_make_question")
         self.gridLayout.addWidget(self.button_make_question, 4, 2, 1, 1)
+        self.button_add_unit = QtWidgets.QPushButton(self.centralwidget)
+        self.button_add_unit.setObjectName("button_add_unit")
+        self.gridLayout.addWidget(self.button_add_unit, 1, 2, 1, 1)
         self.horizontalLayout.addLayout(self.gridLayout)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -183,3 +186,6 @@ class AddEditQuestionPage_UI(object):
         self.label_lv1.setText(_translate("MainWindow", "科目"))
         self.label_add_edit_question.setText(_translate("MainWindow", "新增題目"))
         self.button_make_question.setText(_translate("MainWindow", "出題"))
+        self.button_add_unit.setText(_translate("MainWindow", "新增單元"))
+
+

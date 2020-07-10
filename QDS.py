@@ -19,7 +19,7 @@ def Show_AddEditQuestionPage():
 # 開啟視窗
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    MakeQuestionPage = QMainWindow()    
+    MakeQuestionPage = QMainWindow()
 
     EXCEL_PATH = "database/盈虧問題v2.xlsx"
     model = ExcelModel(EXCEL_PATH)

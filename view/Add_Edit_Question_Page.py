@@ -1,9 +1,11 @@
 from functools import partial
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
 from PyQt5.QtGui import QPixmap
 from model import MyLibrary
 from view.UI import Add_Edit_Question_UI
 from view import ComboboxView as cbView
+from view import Add_Unit_Page
 import pathlib
 import copy
 import os
@@ -19,6 +21,8 @@ class AddEditQuestionPage(QMainWindow):
     MODE_ADD_QUESTION = "add_question"
     MODE_EDIT_QUESTION = "edit_question"
     mode = ""
+    Add_Unit_View = "" 
+    Is_add_unit_view_open = False
 
     # 建構子
     def __init__(self, _model):
@@ -31,6 +35,9 @@ class AddEditQuestionPage(QMainWindow):
         self.comboboxView = cbView.ComboboxView(self.model)
         self.cBoxList = [self.ui.cBox_lv1, self.ui.cBox_lv2, self.ui.cBox_lv3, self.ui.cBox_lv4, self.ui.cBox_lv5]
         self.cBoxNum = len(self.cBoxList)
+
+        self.Add_Unit_View = Add_Unit_Page.AddUnitPage()
+        self.Add_Unit_View.setWindowModality(Qt.ApplicationModal)
 
         self.Initialize()
 
@@ -53,6 +60,7 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.button_edit_question_mode.clicked.connect(self.ClickEditMode)
         self.ui.button_add_question_mode.clicked.connect(self.ClickAddMode)
         self.ui.list_weight_image.currentItemChanged.connect(self.SelectImage) # 選擇圖片
+        self.ui.button_add_unit.clicked.connect(self.OpenAddUnitView)
 
     # 初始化UI
     def InitUI(self):
@@ -331,3 +339,9 @@ class AddEditQuestionPage(QMainWindow):
             for p in path:
                 img_name = pathlib.PurePath(p).name
                 self.ui.list_weight_image.addItem(img_name)
+
+    # 開啟 新增單元 視窗
+    def OpenAddUnitView(self):
+        if self.Is_add_unit_view_open == False:
+            self.Is_add_unit_view_open = True
+            self.Add_Unit_View.show()

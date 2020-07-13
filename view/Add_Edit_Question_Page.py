@@ -66,8 +66,6 @@ class AddEditQuestionPage(QMainWindow):
 
         # 新增單元 視窗
         self.Add_Unit_View.add_unit_signal.connect(self.GetADdUnitViewData)
-        #self.Add_Unit_View.ui.button_add_unit_confirm.clicked.connect(self.CloseAddUnitView)
-        #self.Add_Unit_View.ui.button_add_unit_cancel.clicked.connect(self.CloseAddUnitView)
 
     # 初始化UI
     def InitUI(self):
@@ -192,8 +190,9 @@ class AddEditQuestionPage(QMainWindow):
         self.questionList = self.model.GetQuestionList(questionType)
         self.ui.list_weight_question.clear()
         for i in range(len(self.questionList)):
-            q_head = str(i) + '. ' + (self.questionList[i].GetQuestion())[:20]
-            self.ui.list_weight_question.addItem(q_head)
+            if self.questionList[i].GetQuestionNumber() != 0:
+                q_head = str(i) + '. ' + (self.questionList[i].GetQuestion())[:20]
+                self.ui.list_weight_question.addItem(q_head)
         # self.ui.list_weight_question.addItems(self.questionList)
 
     # 真正新增題目
@@ -207,15 +206,21 @@ class AddEditQuestionPage(QMainWindow):
 
     # 獲取題目資訊，建立題目類別
     def CreateQuestion(self):
-        # list = ['數學', '應用題', '典型應用題', '燕尾定理', '胖子', 2, '操你媽', 'NOIMAGE']
+        questionList = self.model.GetQuestionList(self.comboboxSelectOption)
+        newQuestionIndex = len(questionList)
         q_info = copy.deepcopy(self.comboboxSelectOption)
-        q_info.append(self.GetQuestionIndex())
+        q_info.append(newQuestionIndex)
         q_info.append(self.ui.text_edit_question.toPlainText())
-        q_info.append(self.GetImageIndex(str(self.GetQuestionIndex()))) # 新增&加入圖片
-        dict_q = dict(zip(self.model.GetOriginalDataFrame().columns, q_info))
+        q_info.append(self.GetImageIndex(str(newQuestionIndex))) # 新增&加入圖片
 
-        # print(dict_q)
-        self.AddQuestion(dict_q)
+        # 只有一題寫那題是0 -> 編輯問題
+        if len(questionList) == 1 and questionList[0].GetQuestionNumber() == 0:
+            self.model.EditQuestion(0, q_info)
+        else: # 有很多題 -> 新增問題
+            # list = ['數學', '應用題', '典型應用題', '燕尾定理', '胖子', 2, '操你媽', 'NOIMAGE']
+            dict_q = dict(zip(self.model.GetOriginalDataFrame().columns, q_info))
+            # print(dict_q)
+            self.AddQuestion(dict_q)
 
     # 取得題號
     def GetQuestionIndex(self):
@@ -353,12 +358,6 @@ class AddEditQuestionPage(QMainWindow):
             self.Is_add_unit_view_open = True
             self.Add_Unit_View.show()
 
-    # 關閉 新增單元 視窗
-    def CloseAddUnitView(self):
-        if self.Is_add_unit_view_open == True:
-            self.Is_add_unit_view_open = False
-            self.Add_Unit_View.close()
-
     # 接收 Add Unit View 的資料 函數 (有幾個參數就接幾個) (bool, list)
     def GetADdUnitViewData(self, is_close, list_input_content):
         if is_close == True:
@@ -371,5 +370,6 @@ class AddEditQuestionPage(QMainWindow):
                 q_Info.append("NOIMAGE") # add 圖片
                 dict_q = dict(zip(self.model.GetOriginalDataFrame().columns, q_Info))
                 self.model.AddQuestion(dict_q)
+                self.comboboxView.CreateDictForLevel()
                 #print(dict_q)
                 #print(q_Info)

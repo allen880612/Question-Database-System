@@ -46,13 +46,13 @@ class AddUnitPage(QMainWindow):
 
         # 防呆 - 5個都有值
         if input_correct == True:
-            check_question_table = self.model.GetQuestionList(tBoxStr_list)
-            for list_element in check_question_table:
-                print(type(list_element))
-
+            check_question_list = self.model.GetQuestionList(tBoxStr_list)
             not_have_unit = True
+            if len(check_question_list) > 0:
+                not_have_unit = False
+
             # 防呆 - 5個都有值 - 且未有單元 - 可正常關閉
-            if False:
+            if not_have_unit:
                 is_close = self.close()
                 self.add_unit_signal.emit(is_close, tBoxStr_list)
             # 防呆 - 5個都有值 - 已有單元 - 不可關閉

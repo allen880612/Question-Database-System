@@ -21,7 +21,7 @@ class AddEditQuestionPage(QMainWindow):
     MODE_ADD_QUESTION = "add_question"
     MODE_EDIT_QUESTION = "edit_question"
     mode = ""
-    Add_Unit_View = "" 
+    #Add_Unit_View = "" 
     Is_add_unit_view_open = False
 
     # 建構子
@@ -36,8 +36,10 @@ class AddEditQuestionPage(QMainWindow):
         self.cBoxList = [self.ui.cBox_lv1, self.ui.cBox_lv2, self.ui.cBox_lv3, self.ui.cBox_lv4, self.ui.cBox_lv5]
         self.cBoxNum = len(self.cBoxList)
 
-        self.Add_Unit_View = Add_Unit_Page.AddUnitPage()
+        #region 新增單元 視窗 變數
+        self.Add_Unit_View = Add_Unit_Page.AddUnitPage(self.model)
         self.Add_Unit_View.setWindowModality(Qt.ApplicationModal)
+        #endregion
 
         self.Initialize()
 
@@ -61,6 +63,11 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.button_add_question_mode.clicked.connect(self.ClickAddMode)
         self.ui.list_weight_image.currentItemChanged.connect(self.SelectImage) # 選擇圖片
         self.ui.button_add_unit.clicked.connect(self.OpenAddUnitView)
+
+        # 新增單元 視窗
+        self.Add_Unit_View.add_unit_signal.connect(self.GetADdUnitViewData)
+        #self.Add_Unit_View.ui.button_add_unit_confirm.clicked.connect(self.CloseAddUnitView)
+        #self.Add_Unit_View.ui.button_add_unit_cancel.clicked.connect(self.CloseAddUnitView)
 
     # 初始化UI
     def InitUI(self):
@@ -345,3 +352,24 @@ class AddEditQuestionPage(QMainWindow):
         if self.Is_add_unit_view_open == False:
             self.Is_add_unit_view_open = True
             self.Add_Unit_View.show()
+
+    # 關閉 新增單元 視窗
+    def CloseAddUnitView(self):
+        if self.Is_add_unit_view_open == True:
+            self.Is_add_unit_view_open = False
+            self.Add_Unit_View.close()
+
+    # 接收 Add Unit View 的資料 函數 (有幾個參數就接幾個) (bool, list)
+    def GetADdUnitViewData(self, is_close, list_input_content):
+        if is_close == True:
+            self.Is_add_unit_view_open = False
+
+            if list_input_content != []:
+                q_Info = copy.deepcopy(list_input_content)
+                q_Info.append(0) # add 題號
+                q_Info.append("default Content") # add 內容
+                q_Info.append("NOIMAGE") # add 圖片
+                dict_q = dict(zip(self.model.GetOriginalDataFrame().columns, q_Info))
+                self.model.AddQuestion(dict_q)
+                #print(dict_q)
+                #print(q_Info)

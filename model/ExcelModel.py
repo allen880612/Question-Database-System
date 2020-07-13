@@ -13,7 +13,7 @@ class ExcelModel():
         self.qList = []
         print("\n-----------------------------")
         self.ReadExcel()
-
+        
     #讀取excel
     def ReadExcel(self):
         #need to pip xlrd

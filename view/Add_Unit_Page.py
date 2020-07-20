@@ -1,7 +1,7 @@
 from functools import partial
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMessageBox
 from PyQt5.QtGui import QPixmap
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtWidgets
 from model import MyLibrary
 from view.UI import Add_Unit_UI
 from view import ComboboxView as cbView
@@ -18,28 +18,40 @@ class AddUnitPage(QMainWindow):
         self.ui = Add_Unit_UI.AddUnitPage_UI()
         self.ui.setupUi(self)
         self.model = _model
+        self.level = [self.ui.label_lv1, self.ui.label_lv2]
+        self.tBoxlevel = [self.ui.textBox_lv1, self.ui.textBox_lv2]
         self.Initialize()
 
     # 初始化
     def Initialize(self):
         self.ConnectEvent()
+        self.UpdateUI()
 
         #Test
         self.ui.textBox_lv1.setText("數學")
-        self.ui.textBox_lv2.setText("應用題")
-        self.ui.textBox_lv3.setText("典型應用題")
-        self.ui.textBox_lv4.setText("燕尾定理")
-        self.ui.textBox_lv5.setText("四邊形")
+        self.ui.textBox_lv2.setText("四邊形")
 
     # 註冊事件
     def ConnectEvent(self):
         self.ui.button_add_unit_confirm.clicked.connect(self.ConfrimAddUnit)
         self.ui.button_add_unit_cancel.clicked.connect(self.CancelAddUnit)
+        self.ui.button_add_level.clicked.connect(self.AddLevel)
+        self.ui.button_delete_level.clicked.connect(self.DeleteLevel)
+
+    # ResetPage
+    def ResetPage(self):
+        while self.GetNowLevelNum() > 2:
+            self.DeleteLevel()
 
     # 確定新增
     def  ConfrimAddUnit(self):
-        tBoxStr_list = [self.ui.textBox_lv1.text(), self.ui.textBox_lv2.text(), self.ui.textBox_lv3.text(), self.ui.textBox_lv4.text(), self.ui.textBox_lv5.text()]
+        #tBoxStr_list = [self.ui.textBox_lv1.text(), self.ui.textBox_lv2.text(), self.ui.textBox_lv3.text(), self.ui.textBox_lv4.text(), self.ui.textBox_lv5.text()]
         input_correct = True # 輸入正確
+
+        tBoxStr_list = []
+        for tBox in self.tBoxlevel:
+            tBoxStr_list.append(tBox.text())
+
         for tBox in tBoxStr_list:
             if tBox == "":
                 input_correct = False
@@ -66,3 +78,50 @@ class AddUnitPage(QMainWindow):
     def CancelAddUnit(self):
         is_close = self.close()
         self.add_unit_signal.emit(is_close,[])
+
+    # 新增階層
+    def AddLevel(self):
+        # add Label
+        newLevel = "第 " + str(self.GetNowLevelNum() - 1) + " 層"
+        newLabelName = "label_lv" + str(self.GetNowLevelNum() + 1)
+        newLabel = QtWidgets.QLabel(self.ui.centralwidget)
+        newLabel.setAlignment(QtCore.Qt.AlignCenter)
+        newLabel.setObjectName(newLabelName)
+        newLabel.setText("單元") # 交換單元 以及 新增的階層的文字內容
+        self.level[-1].setText(newLevel)
+        self.ui.gridLayout_2.addWidget(newLabel, 1, self.GetNowLevelNum(), 1, 1)
+        
+        # add textbox
+        newtBoxName = "textBox_lv" + str(self.GetNowLevelNum() + 1)
+        newtBox = QtWidgets.QLineEdit(self.ui.centralwidget)
+        newtBox.setAlignment(QtCore.Qt.AlignCenter)
+        newtBox.setObjectName(newtBoxName)
+        newtBox.setText("")
+        self.ui.gridLayout_2.addWidget(newtBox, 2, self.GetNowLevelNum(), 1, 1)
+
+        # add level
+        self.level.append(newLabel)
+        self.tBoxlevel.append(newtBox)
+        self.UpdateUI()
+
+    # 刪除階層
+    def DeleteLevel(self):
+        self.ui.gridLayout_2.removeWidget(self.level[-1])
+        self.ui.gridLayout_2.removeWidget(self.tBoxlevel[-1])
+
+        self.level[-1].setVisible(False)
+        self.tBoxlevel[-1].setVisible(False)
+
+        self.level.pop()
+        self.tBoxlevel.pop()
+        
+        self.level[-1].setText("單元")
+        self.UpdateUI()
+
+    # 取得目前階層數
+    def GetNowLevelNum(self):
+        return len(self.level)
+
+    # 更新UI
+    def UpdateUI(self):
+        self.ui.button_delete_level.setEnabled(self.GetNowLevelNum() > 2)

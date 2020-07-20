@@ -11,7 +11,6 @@ import copy
 import os
 import shutil #複製圖片用
 
-
 class AddEditQuestionPage(QMainWindow):
 
     comboboxSelectOption = []
@@ -357,6 +356,7 @@ class AddEditQuestionPage(QMainWindow):
         if self.Is_add_unit_view_open == False:
             self.Is_add_unit_view_open = True
             self.Add_Unit_View.show()
+            self.Add_Unit_View.ResetPage()
 
     # 接收 Add Unit View 的資料 函數 (有幾個參數就接幾個) (bool, list)
     def GetADdUnitViewData(self, is_close, list_input_content):

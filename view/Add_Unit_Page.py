@@ -89,7 +89,7 @@ class AddUnitPage(QMainWindow):
         newLabel.setObjectName(newLabelName)
         newLabel.setText("單元") # 交換單元 以及 新增的階層的文字內容
         self.level[-1].setText(newLevel)
-        self.ui.gridLayout_2.addWidget(newLabel, 1, self.GetNowLevelNum(), 1, 1)
+        self.ui.gridLayout_3.addWidget(newLabel, 0, self.GetNowLevelNum(), 1, 1)
         
         # add textbox
         newtBoxName = "textBox_lv" + str(self.GetNowLevelNum() + 1)
@@ -97,7 +97,7 @@ class AddUnitPage(QMainWindow):
         newtBox.setAlignment(QtCore.Qt.AlignCenter)
         newtBox.setObjectName(newtBoxName)
         newtBox.setText("")
-        self.ui.gridLayout_2.addWidget(newtBox, 2, self.GetNowLevelNum(), 1, 1)
+        self.ui.gridLayout_3.addWidget(newtBox, 2, self.GetNowLevelNum(), 1, 1)
 
         # add level
         self.level.append(newLabel)
@@ -106,8 +106,8 @@ class AddUnitPage(QMainWindow):
 
     # 刪除階層
     def DeleteLevel(self):
-        self.ui.gridLayout_2.removeWidget(self.level[-1])
-        self.ui.gridLayout_2.removeWidget(self.tBoxlevel[-1])
+        self.ui.gridLayout_3.removeWidget(self.level[-1])
+        self.ui.gridLayout_3.removeWidget(self.tBoxlevel[-1])
 
         self.level[-1].setVisible(False)
         self.tBoxlevel[-1].setVisible(False)

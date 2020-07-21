@@ -9,7 +9,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_MainWindow(object):
+class SelectQuestion_UI(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(960, 659)
@@ -85,5 +85,3 @@ class Ui_MainWindow(object):
         self.button_add_question.setText(_translate("MainWindow", "新增題目"))
         self.button_make_question.setText(_translate("MainWindow", "出題"))
         self.label_add_edit_question.setText(_translate("MainWindow", "選擇題目階層"))
-
-

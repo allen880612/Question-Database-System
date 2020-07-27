@@ -26,8 +26,9 @@ def test3(tc):
 	return tc.tkList
 
 if __name__ == '__main__':
-	tc = testClass()
-	kk = test3(tc)
-	kk.append(456)
-	print(id(kk))
-	print(id(tc.tkList))
+	#tc = testClass()
+	#kk = test3(tc)
+	#kk.append(456)
+	#print(id(kk))
+	#print(id(tc.tkList))
+	test1()

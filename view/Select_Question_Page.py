@@ -29,6 +29,8 @@ class SelectQuestionPage(QMainWindow):
         self.checkboxDict = {}
         # verticalLayout Dict (收集checkbox)
         self.layoutDict = {} 
+        # 確定選到葉節點的 level (list of string list)
+        self.checkbox_leaf_level_list = []
 
         # Question Level Tree
         self.QLT = QtExtend.QLT(self.comboboxView)
@@ -116,6 +118,12 @@ class SelectQuestionPage(QMainWindow):
                 preList.pop()
                 self.AddCheckbox(node.name, checkbox_name, layout_level, preList, node.isCheck)
 
+            if (node.isCheck) and (node.questionLevel not in self.checkbox_leaf_level_list):
+                self.checkbox_leaf_level_list.append(node.questionLevel)
+            elif (node.isCheck == False) and (node.questionLevel in self.checkbox_leaf_level_list):
+                print("remove")
+                self.checkbox_leaf_level_list.remove(node.questionLevel)
+
     # 刪除 layout 所有的element (checkbox)
     def DeleteLayoutElement(self, layout):
         del_layoutElement_list = self.layoutDict[layout]
@@ -159,6 +167,12 @@ class SelectQuestionPage(QMainWindow):
         elif not cbox.isChecked():
             self.CancelSelectCheckBox(cbox, cbox_data)
     
+        print("---")
+        print("leaf level:")
+        for i in self.checkbox_leaf_level_list:
+            print(i)
+        print("---")
+
     # 勾選 CheckBox (cbox = 被勾選的checkbox, cbox_data = 他的資料)
     def SelectCheckBox(self, cbox, cbox_data):
         print("quesetion: ", cbox_data.questionLevel)
@@ -175,6 +189,9 @@ class SelectQuestionPage(QMainWindow):
             reset_depth = cbox_data.layoutLevel + 1
             self.DeleteLayoutElement(self.questionLevelLayout[reset_depth])
             self.ResetLayout(reset_depth)
+        # 選到葉節點
+        else:
+            self.checkbox_leaf_level_list.append(node.questionLevel)
 
     # 取消勾選 CheckBox (cbox = 被勾選的checkbox, cbox_data = 他的資料)
     def CancelSelectCheckBox(self, cbox, cbox_data):
@@ -189,6 +206,10 @@ class SelectQuestionPage(QMainWindow):
         for layout_level in range(this_depth + 1, len(self.questionLevelLayout)):
             self.DeleteLayoutElement(self.questionLevelLayout[layout_level])
             self.ResetLayout(layout_level)
+
+        # 葉節點 > 移除節點
+        if len(node.childList) == 0:
+            self.checkbox_leaf_level_list.remove(node.questionLevel)
 
     # 創造Checkbox name (checkbox_lv0_0)
     def CreateCheckboxObjectName(self, layout_level):

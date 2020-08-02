@@ -6,6 +6,7 @@ from model import MyLibrary
 from model import QtExtend
 from view.UI import Select_Question_UI
 from view import ComboboxView as cbView
+from view import Add_Unit_Page
 import pathlib
 import os
 import copy
@@ -37,6 +38,12 @@ class SelectQuestionPage(QMainWindow):
         self.QLT.CreateTree()
         self.QLT.DFS()
 
+        # 新增單元頁面
+        self.Add_Unit_View = Add_Unit_Page.AddUnitPage(self.model)
+        self.Add_Unit_View.setWindowModality(QtCore.Qt.ApplicationModal)
+        self.Is_add_unit_view_open = False
+
+
         self.Initialize()
 
     # 初始化
@@ -47,7 +54,8 @@ class SelectQuestionPage(QMainWindow):
 
     # 註冊事件
     def ConnectEvent(self):
-        self.ui.button_add_question.clicked.connect(self.zzxcv)
+        self.ui.button_add_unit.clicked.connect(self.OpenAddUnitView)
+        self.Add_Unit_View.add_unit_signal.connect(self.GetAddUnitViewData)
 
     # ResetPage
     def ResetPage(self):
@@ -103,9 +111,6 @@ class SelectQuestionPage(QMainWindow):
     # 更新UI
     def UpdateUI(self):
         pass
-
-    def zzxcv(self):
-        self.AddCheckbox("fuck", "checkbox_lv1_1", 0)
     
     # 重設該Layout
     def ResetLayout(self, layout_level):
@@ -226,3 +231,25 @@ class SelectQuestionPage(QMainWindow):
             return questionLevel[0]
         else:
             return tuple(questionLevel)
+
+
+    # 開啟 新增單元 視窗
+    def OpenAddUnitView(self):
+        if self.Is_add_unit_view_open == False:
+            self.Is_add_unit_view_open = True
+            self.Add_Unit_View.show()
+            self.Add_Unit_View.ResetPage()
+
+    # 接收 Add Unit View 的資料 函數 (有幾個參數就接幾個) (bool, list)
+    def GetAddUnitViewData(self, is_close, list_input_content):
+        if is_close == True:
+            self.Is_add_unit_view_open = False
+
+            if list_input_content != []:
+                q_Info = copy.deepcopy(list_input_content)
+                q_Info.append(0) # add 題號
+                q_Info.append("default Content") # add 內容
+                q_Info.append("NOIMAGE") # add 圖片
+                dict_q = dict(zip(self.model.GetOriginalDataFrame().columns, q_Info))
+                self.model.AddQuestion(dict_q)
+                self.comboboxView.CreateDictForLevel()

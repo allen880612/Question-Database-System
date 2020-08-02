@@ -35,9 +35,9 @@ class AddEditQuestionPage(QMainWindow):
         self.cBoxList = [self.ui.cBox_lv1, self.ui.cBox_lv2, self.ui.cBox_lv3, self.ui.cBox_lv4, self.ui.cBox_lv5]
         self.cBoxNum = len(self.cBoxList)
 
-        #region 新增單元 視窗 變數
-        self.Add_Unit_View = Add_Unit_Page.AddUnitPage(self.model)
-        self.Add_Unit_View.setWindowModality(Qt.ApplicationModal)
+        #region 新增單元 視窗 變數 (移到主畫面)
+        #self.Add_Unit_View = Add_Unit_Page.AddUnitPage(self.model)
+        #self.Add_Unit_View.setWindowModality(Qt.ApplicationModal)
         #endregion
 
         self.Initialize()
@@ -61,10 +61,10 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.button_edit_question_mode.clicked.connect(self.ClickEditMode)
         self.ui.button_add_question_mode.clicked.connect(self.ClickAddMode)
         self.ui.list_weight_image.currentItemChanged.connect(self.SelectImage) # 選擇圖片
-        self.ui.button_add_unit.clicked.connect(self.OpenAddUnitView)
-
-        # 新增單元 視窗
-        self.Add_Unit_View.add_unit_signal.connect(self.GetADdUnitViewData)
+        
+        # 新增單元 視窗 (移到選擇路徑畫面)
+        # self.ui.button_add_unit.clicked.connect(self.OpenAddUnitView)
+        # self.Add_Unit_View.add_unit_signal.connect(self.GetADdUnitViewData)
 
     # 初始化UI
     def InitUI(self):
@@ -351,25 +351,23 @@ class AddEditQuestionPage(QMainWindow):
                 img_name = pathlib.PurePath(p).name
                 self.ui.list_weight_image.addItem(img_name)
 
-    # 開啟 新增單元 視窗
-    def OpenAddUnitView(self):
-        if self.Is_add_unit_view_open == False:
-            self.Is_add_unit_view_open = True
-            self.Add_Unit_View.show()
-            self.Add_Unit_View.ResetPage()
+    ## 開啟 新增單元 視窗
+    #def OpenAddUnitView(self):
+    #    if self.Is_add_unit_view_open == False:
+    #        self.Is_add_unit_view_open = True
+    #        self.Add_Unit_View.show()
+    #        self.Add_Unit_View.ResetPage()
 
-    # 接收 Add Unit View 的資料 函數 (有幾個參數就接幾個) (bool, list)
-    def GetADdUnitViewData(self, is_close, list_input_content):
-        if is_close == True:
-            self.Is_add_unit_view_open = False
+    ## 接收 Add Unit View 的資料 函數 (有幾個參數就接幾個) (bool, list)
+    #def GetADdUnitViewData(self, is_close, list_input_content):
+    #    if is_close == True:
+    #        self.Is_add_unit_view_open = False
 
-            if list_input_content != []:
-                q_Info = copy.deepcopy(list_input_content)
-                q_Info.append(0) # add 題號
-                q_Info.append("default Content") # add 內容
-                q_Info.append("NOIMAGE") # add 圖片
-                dict_q = dict(zip(self.model.GetOriginalDataFrame().columns, q_Info))
-                self.model.AddQuestion(dict_q)
-                self.comboboxView.CreateDictForLevel()
-                #print(dict_q)
-                #print(q_Info)
+    #        if list_input_content != []:
+    #            q_Info = copy.deepcopy(list_input_content)
+    #            q_Info.append(0) # add 題號
+    #            q_Info.append("default Content") # add 內容
+    #            q_Info.append("NOIMAGE") # add 圖片
+    #            dict_q = dict(zip(self.model.GetOriginalDataFrame().columns, q_Info))
+    #            self.model.AddQuestion(dict_q)
+    #            self.comboboxView.CreateDictForLevel()

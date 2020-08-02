@@ -9,7 +9,8 @@ class ComboboxView():
         self.QDSLevel = {}  # QDS的資料層級選單 (下拉式選單用)
         self.QDSLevel[self.DefaultString_NoSelect] = []  # 預設字串先給空
 
-        self.levelList = list(self.model.GetOriginalDataFrame().columns)[0:5]
+        # 第一層 / 第二層 / 第....層
+        self.levelList = list(self.model.GetOriginalDataFrame().columns)[0:2]
         print(self.levelList)
         self.CreateDictForLevel()
 

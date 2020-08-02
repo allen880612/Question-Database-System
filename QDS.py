@@ -33,7 +33,7 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     MakeQuestionPage = QMainWindow()
 
-    EXCEL_PATH = "database/盈虧問題v2.xlsx"
+    EXCEL_PATH = "database/盈虧問題v3.xlsx"
     model = ExcelModel(EXCEL_PATH)
 
     # 出題頁面

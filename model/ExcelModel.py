@@ -30,7 +30,8 @@ class ExcelModel():
     #過濾表格
     def GetFilteredDataframe(self, questionType):
         # df.loc[('bar', 'two'), 'A'] tuple法不能用，因為數學、應用題那些不屬於index
-        flagList1 = ["第一層", "第二層", "第三層", "第四層", "第五層"]
+        # flagList1 = ["第一層", "第二層", "第三層", "第四層", "第五層"]
+        flagList1 = ["第一層", "第二層"]
         # flagType = ["數學", "應用題", "典型應用題", "盈虧問題", "基本型"]
         # flag = self.dataframe[flagList1] == flagType
         flag = True

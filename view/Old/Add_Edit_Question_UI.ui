@@ -166,6 +166,79 @@
         </item>
        </layout>
       </item>
+      <item row="2" column="2">
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_lv4">
+          <property name="text">
+           <string>主題</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="label_lv5">
+          <property name="text">
+           <string>單元</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QComboBox" name="cBox_lv4"/>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="cBox_lv5"/>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="1">
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="2">
+         <widget class="QLabel" name="label_lv3">
+          <property name="text">
+           <string>題型 - 二</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QComboBox" name="cBox_lv1"/>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="cBox_lv2"/>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="label_lv2">
+          <property name="text">
+           <string>題型 - 一</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_lv1">
+          <property name="text">
+           <string>科目</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QComboBox" name="cBox_lv3"/>
+        </item>
+       </layout>
+      </item>
       <item row="1" column="1">
        <widget class="QLabel" name="label_add_edit_question">
         <property name="font">
@@ -183,19 +256,16 @@
        </widget>
       </item>
       <item row="4" column="2">
-       <widget class="QPushButton" name="button_return">
+       <widget class="QPushButton" name="button_make_question">
         <property name="text">
-         <string>返回</string>
+         <string>出題</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QLabel" name="label_question_level">
+      <item row="1" column="2">
+       <widget class="QPushButton" name="button_add_unit">
         <property name="text">
-         <string>TextLabel</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <string>新增單元</string>
         </property>
        </widget>
       </item>

@@ -89,7 +89,8 @@ class SelectQuestionPage(QMainWindow):
 
     # 更新UI
     def UpdateUI(self):
-        self.ui.button_make_question.setEnabled(self.IsMakeQuestionEnable())
+        self.ui.button_make_question.setEnabled(self.IsMakeQuestionButtonEnable())
+        self.ui.button_add_question.setEnabled(self.IsAddQuestionButtonEnable())
     
     # 重設該Layout
     def ResetLayout(self, layout_level):
@@ -215,8 +216,12 @@ class SelectQuestionPage(QMainWindow):
             return tuple(questionLevel)
 
     # 出題按鈕可不可以按
-    def IsMakeQuestionEnable(self):
+    def IsMakeQuestionButtonEnable(self):
         return len(self.checkbox_leaf_level_list) != 0
+
+    # 新增題目按鈕可不可以按
+    def IsAddQuestionButtonEnable(self):
+        return len(self.checkbox_leaf_level_list) == 1
 
     # 開啟 新增單元 視窗
     def OpenAddUnitView(self):

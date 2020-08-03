@@ -102,3 +102,7 @@ def IskWordOpen(file_path):
         flag = False
     print(flag)
     return flag
+
+# 得到顯示用的題目文字 (Ex: 盈虧問題 - 基本題) (add_question_strlist = ["盈虧問題 - 基本題"])
+def GetQuestionShowText(add_question_strlist):
+    return " - ".join(add_question_strlist)

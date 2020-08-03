@@ -32,12 +32,11 @@ class AddEditQuestionPage(QMainWindow):
 
         self.model = _model
         self.comboboxView = cbView.ComboboxView(self.model)
+        self.cBoxList = [self.ui.cBox_lv1, self.ui.cBox_lv2, self.ui.cBox_lv3, self.ui.cBox_lv4, self.ui.cBox_lv5]
+        self.cBoxNum = len(self.cBoxList)
 
         # 上一層所選的level的list
         self.question_level_list = []
-        
-        # 這一頁所使用的question level (self.question_level_list[0])
-        self.question_level = []
 
         #region 新增單元 視窗 變數 (移到主畫面)
         #self.Add_Unit_View = Add_Unit_Page.AddUnitPage(self.model)
@@ -49,13 +48,14 @@ class AddEditQuestionPage(QMainWindow):
     # 初始化
     def Initialize(self):
         self.ConnectEvent()
-        self.ResetPage()
+        self.LoadComboBox()
+        self.InitUI()
         self.UpdateUI()
         self.mode = self.MODE_ADD_QUESTION
 
     # 註冊事件
     def ConnectEvent(self):
-        self.ui.button_add_question.clicked.connect(self.ClickAddQuestionButton) # Link 新增題目按鈕
+        self.ui.button_add_question.clicked.connect(self.ClickAddQuestionButton)
         self.ui.button_import_image.clicked.connect(self.ImportImage)
         self.ui.button_addToList_image.clicked.connect(self.AddToImageList)
         self.ui.button_delete_image.clicked.connect(self.DeleteImage)
@@ -69,82 +69,126 @@ class AddEditQuestionPage(QMainWindow):
         # self.ui.button_add_unit.clicked.connect(self.OpenAddUnitView)
         # self.Add_Unit_View.add_unit_signal.connect(self.GetADdUnitViewData)
 
-    # 重設頁面
-    def ResetPage(self):
+    # 初始化UI
+    def InitUI(self):
+        # 預設為新增模式
+        self.ui.button_add_question_mode.setEnabled(False)
+        self.ui.button_edit_question_mode.setEnabled(True)
+
+    # 設置下拉是選單內容
+    def LoadComboBox(self):
         defaultString = self.comboboxView.GetNoSelectString()
-        self.ui.label_question_level.setText(MyLibrary.GetQuestionShowText(self.question_level))
-        self.mode = self.MODE_ADD_QUESTION
+        self.cBoxList[0].addItems(self.comboboxView.GetDictValue(defaultString))
+
+        for i in range(5):
+            self.cBoxList[i].activated[str].connect(partial(self.SelectComboBox, i))
+            self.cBoxList[i].setEditable(True)
+            self.cBoxList[i].lineEdit().setText("選擇第" + str(i + 1) + "層")
 
     # 新增按鈕是否可以按下
     def GetAddButtonEnable(self):
-        #flag = True
-        ## print(f"text={not len(self.ui.text_edit_question.toPlainText()) == 0}")
-        #flag &= (not len(self.ui.text_edit_question.toPlainText()) == 0)
-        ## print(f"cBox={len(self.comboboxSelectOption) == self.cBoxNum}")
-        #flag &= (len(self.comboboxSelectOption) == 0)
-        ## print(f"flag={flag}")
-        #return flag
-        return True
+        flag = True
+        # print(f"text={not len(self.ui.text_edit_question.toPlainText()) == 0}")
+        flag &= (not len(self.ui.text_edit_question.toPlainText()) == 0)
+        # print(f"cBox={len(self.comboboxSelectOption) == self.cBoxNum}")
+        flag &= (len(self.comboboxSelectOption) == self.cBoxNum)
+        # print(f"flag={flag}")
+        return flag
 
     # 編輯按鈕是否可以按下
     def GetEditButtonEnable(self):
-        #flag = True
+        flag = True
         # print(f"text={not len(self.ui.text_edit_question.toPlainText()) == 0}")
         # flag = flag and (not len(self.ui.text_edit_question.toPlainText()) == 0)
         # print(f"cBox={len(self.comboboxSelectOption) == self.cBoxNum}")
-        #flag = flag and (len(self.comboboxSelectOption) == self.cBoxNum)
-        #print(f"flag={flag}")
-        #return flag 
-        return True
-
-    # 新增題目模式 按鈕 是否可以被按下
-    def IsAddModeButtonEnable(self):
-        return self.mode != self.MODE_ADD_QUESTION
-
-    # 編輯題目模式 按鈕 是否可以被按下
-    def IsEditModeButtonEnable(self):
-        return self.mode != self.MODE_EDIT_QUESTION
+        flag = flag and (len(self.comboboxSelectOption) == self.cBoxNum)
+        print(f"flag={flag}")
+        return flag
 
     # 更新UI
     def UpdateUI(self):
-        # 空白題目 不該被新增 / 修改
+        # 空白題目 不該被新增 /修改
         self.ui.button_add_question.setEnabled(self.GetAddButtonEnable())
         # 未選擇單元 不該能修改
         self.ui.button_edit_question_mode.setEnabled(self.GetEditButtonEnable())
         # 未引入圖片 不能新增
         self.ui.button_addToList_image.setEnabled(self.temp_importImage != "")
 
-        # 切換模式按鈕
-        self.ui.button_add_question_mode.setEnabled(self.IsAddModeButtonEnable())
-        self.ui.button_edit_question_mode.setEnabled(self.IsEditModeButtonEnable())
+    # 選取下拉式 - 更新
+    def SelectComboBox(self, index, text):
+        self.UpdateSelectOption(index)  # 更新ComboboxSelectOption = 目前選到的層級 (之後做成key)
+        self.UpdateComboBox(index, text)  # 先刪除後面的下拉選單的items再重新加入
+        self.UpdateUI()
+        self.LoadQuestionList()
 
     # 切換至編輯模式
     def ClickEditMode(self):
+        self.ui.button_edit_question_mode.setEnabled(False)
+        self.ui.button_add_question_mode.setEnabled(True)
         self.mode = self.MODE_EDIT_QUESTION
         self.ui.list_weight_image.clear()
         self.LoadQuestionList()
         self.ui.label_image_preview.clear() # 清空預覽圖片
-        self.UpdateUI()
 
     # 切換至新增模式
     def ClickAddMode(self):
+        self.ui.button_edit_question_mode.setEnabled(True)
+        self.ui.button_add_question_mode.setEnabled(False)
         self.mode = self.MODE_ADD_QUESTION
         self.ui.text_edit_question.clear()
         self.ui.list_weight_image.clear()
         self.ui.list_weight_question.clear()
         self.ui.label_image_preview.clear() # 清空預覽圖片
-        self.UpdateUI()
 
     # 點擊 新增題目 按鈕
     def ClickAddQuestionButton(self):
         if self.mode == self.MODE_ADD_QUESTION:
             self.CreateQuestion()
 
+    # 清除所有下拉式選單內容
+    def ClearCombobox(self):
+        self.comboboxSelectOption.clear()
+        self.cBoxList[0].addItems(
+            self.comboboxView.GetDictValue(self.comboboxView.GetNoSelectString()))  # add default items
+
+        for i in range(1, self.cBoxNum):
+            self.cBoxList[i].lineEdit().setText("選擇第" + str(i + 1) + "層")
+
+    # 更新篩選題目list (由下拉式選單選中選像)
+    def UpdateSelectOption(self, index):
+        self.comboboxSelectOption.clear()
+        for i in range(index + 1):
+            self.comboboxSelectOption.append(self.cBoxList[i].currentText())
+        print(self.comboboxSelectOption)
+
+    # 更新下拉式選單 (由前個 更新後個)
+    def UpdateComboBox(self, index, text):
+        # 更新所選文字
+        self.cBoxList[index].setEditText(text)
+
+        # 清除所選之後的選擇
+        for i in range(self.cBoxNum - 1, index):
+            self.cBoxList[i].clear()
+            self.cBoxList[i].lineEdit().setText("選擇第" + str(i + 1) + "層")
+
+        # 非末項，更新後一選項選擇
+        if index != self.cBoxNum - 1:
+            key = MyLibrary.CreateDictKey(self.comboboxSelectOption)
+            nextLevelItems = self.comboboxView.GetDictValue(key)
+
+            # 若回傳 None， 為使用者手動輸入，用於新增題目
+            if not nextLevelItems:
+                pass
+            else:
+                self.cBoxList[index + 1].clear()
+                self.cBoxList[index + 1].addItems(nextLevelItems)
+                self.cBoxList[index + 1].lineEdit().setText("選擇第" + str(index + 2) + "層")
+
     # 獲取題目表
     def LoadQuestionList(self):
         if self.mode == self.MODE_ADD_QUESTION:
             return
-        questionType = self.question_level  # 搜尋的條件
+        questionType = self.comboboxSelectOption  # 搜尋的條件
         self.questionList = self.model.GetQuestionList(questionType)
         self.ui.list_weight_question.clear()
         for i in range(len(self.questionList)):
@@ -159,8 +203,8 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.text_edit_question.clear()
         self.ui.list_weight_image.clear()
         self.comboboxView.CreateDictForLevel()
-        self.temp_importImage = "" # 清除上一題的圖片
-        self.imageListPath = [] # 清除上一題的圖片
+        self.temp_importImage = "" # 清除上一提的圖片
+        self.imageListPath = [] # 清除上一提的圖片
 
     # 獲取題目資訊，建立題目類別
     def CreateQuestion(self):
@@ -313,8 +357,7 @@ class AddEditQuestionPage(QMainWindow):
     # 接收 來自上一層的題目列表
     def GetQuestionLevelList(self, questionList):
         self.question_level_list = questionList
-        self.question_level = self.question_level_list[0]
-        self.comboboxSelectOption = self.question_level # 欠改耶 操 怎這麼多啊
+        print(questionList)
 
     ## 開啟 新增單元 視窗
     #def OpenAddUnitView(self):

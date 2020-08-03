@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QMainWindow, QMessageBox
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtWidgets, QtGui
 from view import ComboboxView as cbview
 from view.UI import Make_Question_UI_Test as mq_UI_Test
 from view.UI import Make_Question_UI as mq_UI
@@ -47,6 +47,7 @@ class MakeQuestionPage(QMainWindow):
     # 註冊事件
     def ConnectEvent(self):
         self.ui.button_make_question.clicked.connect(self.Confirm)
+        self.ui.lineEdit_total_number.setValidator(QtGui.QIntValidator(self.ui.lineEdit_total_number)) # 設置總題數只能輸入數字
         self.ui.lineEdit_total_number.editingFinished.connect(self.AverageQuestionNumber) # LineEdit事件 - 輸入完後均等題目數
 
     # 重設頁面
@@ -65,7 +66,6 @@ class MakeQuestionPage(QMainWindow):
 
     # 刪除所有題目
     def DeletaAllQuestion(self):
-        print("all question")
         for label in self.question_label:
             self.question_layout.removeWidget(label)
             label.setVisible(False)
@@ -83,7 +83,7 @@ class MakeQuestionPage(QMainWindow):
         add_row = current_question_number + 1 # 要新增到的列的位置
 
         new_label = QtWidgets.QLabel(self.ui.centralwidget)
-        new_label.setText(self.GetQuestionShowText(add_question_strlist))
+        new_label.setText(MyLibrary.GetQuestionShowText(add_question_strlist))
         new_label.setObjectName(self.GetNewObjectName("label"))
         self.question_layout.addWidget(new_label, add_row, 2, 1, 1)
 
@@ -91,13 +91,11 @@ class MakeQuestionPage(QMainWindow):
         new_tbox.setText(str(question_number))
         new_tbox.setObjectName(self.GetNewObjectName("textbox"))
         self.question_layout.addWidget(new_tbox, add_row, 3, 1, 1)
-
+        new_tbox.setValidator(QtGui.QIntValidator(new_tbox)) # 設置只能輸入數字
+        new_tbox.editingFinished.connect(self.InputQuestionNumberEvent)
+        
         self.question_label.append(new_label)
         self.question_tbox.append(new_tbox)
-
-    # 得到題目名
-    def GetQuestionShowText(self, add_question_strlist):
-        return " - ".join(add_question_strlist)
 
     # 得到新元件的物件名
     def GetNewObjectName(self, type):
@@ -117,6 +115,16 @@ class MakeQuestionPage(QMainWindow):
                 avg_number += 1
                 remain_number -= 1
             target_tbox.setText(str(avg_number))
+    
+    # 輸入題數後發生之事件
+    def InputQuestionNumberEvent(self):
+        update_total_number = 0
+        for tbox in self.question_tbox:
+            if tbox.text() == "":
+                tbox.setText("0")
+            else:
+                update_total_number += int(tbox.text())
+        self.ui.lineEdit_total_number.setText(str(update_total_number))
 
     # 接收 來自上一層的題目列表
     def GetQuestionLevelList(self, questionList):

@@ -16,10 +16,13 @@ def Show_MakeQuestionPage():
 
 # 開啟編輯題目視窗
 def Show_AddEditQuestionPage():
+    AddEditQuestionPage.comboboxView.CreateDictForLevel()
+    AddEditQuestionPage.GetQuestionLevelList(SelectQuestionPage.checkbox_leaf_level_list)
+    AddEditQuestionPage.ResetPage() # 重設 Add Edit Question Page 
+
     MakeQuestionPage.hide()
     AddEditQuestionPage.show()
     SelectQuestionPage.hide()
-    AddEditQuestionPage.comboboxView.CreateDictForLevel()
 
 # 開啟選擇題目階層視窗
 def Show_SelectQuestionLevelPage():
@@ -50,7 +53,7 @@ if __name__ == '__main__':
     SelectQuestionPage.ui.button_make_question.clicked.connect(Show_MakeQuestionPage) # 選擇路徑 -> 出題
 
     MakeQuestionPage.ui.button_return.clicked.connect(Show_SelectQuestionLevelPage) # 出題 -> 選擇路徑
-    AddEditQuestionPage.ui.button_make_question.clicked.connect(Show_SelectQuestionLevelPage) # 新增題目 -> 選擇路徑
+    AddEditQuestionPage.ui.button_return.clicked.connect(Show_SelectQuestionLevelPage) # 新增題目 -> 選擇路徑
 
     #MakeQuestionPage.make_question_signal.connect(SelectQuestionPage.GetQuestionLevelList)
 

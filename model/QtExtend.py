@@ -18,6 +18,10 @@ class QLT(object):
 		self.head_node = QLTNode(-1, "None", False, [])
 
 	def CreateTree(self):
+		# 重建樹
+		self.DeleteTree()
+		self.head_node = QLTNode(-1, "None", False, [])
+
 		noselect_list = self.comboboxView.GetDictValue("NOSELECT")
 		head = self.head_node
 		# 建第一層
@@ -92,6 +96,21 @@ class QLT(object):
 				get_node = self.GetNodeByQuestionLevel_DFS(nodes, questionLevel)
 				if get_node:
 					return get_node
+	
+	# 刪除此樹
+	def DeleteTree(self):
+		del self.head_node # 直接刪除首節點，我不知道這樣垃圾回收會不會做事
+		#self.DeleteTree_DFS(self.head_node)
+
+	# ↑ DFS
+	def DeleteTree_DFS(self, node):
+		if len(node.childList) == 0:
+			return
+
+		for nodes in node:
+			DeleteTree_DFS(nodes)
+			del nodes
+		node.childList.clear()
 
 	# 設置顆樹所有的節點的isShow & Check State
 	def SetTreeCheckShow(self, node, isShow):

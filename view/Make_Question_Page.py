@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QMainWindow, QMessageBox
+from PyQt5 import QtCore, QtWidgets
 from view import ComboboxView as cbview
 from view.UI import Make_Question_UI_Test as mq_UI_Test
 from view.UI import Make_Question_UI as mq_UI
@@ -21,63 +22,115 @@ class MakeQuestionPage(QMainWindow):
         self.ui = mq_UI.MakeQuestionPage_UI()
         self.ui.setupUi(self)
 
-        self.cBoxList = [self.ui.cBox_level1, self.ui.cBox_level2, self.ui.cBox_level3, self.ui.cBox_level4, self.ui.cBox_level5]
-        self.cBoxNum = len(self.cBoxList)
         self.model = _model
         self.comboboxView = cbview.ComboboxView(self.model)
-        self.InitGUI()
 
-    #region UI 設定
-    def InitGUI(self):
+        # 上一層所選的level的list
+        self.question_level_list = []
 
-        self.ui.btn_confirm.clicked.connect(self.Confirm)
-        #region 下拉式選單
+        # UI上擺放題目的Layout
+        self.question_layout = self.ui.gridLayout_1
+
+        # UI上 的題目文字
+        self.question_label = []
+
+        # UI上 的題數輸入框
+        self.question_tbox = []
+
+        self.Initialize()
+
+    # 初始化
+    def Initialize(self):
+        self.ResetPage()
+        self.ConnectEvent()
+
+    # 註冊事件
+    def ConnectEvent(self):
+        self.ui.button_make_question.clicked.connect(self.Confirm)
+        self.ui.lineEdit_total_number.editingFinished.connect(self.AverageQuestionNumber) # LineEdit事件 - 輸入完後均等題目數
+
+    # 重設頁面
+    def ResetPage(self):
+        # 重設defaultString
         defaultString = self.comboboxView.GetNoSelectString()
-        self.cBoxList[0].addItems(self.comboboxView.GetDictValue(defaultString))
 
-        for i in range(5):
-            # self.cBoxList2[i].activated[str].connect(lambda text: self.SelectLevel(i, text))  # 先封印，不知為啥參數總是錯
-            self.cBoxList[i].activated[str].connect(partial(self.SelectLevel, i))
-            self.cBoxList[i].setEditable(True)
-            self.cBoxList[i].lineEdit().setText("選擇第" + str(i + 1) + "層")
-        #endregion
-    #endregion
+        # 重建題目數
+        self.DeletaAllQuestion()
+        for question in self.question_level_list:
+            self.SetQuestion(question)
+
+        # 重置總題數 & 等分題數
+        self.ui.lineEdit_total_number.setText("40")
+        self.AverageQuestionNumber()
+
+    # 刪除所有題目
+    def DeletaAllQuestion(self):
+        print("all question")
+        for label in self.question_label:
+            self.question_layout.removeWidget(label)
+            label.setVisible(False)
+        for tbox in self.question_tbox:
+            self.question_layout.removeWidget(tbox)
+            tbox.setVisible(False)
+        self.question_label.clear()
+        self.question_tbox.clear()
+
+    # 設置一道題目
+    def SetQuestion(self, add_question_strlist, question_number=0):
+        # self.gridLayout_1.addWidget(self.label_total_number, 0, 2, 1, 1)
+        # self.gridLayout_1.addWidget(self.lineEdit_total_number, 0, 3, 1, 1)
+        current_question_number = len(self.question_label)
+        add_row = current_question_number + 1 # 要新增到的列的位置
+
+        new_label = QtWidgets.QLabel(self.ui.centralwidget)
+        new_label.setText(self.GetQuestionShowText(add_question_strlist))
+        new_label.setObjectName(self.GetNewObjectName("label"))
+        self.question_layout.addWidget(new_label, add_row, 2, 1, 1)
+
+        new_tbox = QtWidgets.QLineEdit(self.ui.centralwidget)
+        new_tbox.setText(str(question_number))
+        new_tbox.setObjectName(self.GetNewObjectName("textbox"))
+        self.question_layout.addWidget(new_tbox, add_row, 3, 1, 1)
+
+        self.question_label.append(new_label)
+        self.question_tbox.append(new_tbox)
+
+    # 得到題目名
+    def GetQuestionShowText(self, add_question_strlist):
+        return " - ".join(add_question_strlist)
+
+    # 得到新元件的物件名
+    def GetNewObjectName(self, type):
+        return type + "_" + str(len(self.question_label))
+
+    # 平均每一題
+    def AverageQuestionNumber(self):
+        total_question_number = int(self.ui.lineEdit_total_number.text())
+        question_level_list_count = len(self.question_level_list) if self.question_level_list else 1 # 上一層選了多少路徑 (至少為1)
+        average_number = total_question_number // question_level_list_count # 平均每一個題型有多少題
+        remain_number = total_question_number % question_level_list_count  # 多的題目
+        average_number_list = [average_number] * question_level_list_count
+        for index in range(0, len(self.question_tbox)):
+            target_tbox = self.question_tbox[index]
+            avg_number = average_number_list[index]
+            if remain_number > 0:
+                avg_number += 1
+                remain_number -= 1
+            target_tbox.setText(str(avg_number))
+
+    # 接收 來自上一層的題目列表
+    def GetQuestionLevelList(self, questionList):
+        self.question_level_list = questionList
+
+    # 測試用
+    def Test(self):
+        qqq = self.model.GetQuestionList(self.question_level_list[0])
+        print("-----")
+        print(qqq)
+        print(len(qqq))
 
     #region 函式區
-
-    def SelectLevel(self, index, text):
-        self.UpdateSelectOption(index)      # 更新ComboboxSelectOption = 目前選到的層級 (之後做成key)
-        self.UpdateComboBox(index, text)    # 先刪除後面的下拉選單的items再重新加入
-
-    def ClearCombobox(self):
-        self.comboboxSelectOption.clear()
-        self.cBoxList[0].addItems(self.comboboxView.GetDictValue(self.comboboxView.GetNoSelectString()))  # add default items
-
-        for i in range(1, self.cBoxNum):
-            self.cBoxList[i].lineEdit().setText("選擇第" + str(i + 1) + "層")
-
-    def UpdateSelectOption(self, index):
-        self.comboboxSelectOption.clear()
-        for i in range(index+1):
-            self.comboboxSelectOption.append(self.cBoxList[i].currentText())
-
-    def UpdateComboBox(self, index, text):
-        # 更新所選文字
-        self.cBoxList[index].setEditText(text)
-
-        # 清除所選之後的選擇
-        for i in range(self.cBoxNum-1, index):
-            self.cBoxList[i].clear()
-            self.cBoxList[i].lineEdit().setText("選擇第" + str(i + 1) + "層")
-
-        # 非末項，更新後一選項選擇
-        if index != self.cBoxNum - 1:
-            self.cBoxList[index + 1].clear()
-            self.cBoxList[index + 1].addItems(self.comboboxView.GetDictValue(MyLibrary.CreateDictKey(self.comboboxSelectOption)))
-            self.cBoxList[index + 1].lineEdit().setText("選擇第" + str(index + 2) + "層")
-
     def Confirm(self):
-
         #excel
         if self.model.IsLoad():
             if not MyLibrary.IskWordOpen("word/answer.docx") or not MyLibrary.IskWordOpen("word/question.docx"):
@@ -85,26 +138,26 @@ class MakeQuestionPage(QMainWindow):
                 return
 
             #questionType = ["數學"]
-            questionType = self.comboboxSelectOption #搜尋的條件
-            if questionType: #存在搜尋條件才做
-                # self.model.GetFilteredDataframe(questionType)
-                questionNumber = 10  # 預設隨機選10題
-                # qList = self.model.GetQuestionList()  # 取得過濾後的題目
-                qList = self.model.GetQuestionList(questionType)  # 取得過濾後的題目
-                qList = random.sample(qList, min(questionNumber, len(qList)))  # 將題目不重複隨機選擇 k 題 (0 <= k <= 篩選後的題目數量)
-                print(questionType)
-                print(qList)
-                self.BulidWord(qList, "answer", True)  # 建造word 保留答案
-                self.BulidWord(qList, "question", False)  # 建造word 刪除答案
-                self.ClearCombobox()  # 清除選擇的combobox
-                print("done")
-            else:
-                self.ui.label.setText("未選擇條件")
+            qList = [] # 要給Word建構的題目列表
+            # 建構 Question List
+            for question_level_index in range(0, len(self.question_level_list)):
+                this_question_level = self.question_level_list[question_level_index] # 目前跑到的題目階層
+                this_question_number = int(self.question_tbox[question_level_index].text()) # 目前跑到的題目階層所要建構的題數
+                filter_question_list = self.model.GetQuestionList(this_question_level) # 根據階層篩選題目
+                # ↓目前有問題，如果選20題，但該題型只有10題?，目前做法: 直接選10題不重複，但總題數減少
+                filter_question_list = random.sample(filter_question_list, min(this_question_number, len(filter_question_list))) # 將題目不重複隨機選擇 k 題 (0 <= k <= 篩選後的題目數量)
+                
+                qList += filter_question_list
+
+            self.BulidWord(qList, "answer", True)  # 建造word 保留答案
+            self.BulidWord(qList, "question", False)  # 建造word 刪除答案
+            print("done")
         #excel
 
     def BulidWord(self, qList, fileName, haveAnswer):
         word = docx.Document(docx=self.TEMPLATE_WORD_PATH)  # 另一個坑，為了讓方裝後也能抓到default.docx，必須指定
-        heading = " - ".join(self.comboboxSelectOption)
+        # heading = " - ".join(self.comboboxSelectOption)
+        heading = " - ".join(self.question_level_list[0])
         word.add_heading(heading, 0) #新增那個醜醜藍字
 
         #新增題目 style

@@ -4,19 +4,24 @@ from view import Make_Question_Page_Test, Add_Edit_Question_Page, Make_Question_
 from view import Select_Question_Page
 from model.ExcelModel import ExcelModel
 
-
+# 開啟出題視窗
 def Show_MakeQuestionPage():
+    MakeQuestionPage.comboboxView.CreateDictForLevel()
+    MakeQuestionPage.GetQuestionLevelList(SelectQuestionPage.checkbox_leaf_level_list) # 把選擇好的題目給Make Question Page
+    MakeQuestionPage.ResetPage() # 重設Make Question Page
+
     MakeQuestionPage.show()
     AddEditQuestionPage.hide()
     SelectQuestionPage.hide()
-    MakeQuestionPage.comboboxView.CreateDictForLevel()
 
+# 開啟編輯題目視窗
 def Show_AddEditQuestionPage():
     MakeQuestionPage.hide()
     AddEditQuestionPage.show()
     SelectQuestionPage.hide()
     AddEditQuestionPage.comboboxView.CreateDictForLevel()
 
+# 開啟選擇題目階層視窗
 def Show_SelectQuestionLevelPage():
     MakeQuestionPage.hide()
     AddEditQuestionPage.hide()
@@ -44,8 +49,10 @@ if __name__ == '__main__':
     SelectQuestionPage.ui.button_add_question.clicked.connect(Show_AddEditQuestionPage) # 選擇路徑 -> 新增題目
     SelectQuestionPage.ui.button_make_question.clicked.connect(Show_MakeQuestionPage) # 選擇路徑 -> 出題
 
-    MakeQuestionPage.ui.btn_edeit_add.clicked.connect(Show_SelectQuestionLevelPage) # 出題 -> 選擇路徑
+    MakeQuestionPage.ui.button_return.clicked.connect(Show_SelectQuestionLevelPage) # 出題 -> 選擇路徑
     AddEditQuestionPage.ui.button_make_question.clicked.connect(Show_SelectQuestionLevelPage) # 新增題目 -> 選擇路徑
+
+    #MakeQuestionPage.make_question_signal.connect(SelectQuestionPage.GetQuestionLevelList)
 
     #Show_MakeQuestionPage()
     #Show_AddEditQuestionPage()

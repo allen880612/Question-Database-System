@@ -25,10 +25,16 @@ def test2():
 def test3(tc):
 	return tc.tkList
 
+def test4():
+	kkk = [1,2,3,4]
+	print(kkk)
+	kkk += [9,8,7,6]
+	print(kkk)
+
 if __name__ == '__main__':
 	#tc = testClass()
 	#kk = test3(tc)
 	#kk.append(456)
 	#print(id(kk))
 	#print(id(tc.tkList))
-	test1()
+	test4()

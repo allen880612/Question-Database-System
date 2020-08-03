@@ -29,20 +29,18 @@ class SelectQuestionPage(QMainWindow):
         # 查詢用check box dict
         self.checkboxDict = {}
         # verticalLayout Dict (收集checkbox)
-        self.layoutDict = {} 
+        self.layoutDict = {self.ui.verticalLayout_lv1 : [], self.ui.verticalLayout_lv2 : [], self.ui.verticalLayout_lv3 : [], self.ui.verticalLayout_lv4 : [], self.ui.verticalLayout_lv5 : []} 
+
         # 確定選到葉節點的 level (list of string list)
         self.checkbox_leaf_level_list = []
 
         # Question Level Tree
         self.QLT = QtExtend.QLT(self.comboboxView)
-        self.QLT.CreateTree()
-        self.QLT.DFS()
 
         # 新增單元頁面
         self.Add_Unit_View = Add_Unit_Page.AddUnitPage(self.model)
         self.Add_Unit_View.setWindowModality(QtCore.Qt.ApplicationModal)
         self.Is_add_unit_view_open = False
-
 
         self.Initialize()
 
@@ -57,10 +55,20 @@ class SelectQuestionPage(QMainWindow):
         self.ui.button_add_unit.clicked.connect(self.OpenAddUnitView)
         self.Add_Unit_View.add_unit_signal.connect(self.GetAddUnitViewData)
 
+        #self.ui.button_make_question.connect(self.OpenMakeQuestionPage)
+
     # ResetPage
     def ResetPage(self):
         self.questionLevelLayout = [self.ui.verticalLayout_lv1, self.ui.verticalLayout_lv2, self.ui.verticalLayout_lv3, self.ui.verticalLayout_lv4, self.ui.verticalLayout_lv5]
         
+        # reset Question Level Tree
+        self.QLT.CreateTree()
+        self.QLT.DFS()
+        
+        # reset layout
+        for layout in self.questionLevelLayout:
+            self.DeleteLayoutElement(layout)
+
         # reset layout dict
         self.layoutDict = {}
         self.layoutDict[self.ui.verticalLayout_lv1] = []
@@ -71,46 +79,17 @@ class SelectQuestionPage(QMainWindow):
 
         # reset checkbox dict
         self.checkboxDict = {}
-        #create_checkbox_list = self.comboboxView.GetDictValue("NOSELECT")
-        #for checkbox_text in create_checkbox_list:
-        #    checkbox_name = self.CreateCheckboxObjectName(0)
-        #    self.AddCheckbox(checkbox_text, checkbox_name, 0, [])
         show_QTLNode_list = self.QLT.GetNodeByLevel(0)
+        print(len(show_QTLNode_list))
         for node in show_QTLNode_list:
             checkbox_name = self.CreateCheckboxObjectName(0)
             self.AddCheckbox(node.name, checkbox_name, 0, [])
 
-        # test
-        node = self.QLT.GetNodeByQuestionLevel(["數學", "應用題", "典型應用題", "燕尾定理"])
-        if node == None:
-            print("fuck")
-        else:
-            print(node.depth)
-            print(node.questionLevel)
-
-    # 確定新增
-    def  ConfrimAddUnit(self):
-       pass
-
-    # 取消新增
-    def CancelAddUnit(self):
-        pass
-
-    # 新增階層
-    def AddLevel(self):
-        pass
-
-    # 刪除階層
-    def DeleteLevel(self):
-        pass
-
-    # 取得目前階層數
-    def GetNowLevelNum(self):
-        pass
+        self.UpdateUI()
 
     # 更新UI
     def UpdateUI(self):
-        pass
+        self.ui.button_make_question.setEnabled(self.IsMakeQuestionEnable())
     
     # 重設該Layout
     def ResetLayout(self, layout_level):
@@ -157,6 +136,7 @@ class SelectQuestionPage(QMainWindow):
         del_checkbox.setVisible(False)
         cbox_data.layout.removeWidget(del_checkbox)
         # self.layoutDict[cbox_data.layout].remove(del_checkbox)
+        print("delete")
         del self.checkboxDict[del_checkbox.objectName()]
 
     # 點選 checkbox
@@ -177,6 +157,8 @@ class SelectQuestionPage(QMainWindow):
         for i in self.checkbox_leaf_level_list:
             print(i)
         print("---")
+
+        self.UpdateUI()
 
     # 勾選 CheckBox (cbox = 被勾選的checkbox, cbox_data = 他的資料)
     def SelectCheckBox(self, cbox, cbox_data):
@@ -232,6 +214,9 @@ class SelectQuestionPage(QMainWindow):
         else:
             return tuple(questionLevel)
 
+    # 出題按鈕可不可以按
+    def IsMakeQuestionEnable(self):
+        return len(self.checkbox_leaf_level_list) != 0
 
     # 開啟 新增單元 視窗
     def OpenAddUnitView(self):
@@ -247,9 +232,13 @@ class SelectQuestionPage(QMainWindow):
 
             if list_input_content != []:
                 q_Info = copy.deepcopy(list_input_content)
+                q_Info.append("") # Level 3
+                q_Info.append("") # Level 4
+                q_Info.append("") # Level 5
                 q_Info.append(0) # add 題號
                 q_Info.append("default Content") # add 內容
                 q_Info.append("NOIMAGE") # add 圖片
                 dict_q = dict(zip(self.model.GetOriginalDataFrame().columns, q_Info))
                 self.model.AddQuestion(dict_q)
                 self.comboboxView.CreateDictForLevel()
+                self.ResetPage()

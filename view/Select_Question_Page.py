@@ -31,8 +31,8 @@ class SelectQuestionPage(QMainWindow):
         # verticalLayout Dict (收集checkbox)
         self.layoutDict = {self.ui.verticalLayout_lv1 : [], self.ui.verticalLayout_lv2 : [], self.ui.verticalLayout_lv3 : [], self.ui.verticalLayout_lv4 : [], self.ui.verticalLayout_lv5 : []} 
 
-        # 確定選到葉節點的 level (list of string list)
-        self.checkbox_leaf_level_list = []
+        # 確定選到葉節點的 level (list of node list, no sort)
+        self.checkbox_leaf_list = []
 
         # Question Level Tree
         self.QLT = QtExtend.QLT(self.comboboxView)
@@ -109,10 +109,10 @@ class SelectQuestionPage(QMainWindow):
                 preList.pop()
                 self.AddCheckbox(node.name, checkbox_name, layout_level, preList, node.isCheck)
 
-            if (node.isCheck) and (len(node.childList) == 0) and (node.questionLevel not in self.checkbox_leaf_level_list):
-                self.checkbox_leaf_level_list.append(node.questionLevel)
-            elif (node.isCheck == False) and (node.questionLevel in self.checkbox_leaf_level_list):
-                self.checkbox_leaf_level_list.remove(node.questionLevel)
+            if (node.isCheck) and (len(node.childList) == 0) and (node not in self.checkbox_leaf_list):
+                self.checkbox_leaf_list.append(node)
+            elif (node.isCheck == False) and (node in self.checkbox_leaf_list):
+                self.checkbox_leaf_list.remove(node)
 
     # 刪除 layout 所有的element (checkbox)
     def DeleteLayoutElement(self, layout):
@@ -159,7 +159,7 @@ class SelectQuestionPage(QMainWindow):
     
         print("---")
         print("leaf level:")
-        for i in self.checkbox_leaf_level_list:
+        for i in self.GetLeafNodeBySort():
             print(i)
         print("---")
 
@@ -184,7 +184,7 @@ class SelectQuestionPage(QMainWindow):
                 self.ResetLayout(reset_depth)
         # 選到葉節點
         else:
-            self.checkbox_leaf_level_list.append(node.questionLevel)
+            self.checkbox_leaf_list.append(node)
 
     # 取消勾選 CheckBox (cbox = 被勾選的checkbox, cbox_data = 他的資料)
     def CancelSelectCheckBox(self, cbox, cbox_data, isRefresh=True):
@@ -203,7 +203,7 @@ class SelectQuestionPage(QMainWindow):
 
         # 葉節點 > 移除節點
         if len(node.childList) == 0:
-            self.checkbox_leaf_level_list.remove(node.questionLevel)
+            self.checkbox_leaf_list.remove(node)
 
     # 創造Checkbox name (checkbox_lv0_0)
     def CreateCheckboxObjectName(self, layout_level):
@@ -230,7 +230,7 @@ class SelectQuestionPage(QMainWindow):
             self.DeleteLayoutElement(self.questionLevelLayout[layout_level])
             self.ResetLayout(layout_level)
 
-        print(self.checkbox_leaf_level_list)
+        print(self.GetLeafNodeBySort())
         self.UpdateUI()
 
     # 查詢字典中的Check box
@@ -246,11 +246,11 @@ class SelectQuestionPage(QMainWindow):
 
     # 出題按鈕可不可以按
     def IsMakeQuestionButtonEnable(self):
-        return len(self.checkbox_leaf_level_list) != 0
+        return len(self.checkbox_leaf_list) != 0
 
     # 新增題目按鈕可不可以按
     def IsAddQuestionButtonEnable(self):
-        return len(self.checkbox_leaf_level_list) == 1
+        return len(self.checkbox_leaf_list) == 1
 
     # 更新第二個全選按鈕的狀態
     def UpdateSecondSelectAllButtonState(self):
@@ -261,6 +261,14 @@ class SelectQuestionPage(QMainWindow):
         # 第二層有東西
         else:
             self.ui.checkBox_level2_selectAll.setVisible(True)
+
+    # 根據順序得到葉節點
+    def GetLeafNodeBySort(self):
+        self.checkbox_leaf_list.sort(key = lambda node: node.weight)
+        leaf_strlist = []
+        for node in self.checkbox_leaf_list:
+            leaf_strlist.append(node.questionLevel)
+        return leaf_strlist
 
     # 開啟 新增單元 視窗
     def OpenAddUnitView(self):

@@ -7,7 +7,7 @@ from model.ExcelModel import ExcelModel
 # 開啟出題視窗
 def Show_MakeQuestionPage():
     MakeQuestionPage.comboboxView.CreateDictForLevel()
-    MakeQuestionPage.GetQuestionLevelList(SelectQuestionPage.checkbox_leaf_level_list) # 把選擇好的題目給Make Question Page
+    MakeQuestionPage.GetQuestionLevelList(SelectQuestionPage.GetLeafNodeBySort()) # 把選擇好的題目給Make Question Page
     MakeQuestionPage.ResetPage() # 重設Make Question Page
 
     MakeQuestionPage.show()
@@ -17,7 +17,7 @@ def Show_MakeQuestionPage():
 # 開啟編輯題目視窗
 def Show_AddEditQuestionPage():
     AddEditQuestionPage.comboboxView.CreateDictForLevel()
-    AddEditQuestionPage.GetQuestionLevelList(SelectQuestionPage.checkbox_leaf_level_list)
+    AddEditQuestionPage.GetQuestionLevelList(SelectQuestionPage.GetLeafNodeBySort())
     AddEditQuestionPage.ResetPage() # 重設 Add Edit Question Page 
 
     MakeQuestionPage.hide()

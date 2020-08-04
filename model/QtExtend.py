@@ -15,25 +15,25 @@ class QLT(object):
 	def __init__(self, cbView):
 		self.fuck = ""
 		self.comboboxView = cbView
-		self.head_node = QLTNode(-1, "None", False, [])
+		self.node_count = 0
+		self.head_node = QLTNode(-1, "None", False, [], weight=self.node_count)
 
 	def CreateTree(self):
 		# 重建樹
 		self.DeleteTree()
-		self.head_node = QLTNode(-1, "None", False, [])
+		self.head_node = QLTNode(-1, "None", False, [], weight=self.node_count)
 
 		noselect_list = self.comboboxView.GetDictValue("NOSELECT")
 		head = self.head_node
-		# 建第一層
-		for nodename in noselect_list:
-			head.AddNode(QLTNode(0, nodename, False, [nodename], True))
-
 		depth = 0
 
-		# 建之後的層
-		for node in head.childList:
-			qList = [node.name]
-			self.AddNode(node, qList, depth)
+		# 建第一層
+		for nodename in noselect_list:
+			qList = [nodename]
+			self.node_count += 1
+			new_node = QLTNode(0, nodename, False, [nodename], weight=self.node_count, isShow=True)
+			head.AddNode(new_node)
+			self.AddNode(new_node, qList, depth)
 
 	# 在node下 再加一個node, questionLsit, depth
 	def AddNode(self, node, questionList, depth):
@@ -45,7 +45,8 @@ class QLT(object):
 		for node_name in cb_list:
 			temp_qList = copy.deepcopy(questionList) # 先把上一層的list temp起來
 			temp_qList.append(node_name)
-			new_node = QLTNode(depth + 1, node_name, False, temp_qList)
+			self.node_count += 1
+			new_node = QLTNode(depth + 1, node_name, False, temp_qList, weight=self.node_count, isShow=False)
 			node.AddNode(new_node)
 			self.AddNode(new_node, temp_qList, depth + 1)
 
@@ -119,6 +120,22 @@ class QLT(object):
 		for child in node.childList:
 			self.SetTreeCheckShow(child, isShow)
 
+	# 得到所有葉節點
+	def GetAllCheckedLeafNode(self):
+		node_list = []
+		self.GetAllCheckedLeafNode_DFS(self.head_node, node_list)
+		return node_list
+
+	# DFS↑
+	def GetAllCheckedLeafNode_DFS(self, node, node_list):
+		# 為葉節點
+		if len(node.childList) == 0 and node.isCheck == True:
+			node_list.append(node)
+			return
+
+		for nodes in node.childList:
+			self.GetAllCheckedLeafNode_DFS(nodes, node_list)
+
 	# 取得 篩選comboboxView.GetDictValue 用的tuple key
 	def GetQuestionLevelTupleKey(self, questionLevel):
 		if len(questionLevel) == 1:
@@ -129,13 +146,14 @@ class QLT(object):
 # Question Level Tree - Node
 # (depth = 深度, name = 題目階層名, ischeck = 是否有被勾選, questionLevel = 題目階層 (含自己))
 class QLTNode(object):
-	def __init__(self, depth, name, ischeck, questionLevel, isShow=False):
+	def __init__(self, depth, name, ischeck, questionLevel, weight=0, isShow=False):
 		self.childList = []
 		self.depth = depth
 		self.name = name
 		self.isCheck = ischeck
 		self.questionLevel = questionLevel
 		self.isShow = isShow
+		self.weight = weight
 
 	def AddNode(self, node):
 		self.childList.append(node)

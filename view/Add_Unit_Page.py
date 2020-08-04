@@ -27,9 +27,10 @@ class AddUnitPage(QMainWindow):
         self.ConnectEvent()
         self.UpdateUI()
 
+        self.ui.button_add_level.setEnabled(False)
         #Test
-        self.ui.textBox_lv1.setText("數學")
-        self.ui.textBox_lv2.setText("四邊形")
+        #self.ui.textBox_lv1.setText("數學")
+        #self.ui.textBox_lv2.setText("四邊形")
 
     # 註冊事件
     def ConnectEvent(self):
@@ -40,6 +41,8 @@ class AddUnitPage(QMainWindow):
 
     # ResetPage
     def ResetPage(self):
+        self.ui.textBox_lv1.setText("")
+        self.ui.textBox_lv2.setText("")
         while self.GetNowLevelNum() > 2:
             self.DeleteLevel()
 

@@ -72,11 +72,12 @@ class AddEditQuestionPage(QMainWindow):
     # 重設頁面
     def ResetPage(self):
         defaultString = self.comboboxView.GetNoSelectString()
+        self.ClickAddMode()
         self.ui.label_question_level.setText(MyLibrary.GetQuestionShowText(self.question_level))
         self.mode = self.MODE_ADD_QUESTION
 
     # 新增按鈕是否可以按下
-    def GetAddButtonEnable(self):
+    def GetAddQuestionButtonEnable(self):
         #flag = True
         ## print(f"text={not len(self.ui.text_edit_question.toPlainText()) == 0}")
         #flag &= (not len(self.ui.text_edit_question.toPlainText()) == 0)
@@ -84,7 +85,7 @@ class AddEditQuestionPage(QMainWindow):
         #flag &= (len(self.comboboxSelectOption) == 0)
         ## print(f"flag={flag}")
         #return flag
-        return True
+        return len(self.ui.text_edit_question.toPlainText()) != 0
 
     # 編輯按鈕是否可以按下
     def GetEditButtonEnable(self):
@@ -108,7 +109,7 @@ class AddEditQuestionPage(QMainWindow):
     # 更新UI
     def UpdateUI(self):
         # 空白題目 不該被新增 / 修改
-        self.ui.button_add_question.setEnabled(self.GetAddButtonEnable())
+        self.ui.button_add_question.setEnabled(self.GetAddQuestionButtonEnable())
         # 未選擇單元 不該能修改
         self.ui.button_edit_question_mode.setEnabled(self.GetEditButtonEnable())
         # 未引入圖片 不能新增
@@ -164,14 +165,17 @@ class AddEditQuestionPage(QMainWindow):
 
     # 獲取題目資訊，建立題目類別
     def CreateQuestion(self):
-        questionList = self.model.GetQuestionList(self.comboboxSelectOption)
+        questionList = self.model.GetQuestionList(self.question_level)
         newQuestionIndex = len(questionList)
-        q_info = copy.deepcopy(self.comboboxSelectOption)
+        q_info = copy.deepcopy(self.question_level)
+        q_info.append("") # Level 3
+        q_info.append("") # Level 4
+        q_info.append("") # Level 5
         q_info.append(newQuestionIndex)
         q_info.append(self.ui.text_edit_question.toPlainText())
         q_info.append(self.GetImageIndex(str(newQuestionIndex))) # 新增&加入圖片
 
-        # 只有一題寫那題是0 -> 編輯問題
+        # 只有一題且那題是0 -> 編輯問題
         if len(questionList) == 1 and questionList[0].GetQuestionNumber() == 0:
             self.model.EditQuestion(0, q_info)
         else: # 有很多題 -> 新增問題
@@ -182,17 +186,17 @@ class AddEditQuestionPage(QMainWindow):
 
     # 取得題號
     def GetQuestionIndex(self):
-        qList = self.model.GetQuestionList(self.comboboxSelectOption)
+        qList = self.model.GetQuestionList(self.question_level)
         print(qList)
         return len(qList)
 
     # 格式化圖片
     def FormatImage(self, pixmap):
-        # pixmap = pixmap.scaled(256, 256, Qt.KeepAspectRatio) # Need from PyQt5.QtCore import Qt
-        if pixmap.size().width() >= pixmap.size().height():
-            pixmap = pixmap.scaledToWidth(256)
-        else:
-            pixmap = pixmap.scaledToHeight(256)
+        pixmap = pixmap.scaled(256, 256, Qt.KeepAspectRatio) # Need from PyQt5.QtCore import Qt
+        #if pixmap.size().width() >= pixmap.size().height():
+        #    pixmap = pixmap.scaledToWidth(256)
+        #else:
+        #    pixmap = pixmap.scaledToHeight(256)
         return pixmap
 
     # 引入圖片
@@ -241,7 +245,7 @@ class AddEditQuestionPage(QMainWindow):
 
         # 創建儲存圖片用資料夾
         dir_path = "database"
-        for dir in self.comboboxSelectOption:
+        for dir in self.question_level:
             dir_path = os.path.join(dir_path, dir)
         print("new path: " + dir_path)
         if not os.path.exists(dir_path): # 如果資料夾不存在 才建立資料夾
@@ -274,15 +278,19 @@ class AddEditQuestionPage(QMainWindow):
 
         # 編輯模式中 -> 點選圖片 > 預覽圖片
         if self.mode == self.MODE_EDIT_QUESTION:
-            dir_path = MyLibrary.GetFolderPathByList(self.comboboxSelectOption)
+            dir_path = MyLibrary.GetFolderPathByList(self.question_level)
             image_name = item.text()
             dir_path = os.path.join(dir_path, image_name)
-            self.ui.label_image_preview.setPixmap(QPixmap(dir_path)) # 設置圖片
+            pixmap = QPixmap(dir_path)
+            pixmap = self.FormatImage(pixmap)
+            self.ui.label_image_preview.setPixmap(pixmap) # 設置圖片
        
         # 新增模式中 -> 點選圖片 > 預覽圖片
         if self.mode == self.MODE_ADD_QUESTION:
             image_path = self.imageListPath[nowSelectImageIndex]
-            self.ui.label_image_preview.setPixmap(QPixmap(image_path))
+            pixmap = QPixmap(image_path)
+            self.FormatImage(pixmap)
+            self.ui.label_image_preview.setPixmap(pixmap)
 
 
     # 選擇題目 - 更新題目右側資訊
@@ -314,7 +322,6 @@ class AddEditQuestionPage(QMainWindow):
     def GetQuestionLevelList(self, questionList):
         self.question_level_list = questionList
         self.question_level = self.question_level_list[0]
-        self.comboboxSelectOption = self.question_level # 欠改耶 操 怎這麼多啊
 
     ## 開啟 新增單元 視窗
     #def OpenAddUnitView(self):

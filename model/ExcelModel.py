@@ -64,7 +64,7 @@ class ExcelModel():
         #q_Info.append(987) # add 題號
         #q_Info.append("default Content") # add 內容
         #q_Info.append("NOIMAGE") # add 圖片
-        self.dataframe.iloc[250] = questionInfo
+        self.dataframe.iloc[-1] = questionInfo
         self.WriteToExcel()
 
     # 寫檔到Excel

@@ -109,10 +109,9 @@ class SelectQuestionPage(QMainWindow):
                 preList.pop()
                 self.AddCheckbox(node.name, checkbox_name, layout_level, preList, node.isCheck)
 
-            if (node.isCheck) and (node.questionLevel not in self.checkbox_leaf_level_list):
+            if (node.isCheck) and (len(node.childList) == 0) and (node.questionLevel not in self.checkbox_leaf_level_list):
                 self.checkbox_leaf_level_list.append(node.questionLevel)
             elif (node.isCheck == False) and (node.questionLevel in self.checkbox_leaf_level_list):
-                print("remove")
                 self.checkbox_leaf_level_list.remove(node.questionLevel)
 
     # 刪除 layout 所有的element (checkbox)
@@ -143,7 +142,6 @@ class SelectQuestionPage(QMainWindow):
         del_checkbox.setVisible(False)
         cbox_data.layout.removeWidget(del_checkbox)
         # self.layoutDict[cbox_data.layout].remove(del_checkbox)
-        print("delete")
         del self.checkboxDict[del_checkbox.objectName()]
 
     # 點選 checkbox
@@ -168,7 +166,7 @@ class SelectQuestionPage(QMainWindow):
         self.UpdateUI()
 
     # 勾選 CheckBox (cbox = 被勾選的checkbox, cbox_data = 他的資料)
-    def SelectCheckBox(self, cbox, cbox_data):
+    def SelectCheckBox(self, cbox, cbox_data, isRefresh=True):
         print("quesetion: ", cbox_data.questionLevel)
 
         node = self.QLT.GetNodeByQuestionLevel(cbox_data.questionLevel) # 取得node
@@ -180,26 +178,28 @@ class SelectQuestionPage(QMainWindow):
                 child.isShow = True
         
             # 重建layout
-            reset_depth = cbox_data.layoutLevel + 1
-            self.DeleteLayoutElement(self.questionLevelLayout[reset_depth])
-            self.ResetLayout(reset_depth)
+            if isRefresh:
+                reset_depth = cbox_data.layoutLevel + 1
+                self.DeleteLayoutElement(self.questionLevelLayout[reset_depth])
+                self.ResetLayout(reset_depth)
         # 選到葉節點
         else:
             self.checkbox_leaf_level_list.append(node.questionLevel)
 
     # 取消勾選 CheckBox (cbox = 被勾選的checkbox, cbox_data = 他的資料)
-    def CancelSelectCheckBox(self, cbox, cbox_data):
+    def CancelSelectCheckBox(self, cbox, cbox_data, isRefresh=True):
         # 更新 QLT
         node = self.QLT.GetNodeByQuestionLevel(cbox_data.questionLevel)
         node.isCheck = False
         for child in node.childList:
             self.QLT.SetTreeCheckShow(child, False)
         
-        this_depth = cbox_data.layoutLevel
         # 重建Layout
-        for layout_level in range(this_depth + 1, len(self.questionLevelLayout)):
-            self.DeleteLayoutElement(self.questionLevelLayout[layout_level])
-            self.ResetLayout(layout_level)
+        if isRefresh:
+            this_depth = cbox_data.layoutLevel
+            for layout_level in range(this_depth + 1, len(self.questionLevelLayout)):
+                self.DeleteLayoutElement(self.questionLevelLayout[layout_level])
+                self.ResetLayout(layout_level)
 
         # 葉節點 > 移除節點
         if len(node.childList) == 0:
@@ -214,14 +214,24 @@ class SelectQuestionPage(QMainWindow):
     def ClickSelectAllCheckbox(self, cbox, depth):
         flag = cbox.isChecked()
         layout = self.questionLevelLayout[depth]
-        self.SetAllCheckboxState(layout, flag)
+        self.SetAllCheckboxState(layout, flag, depth)
 
-     # 設置全體的checkbox 狀態
-    def SetAllCheckboxState(self, layout, state):
-         cbox_list = self.layoutDict[layout]
-         for cbox in cbox_list:
-             if cbox.isChecked() != state:
-                 cbox.click()
+    # 設置全體的checkbox 狀態
+    def SetAllCheckboxState(self, layout, state, depth):
+        cbox_list = self.layoutDict[layout]
+        for cbox in cbox_list:
+            if cbox.isChecked() != state:
+                if state == True:
+                    self.SelectCheckBox(cbox, self.FindCheckbox(cbox.objectName()), isRefresh=False)
+                else:
+                    self.CancelSelectCheckBox(cbox, self.FindCheckbox(cbox.objectName()), isRefresh=False)
+
+        for layout_level in range(depth, len(self.questionLevelLayout)):
+            self.DeleteLayoutElement(self.questionLevelLayout[layout_level])
+            self.ResetLayout(layout_level)
+
+        print(self.checkbox_leaf_level_list)
+        self.UpdateUI()
 
     # 查詢字典中的Check box
     def FindCheckbox(self, checkbox_name):

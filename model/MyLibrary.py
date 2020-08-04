@@ -92,11 +92,17 @@ def GetFolderPathByList(dir_list):
         dir_path = os.path.join(dir_path, dir)
     return dir_path
 
-# Word 是否被打開
+# 檔案是否存在
+def IsFileExist(file_path):
+    return os.path.isfile(file_path)
+
+# Word 是否被打開 (不檢查是否有檔案)
 def IskWordOpen(file_path):
-    word = docx.Document(file_path)
+    if not IsFileExist(file_path):
+        return True
     flag = True
     try:
+        word = docx.Document(file_path)
         word.save(file_path)
     except:
         flag = False

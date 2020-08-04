@@ -55,12 +55,17 @@ class SelectQuestionPage(QMainWindow):
         self.ui.button_add_unit.clicked.connect(self.OpenAddUnitView)
         self.Add_Unit_View.add_unit_signal.connect(self.GetAddUnitViewData)
 
+        self.ui.checkBox_level1_selectAll.clicked.connect(lambda: self.ClickSelectAllCheckbox(self.ui.checkBox_level1_selectAll, 0))
+        self.ui.checkBox_level2_selectAll.clicked.connect(lambda: self.ClickSelectAllCheckbox(self.ui.checkBox_level2_selectAll, 1))
+
         #self.ui.button_make_question.connect(self.OpenMakeQuestionPage)
 
     # ResetPage
     def ResetPage(self):
         self.questionLevelLayout = [self.ui.verticalLayout_lv1, self.ui.verticalLayout_lv2, self.ui.verticalLayout_lv3, self.ui.verticalLayout_lv4, self.ui.verticalLayout_lv5]
-        
+        self.ui.gridLayout.setVerticalSpacing(18)
+        #self.ui.verticalLayout_lv1.setAlignment(QtCore.Qt.AlignTop)
+
         # reset Question Level Tree
         self.QLT.CreateTree()
         self.QLT.DFS()
@@ -91,6 +96,7 @@ class SelectQuestionPage(QMainWindow):
     def UpdateUI(self):
         self.ui.button_make_question.setEnabled(self.IsMakeQuestionButtonEnable())
         self.ui.button_add_question.setEnabled(self.IsAddQuestionButtonEnable())
+        self.UpdateSecondSelectAllButtonState()
     
     # 重設該Layout
     def ResetLayout(self, layout_level):
@@ -204,6 +210,19 @@ class SelectQuestionPage(QMainWindow):
         currentLayout = self.questionLevelLayout[layout_level]
         return "checkbox_lv" + str(layout_level) + "_" + str(len(self.layoutDict.get(currentLayout)))
 
+    # 點選全選Check box
+    def ClickSelectAllCheckbox(self, cbox, depth):
+        flag = cbox.isChecked()
+        layout = self.questionLevelLayout[depth]
+        self.SetAllCheckboxState(layout, flag)
+
+     # 設置全體的checkbox 狀態
+    def SetAllCheckboxState(self, layout, state):
+         cbox_list = self.layoutDict[layout]
+         for cbox in cbox_list:
+             if cbox.isChecked() != state:
+                 cbox.click()
+
     # 查詢字典中的Check box
     def FindCheckbox(self, checkbox_name):
         return self.checkboxDict.get(checkbox_name)
@@ -223,13 +242,23 @@ class SelectQuestionPage(QMainWindow):
     def IsAddQuestionButtonEnable(self):
         return len(self.checkbox_leaf_level_list) == 1
 
+    # 更新第二個全選按鈕的狀態
+    def UpdateSecondSelectAllButtonState(self):
+        # 第二層沒有東西
+        if len(self.layoutDict[self.ui.verticalLayout_lv2]) == 0:
+            self.ui.checkBox_level2_selectAll.setVisible(False) #關掉
+            self.ui.checkBox_level2_selectAll.setChecked(False) #取消勾選
+        # 第二層有東西
+        else:
+            self.ui.checkBox_level2_selectAll.setVisible(True)
+
     # 開啟 新增單元 視窗
     def OpenAddUnitView(self):
         if self.Is_add_unit_view_open == False:
             self.Is_add_unit_view_open = True
             self.Add_Unit_View.show()
             self.Add_Unit_View.ResetPage()
-
+    
     # 接收 Add Unit View 的資料 函數 (有幾個參數就接幾個) (bool, list)
     def GetAddUnitViewData(self, is_close, list_input_content):
         if is_close == True:

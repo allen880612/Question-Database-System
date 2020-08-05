@@ -65,7 +65,7 @@ class SelectQuestionPage(QMainWindow):
         self.questionLevelLayout = [self.ui.verticalLayout_lv1, self.ui.verticalLayout_lv2, self.ui.verticalLayout_lv3, self.ui.verticalLayout_lv4, self.ui.verticalLayout_lv5]
         self.ui.gridLayout.setVerticalSpacing(18)
         #self.ui.verticalLayout_lv1.setAlignment(QtCore.Qt.AlignTop)
-
+        self.checkbox_leaf_list = []
         # reset Question Level Tree
         self.QLT.CreateTree()
         self.QLT.DFS()

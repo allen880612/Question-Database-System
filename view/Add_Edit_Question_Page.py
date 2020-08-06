@@ -157,7 +157,7 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.list_weight_question.clear()
         for i in range(len(self.questionList)):
             if self.questionList[i].GetQuestionNumber() != 0:
-                q_head = str(i) + '. ' + (self.questionList[i].GetQuestion())[:20]
+                q_head = str(self.questionList[i].GetQuestionNumber()) + '. ' + (self.questionList[i].GetQuestion())[:20]
                 self.ui.list_weight_question.addItem(q_head)
         # self.ui.list_weight_question.addItems(self.questionList)
 
@@ -196,16 +196,19 @@ class AddEditQuestionPage(QMainWindow):
     def StoreQuestion(self):
         nowSelectIndex = self.ui.list_weight_question.currentRow()
         nowSelectQuestion = self.questionList[nowSelectIndex]
+        nowSelectQuestion.EditQuestion(self.ui.text_edit_question.toPlainText())
         q_info = copy.deepcopy(self.question_level)
         q_info.append("") # Level 3
         q_info.append("") # Level 4
         q_info.append("") # Level 5
         q_info.append(nowSelectQuestion.GetQuestionNumber())
         q_info.append(self.ui.text_edit_question.toPlainText())
-        q_info.append(nowSelectQuestion.GetImage()) # 先用原本的圖片
+        q_info.append("NOIMAGE" if not nowSelectQuestion.HaveImage() else nowSelectQuestion.GetImage()) # 先用原本的圖片
         q_info.append(nowSelectQuestion.dataframe_index)
         print(self.model.dataframe.iloc[nowSelectQuestion.dataframe_index])
-        # self.model.EditQuestion(q_info, index=nowSelectQuestion.dataframe_index)
+        self.model.EditQuestion(q_info, index=nowSelectQuestion.dataframe_index)
+        new_item = str(nowSelectQuestion.GetQuestionNumber()) + '. ' + (nowSelectQuestion.GetQuestion())[:20]
+        self.ui.list_weight_question.currentItem().setText(new_item)
 
     # 取得題號
     def GetQuestionIndex(self):

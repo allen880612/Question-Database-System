@@ -73,6 +73,11 @@ class Question(object):
             elif ch == '】':
                 addMode = True
         return newQuestion
+    
+    # 編輯問題
+    def EditQuestion(self, new_question):
+        self.__questionAnswer = new_question
+        self.__question = self.DeleteAnswer(new_question)
 
 #建構篩選好的問題List
 def CreatQuestionList(df, questionType):

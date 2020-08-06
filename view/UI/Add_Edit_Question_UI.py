@@ -128,8 +128,8 @@ class AddEditQuestionPage_UI(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.button_add_question_mode.setText(_translate("MainWindow", "新增題目"))
-        self.button_edit_question_mode.setText(_translate("MainWindow", "修改題目"))
+        self.button_add_question_mode.setText(_translate("MainWindow", "切換至新增題目模式"))
+        self.button_edit_question_mode.setText(_translate("MainWindow", "切換至修改題目模式"))
         self.label_image_preview_text.setText(_translate("MainWindow", "圖片預覽"))
         self.label_image_list.setText(_translate("MainWindow", "圖片列表"))
         self.label_image_preview.setText(_translate("MainWindow", "TextLabel"))

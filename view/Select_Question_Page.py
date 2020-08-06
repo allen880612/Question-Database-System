@@ -290,6 +290,7 @@ class SelectQuestionPage(QMainWindow):
                 q_Info.append(0) # add 題號
                 q_Info.append("default Content") # add 內容
                 q_Info.append("NOIMAGE") # add 圖片
+                q_info.append(self.model.GetQuestionCount() - 1)
                 dict_q = dict(zip(self.model.GetOriginalDataFrame().columns, q_Info))
                 self.model.AddQuestion(dict_q)
                 self.comboboxView.CreateDictForLevel()

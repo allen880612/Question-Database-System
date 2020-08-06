@@ -40,7 +40,7 @@ class ExcelModel():
             flag = flag & tempFlag
         # & & &&& 過濾器法
         self.filleredDataframe = self.dataframe[flag] #過濾後的題目 (type() = dataframe)
-        quesImage_df = self.filleredDataframe.loc[:, ["題目", "圖", "題號"]]
+        quesImage_df = self.filleredDataframe.loc[:, ["題目", "圖", "題號", "編號"]]
         self.qList = MyLibrary.CreatQuestionList(quesImage_df.reset_index(), questionType) #建構question list
         print("GetFilteredDataframe done")
 
@@ -58,19 +58,23 @@ class ExcelModel():
         self.WriteToExcel()
 
     # 編輯問題
-    def EditQuestion(self, index, questionInfo):
+    def EditQuestion(self, questionInfo, index=-1):
         #範例
         #q_Info = ["國文", "非選擇題", "典型非選擇題", "梁唐晉和週", "欸胖子"]
         #q_Info.append(987) # add 題號
         #q_Info.append("default Content") # add 內容
         #q_Info.append("NOIMAGE") # add 圖片
-        self.dataframe.iloc[-1] = questionInfo
+        self.dataframe.iloc[index] = questionInfo
         self.WriteToExcel()
 
     # 寫檔到Excel
     def WriteToExcel(self):
         print(os.getcwd(), self.path)
         self.dataframe.to_excel(self.path, index=False)
+
+    # 共有 n 題
+    def GetQuestionCount(self):
+        return self.dataframe.shape[0] - 1
 
     # #取得excel中指定的題目
     # def GetFilteredQuestion(self):

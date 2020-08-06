@@ -16,12 +16,13 @@ def CreateDictKey(keyList):
 
 # Question Class
 class Question(object):
-    def __init__(self, question, images, imgPath, qnumber=0):
+    def __init__(self, question, images, imgPath, indexOnExcel, qnumber=0):
         self.__questionAnswer = question
         self.__haveImage = True
         self.__question = self.DeleteAnswer(question)
         self.__image = self.PaserImage(images, imgPath)
         self.__question_number = qnumber
+        self.dataframe_index = indexOnExcel
 
     def PaserImage(self, images, imgPath):
         # 篩掉無圖片的
@@ -78,7 +79,7 @@ def CreatQuestionList(df, questionType):
     questionList = []
     imagePath = "database\\" + "\\".join(questionType)  # base path
     for index, row in df.iterrows():
-        questionList.append(Question(row["題目"], row["圖"], imagePath, row["題號"]))
+        questionList.append(Question(row["題目"], row["圖"], imagePath, row["編號"], row["題號"]))
         #print(row)
         #print(row["題目"], row["圖"])
     # for q in questionList:

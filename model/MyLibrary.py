@@ -1,5 +1,6 @@
 import os
 import docx
+import copy
 
 # 刪除串列中重複的元素 (然後照加入順序排)
 def DeleteRepeatElement(oldList):
@@ -21,6 +22,8 @@ class Question(object):
         self.__haveImage = True
         self.__question = self.DeleteAnswer(question)
         self.__image = self.PaserImage(images, imgPath)
+        self.__images = images
+        self.__imagePath = imgPath
         self.__question_number = qnumber
         self.dataframe_index = indexOnExcel
 
@@ -38,6 +41,7 @@ class Question(object):
         tmpPaths = images.split(' ')
         for img in tmpPaths:
             imageList.append(imgPath + "\\" + img)  # 遍歷補路徑
+        self.__haveImage = True
         return imageList
 
     def GetImage(self):
@@ -45,6 +49,10 @@ class Question(object):
 
     def HaveImage(self):
         return self.__haveImage
+
+    # 返回 不帶路徑的圖片名
+    def GetImages(self):
+        return self.__images
 
     def SetHaveImage(self, flag):
         self.__haveImage = flag
@@ -75,9 +83,25 @@ class Question(object):
         return newQuestion
     
     # 編輯問題
-    def EditQuestion(self, new_question):
+    def EditQuestion(self, new_question, images=""):
         self.__questionAnswer = new_question
         self.__question = self.DeleteAnswer(new_question)
+        if images != "" and self.__images != images:
+            print("TrueTrueTrue")
+            self.__images = images
+            self.__image = self.PaserImage(images, self.__imagePath)
+
+    # 轉換成data frame 使用的list
+    def ConvertToList(self, question_level):
+        q_info = copy.deepcopy(question_level)
+        q_info.append("") # Level 3
+        q_info.append("") # Level 4
+        q_info.append("") # Level 5
+        q_info.append(self.GetQuestionNumber()) # 題號
+        q_info.append(self.GetQuestionAnswer()) # 題目含答案
+        q_info.append("NOIMAGE" if not self.HaveImage() else self.GetImages()) # 圖片
+        q_info.append(self.dataframe_index) # 編號 on Dataframe
+        return q_info
 
 #建構篩選好的問題List
 def CreatQuestionList(df, questionType):

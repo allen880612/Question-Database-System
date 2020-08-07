@@ -196,18 +196,13 @@ class AddEditQuestionPage(QMainWindow):
     def StoreQuestion(self):
         nowSelectIndex = self.ui.list_weight_question.currentRow()
         nowSelectQuestion = self.questionList[nowSelectIndex]
-        nowSelectQuestion.EditQuestion(self.ui.text_edit_question.toPlainText())
-        q_info = copy.deepcopy(self.question_level)
-        q_info.append("") # Level 3
-        q_info.append("") # Level 4
-        q_info.append("") # Level 5
-        q_info.append(nowSelectQuestion.GetQuestionNumber())
-        q_info.append(self.ui.text_edit_question.toPlainText())
-        q_info.append("NOIMAGE" if not nowSelectQuestion.HaveImage() else nowSelectQuestion.GetImage()) # 先用原本的圖片
-        q_info.append(nowSelectQuestion.dataframe_index)
+        nowSelectQuestion.EditQuestion(self.ui.text_edit_question.toPlainText(), self.GetImageIndex(str(nowSelectQuestion.GetQuestionNumber())))
+        q_info = nowSelectQuestion.ConvertToList(self.question_level)
+        print("on edit question, q_info: ")
+        print(q_info)
         print(self.model.dataframe.iloc[nowSelectQuestion.dataframe_index])
         self.model.EditQuestion(q_info, index=nowSelectQuestion.dataframe_index)
-        new_item = str(nowSelectQuestion.GetQuestionNumber()) + '. ' + (nowSelectQuestion.GetQuestion())[:20]
+        new_item = str(nowSelectQuestion.GetQuestionNumber()) + '. ' + (nowSelectQuestion.GetQuestion())[:20] # 更新list widget item
         self.ui.list_weight_question.currentItem().setText(new_item)
 
     # 取得題號

@@ -3,6 +3,7 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 from view import ComboboxView as cbview
 from view.UI import Make_Question_UI_Test as mq_UI_Test
 from view.UI import Make_Question_UI as mq_UI
+from view import Revise_MakeQuestion_Page
 from model import MyLibrary
 import random
 import os
@@ -36,6 +37,10 @@ class MakeQuestionPage(QMainWindow):
 
         # UI上 的題數輸入框
         self.question_tbox = []
+
+        # 微調題目頁面
+        self.Revise_MakeQuestion_View = Revise_MakeQuestion_Page.ReviseMakeQuestionPage(self.model)
+        self.Is_revise_question_view_open = False
 
         self.Initialize()
 
@@ -74,6 +79,8 @@ class MakeQuestionPage(QMainWindow):
             tbox.setVisible(False)
         self.question_label.clear()
         self.question_tbox.clear()
+
+    self.Is_revise_question_view_open = False
 
     # 設置一道題目
     def SetQuestion(self, add_question_strlist, question_number=0):
@@ -207,3 +214,12 @@ class MakeQuestionPage(QMainWindow):
         savePath = "word/" + fileName + ".docx"
         word.save(savePath) #存檔 (存在word資料夾)
     #endregion
+
+    #######################################################
+
+    # 開啟 微調題目 視窗
+    def OpenReviseQuestionView(self):
+        if self.Is_revise_question_view_open == False:
+            self.Is_revise_question_view_open = True
+            self.Revise_MakeQuestion_View.show()
+            self.Revise_MakeQuestion_View.ResetPage()

@@ -54,10 +54,16 @@
       <item row="0" column="0">
        <layout class="QHBoxLayout" name="horizontalLayout_6">
         <item>
-         <widget class="QListView" name="listView_make_question_level"/>
+         <widget class="QListWidget" name="listWidget_make_question_level"/>
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout_3">
+          <item row="1" column="0">
+           <widget class="QListWidget" name="listWidget_none_select_question"/>
+          </item>
+          <item row="1" column="2">
+           <widget class="QListWidget" name="listWidget_selected_question"/>
+          </item>
           <item row="0" column="2">
            <layout class="QHBoxLayout" name="horizontalLayout_8">
             <item>
@@ -94,12 +100,6 @@
              </spacer>
             </item>
            </layout>
-          </item>
-          <item row="1" column="2">
-           <widget class="QListWidget" name="listWidget"/>
-          </item>
-          <item row="1" column="0">
-           <widget class="QListWidget" name="listWidget_2"/>
           </item>
           <item row="0" column="0">
            <layout class="QHBoxLayout" name="horizontalLayout_7">

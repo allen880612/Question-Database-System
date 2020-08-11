@@ -126,6 +126,13 @@ class MakeQuestionPage(QMainWindow):
                 remain_number -= 1
             target_tbox.setText(str(avg_number))
     
+    # 將題數轉換成數字list
+    def GetQuestionNumberList(self):
+        number_list = []
+        for tbox in self.question_tbox:
+            number_list.append(int(tbox.text()))
+        return number_list
+
     # 輸入題數後發生之事件
     def InputQuestionNumberEvent(self):
         update_total_number = 0
@@ -224,8 +231,12 @@ class MakeQuestionPage(QMainWindow):
     def OpenReviseQuestionView(self):
         if self.Is_revise_question_view_open == False:
             self.Is_revise_question_view_open = True
-            self.Revise_MakeQuestion_View.show()
+            tuple_list = zip(self.question_level_list, self.GetQuestionNumberList())
+            
+            self.Revise_MakeQuestion_View.SetQuestionLevelTupleData(list(tuple_list))
             self.Revise_MakeQuestion_View.ResetPage()
+            self.Revise_MakeQuestion_View.show()
+            
     
     # 接收 調整題目頁面 的資料 之函數 (有幾個參數就接幾個) (bool)
     def GetReviseMakeQuestionViewData(self, is_close):

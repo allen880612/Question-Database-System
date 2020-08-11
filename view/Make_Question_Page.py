@@ -51,9 +51,13 @@ class MakeQuestionPage(QMainWindow):
 
     # 註冊事件
     def ConnectEvent(self):
-        self.ui.button_make_question.clicked.connect(self.Confirm)
+        #self.ui.button_make_question.clicked.connect(self.Confirm)
+        self.ui.button_make_question.clicked.connect(self.OpenReviseQuestionView)
         self.ui.lineEdit_total_number.setValidator(QtGui.QIntValidator(self.ui.lineEdit_total_number)) # 設置總題數只能輸入數字
         self.ui.lineEdit_total_number.editingFinished.connect(self.AverageQuestionNumber) # LineEdit事件 - 輸入完後均等題目數
+
+        # 註冊 調整題目頁面之信號
+        self.Revise_MakeQuestion_View.revise_make_question_signal.connect(self.GetReviseMakeQuestionViewData)
 
     # 重設頁面
     def ResetPage(self):
@@ -68,6 +72,7 @@ class MakeQuestionPage(QMainWindow):
         # 重置總題數 & 等分題數
         self.ui.lineEdit_total_number.setText("40")
         self.AverageQuestionNumber()
+        self.Is_revise_question_view_open = False
 
     # 刪除所有題目
     def DeletaAllQuestion(self):
@@ -79,8 +84,6 @@ class MakeQuestionPage(QMainWindow):
             tbox.setVisible(False)
         self.question_label.clear()
         self.question_tbox.clear()
-
-    self.Is_revise_question_view_open = False
 
     # 設置一道題目
     def SetQuestion(self, add_question_strlist, question_number=0):
@@ -223,3 +226,8 @@ class MakeQuestionPage(QMainWindow):
             self.Is_revise_question_view_open = True
             self.Revise_MakeQuestion_View.show()
             self.Revise_MakeQuestion_View.ResetPage()
+    
+    # 接收 調整題目頁面 的資料 之函數 (有幾個參數就接幾個) (bool)
+    def GetReviseMakeQuestionViewData(self, is_close):
+        if is_close == True:
+            self.Is_revise_question_view_open = False

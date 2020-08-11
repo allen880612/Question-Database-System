@@ -20,6 +20,7 @@ class AddUnitPage(QMainWindow):
         self.model = _model
         self.level = [self.ui.label_lv1, self.ui.label_lv2]
         self.tBoxlevel = [self.ui.textBox_lv1, self.ui.textBox_lv2]
+        self.is_click_button = False # 如果透過按下按鈕關閉視窗 這個為True
         self.Initialize()
 
     # 初始化
@@ -41,6 +42,7 @@ class AddUnitPage(QMainWindow):
 
     # ResetPage
     def ResetPage(self):
+        self.is_click_button = False
         self.ui.textBox_lv1.setText("")
         self.ui.textBox_lv2.setText("")
         while self.GetNowLevelNum() > 2:
@@ -68,6 +70,7 @@ class AddUnitPage(QMainWindow):
 
             # 防呆 - 5個都有值 - 且未有單元 - 可正常關閉
             if not_have_unit:
+                self.is_click_button = True
                 is_close = self.close()
                 self.add_unit_signal.emit(is_close, tBoxStr_list)
             # 防呆 - 5個都有值 - 已有單元 - 不可關閉
@@ -79,8 +82,9 @@ class AddUnitPage(QMainWindow):
 
     # 取消新增
     def CancelAddUnit(self):
+        self.is_click_button = True
         is_close = self.close()
-        self.add_unit_signal.emit(is_close,[])
+        self.add_unit_signal.emit(is_close, [])
 
     # 新增階層
     def AddLevel(self):
@@ -128,3 +132,10 @@ class AddUnitPage(QMainWindow):
     # 更新UI
     def UpdateUI(self):
         self.ui.button_delete_level.setEnabled(self.GetNowLevelNum() > 2)
+    
+    # 關閉視窗事件
+    def closeEvent(self, event):
+        # 不是透過按鈕來關閉視窗 > 同關閉
+        if self.is_click_button == False:
+            is_close = True
+            self.add_unit_signal.emit(is_close, [])

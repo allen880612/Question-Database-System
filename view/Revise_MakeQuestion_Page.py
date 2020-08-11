@@ -16,7 +16,9 @@ class ReviseMakeQuestionPage(QMainWindow):
         self.ui = Revise_MakeQuestion_UI.ReviseMakeQuestion_UI()
         self.ui.setupUi(self)
         self.model = _model
-        
+        self.is_click_button = False # 是否透過button關閉視窗
+        self.listView = self.ui.listView_make_question_level
+        self.tester = ["str1", "str2", "str8"]
         self.Initialize()
 
     # 初始化
@@ -26,7 +28,8 @@ class ReviseMakeQuestionPage(QMainWindow):
 
     # 重設頁面
     def ResetPage(self):
-        pass
+        self.is_click_button = False
+        
 
     # 註冊事件
     def ConnectEvent(self):
@@ -34,5 +37,12 @@ class ReviseMakeQuestionPage(QMainWindow):
 
     # 關閉這個視窗
     def ClosePage(self):
+        self.is_click_button = True
         is_close = self.close()
         self.revise_make_question_signal.emit(is_close)
+
+    # 關閉視窗事件
+    def closeEventI(self, event):
+        if self.is_click_button == False:
+            is_close = True
+            self.revise_make_question_signal.emit(is_close)

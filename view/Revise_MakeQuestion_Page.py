@@ -10,6 +10,7 @@ import docx
 class ReviseMakeQuestionPage(QMainWindow):
 
     revise_make_question_signal = QtCore.pyqtSignal(bool) # set 信號
+    TEMPLATE_WORD_PATH = "database/default.docx"
 
     def __init__(self, _model):
         super(ReviseMakeQuestionPage, self).__init__()
@@ -61,6 +62,8 @@ class ReviseMakeQuestionPage(QMainWindow):
 
         self.ui.button_add_question.clicked.connect(self.AddToMakeQuestionList)
         self.ui.button_remove_question.clicked.connect(self.RemoveFromMakeQuestionList)
+
+        self.ui.button_continue.clicked.connect(self.MakeQuestion) # Link 出題按鈕
 
     # 刷新UI
     def UpdateUI(self):
@@ -176,6 +179,8 @@ class ReviseMakeQuestionPage(QMainWindow):
         self.UpdateNoneSelectQuestionListWidget()
         # 更新 已選擇的題目的 List Widget
         self.UpdateSelectQuestionListWidget()
+
+        self.UpdateUI()
         
     # 從出題列表中移除
     def RemoveFromMakeQuestionList(self):
@@ -194,6 +199,8 @@ class ReviseMakeQuestionPage(QMainWindow):
         self.UpdateNoneSelectQuestionListWidget()
         # 更新 已選擇的題目的 List Widget
         self.UpdateSelectQuestionListWidget()
+
+        self.UpdateUI()
 
     # 取得用於字典查詢時的level -> type = tuple
     def GetLevelKey(self):
@@ -217,3 +224,73 @@ class ReviseMakeQuestionPage(QMainWindow):
         if self.is_click_button == False:
             is_close = True
             self.revise_make_question_signal.emit(is_close)
+    
+    # 得到Question List
+    def GetQuestionList(self):
+        qList = []
+        for level, questionList in self.question_select_dict.items():
+            qList += questionList
+        return qList
+
+    ###################################################################################
+    #出題
+    #region 函式區
+    def MakeQuestion(self):
+        #excel
+        if self.model.IsLoad():
+            if not MyLibrary.IskWordOpen("word/answer.docx") or not MyLibrary.IskWordOpen("word/question.docx"):
+                QMessageBox.information(self, "警告", "Word開啟中！\n請關閉Word後再試一次", QMessageBox.Yes)
+                return
+
+            qList = self.GetQuestionList() # 要給Word建構的題目列表
+            random.shuffle(qList)
+
+            self.BulidWord(qList, "answer", True)  # 建造word 保留答案
+            self.BulidWord(qList, "question", False)  # 建造word 刪除答案
+            print("done")
+        #excel
+
+    def BulidWord(self, qList, fileName, haveAnswer):
+        word = docx.Document(docx=self.TEMPLATE_WORD_PATH)  # 另一個坑，為了讓封裝後也能抓到default.docx，必須指定
+        heading = " - ".join(self.question_level_tupleList[0][0])
+        word.add_heading(heading, 0) #新增那個醜醜藍字
+
+        #新增題目 style
+        questionStyle = word.styles.add_style("question", docx.enum.style.WD_STYLE_TYPE.PARAGRAPH) #新增一樣式 (樣式名稱, 樣式類型)
+        questionStyle.font.size = docx.shared.Pt(12) #更改此樣式的文字大小
+        questionStyle.font.name = "Times New Roman" #設定英文字體
+        # where am I? who am I???
+        questionStyle._element.rPr.rFonts.set(docx.oxml.ns.qn("w:eastAsia"), "細明體") #設定中文字體
+        # 設定凸排, su go i ne, my Python
+        questionStyle.paragraph_format.first_line_indent = docx.shared.Pt(-18) # 設定首縮排/凸排 (正值 = 縮排, 負值 = 凸排)
+        questionStyle.paragraph_format.left_indent = docx.shared.Pt(18) # ↓注意，重點來了，設定"整個段落"縮排  (正常來說應該不用設定，但是設定凸排的時候，他會順便把整個段落也往左移動，所以要他媽的移回來)
+
+        #imageList = self.excel.GetFilteredImage(self.comboboxSelectOption)
+        #新增題目
+        for i in range(0, len(qList)):
+            questionIndex = "(" + str(i + 1) + ") " #題號
+            if haveAnswer:
+                question = qList[i].GetQuestionAnswer()
+            else:
+                question = qList[i].GetQuestion()
+            paragraph = word.add_paragraph(questionIndex + question, style = "question")
+            #paragraph = word.add_paragraph(questionIndex + questionList[i], style = "question") #題號 + 題目 一題作為一個段落
+            paragraph.alignment = 0 #設定段落對齊 0 = 靠左, 1 = 置中, 2 = 靠右, 3 = 左右對齊 (WD_PARAGRAPH_ALIGNMENT)
+            try:
+                # print("have", qList[i].HaveImage())
+                # print("image", qList[i].GetImage())
+                if qList[i].HaveImage() and qList[i].GetImage():
+                    print(qList[i].GetImage())
+                    #run = word.paragraphs[i + 1].add_run()
+                    imageParagraph = word.add_paragraph() # 為了讓圖片靠右，直接新增一個段落，方便用alignment
+                    imageParagraph.alignment = 2
+                    run = imageParagraph.add_run()
+                    #run.add_break() #不換段換行
+                    for image in qList[i].GetImage():
+                        run.add_picture(image, height=docx.shared.Cm(2.6))
+            except:
+                print("Insert image fail!")
+        
+        savePath = "word/" + fileName + ".docx"
+        word.save(savePath) #存檔 (存在word資料夾)
+    #endregion

@@ -82,7 +82,7 @@ class ReviseMakeQuestion_UI(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.button_return.setText(_translate("MainWindow", "返回"))
-        self.button_continue.setText(_translate("MainWindow", "下一頁"))
+        self.button_continue.setText(_translate("MainWindow", "出題"))
         self.button_remove_question.setText(_translate("MainWindow", "←"))
         self.button_add_question.setText(_translate("MainWindow", "→"))
 

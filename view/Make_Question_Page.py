@@ -154,6 +154,7 @@ class MakeQuestionPage(QMainWindow):
         print(qqq)
         print(len(qqq))
 
+    # 移駕至調整題目頁面
     #region 函式區
     def Confirm(self):
         #excel

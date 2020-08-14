@@ -11,6 +11,7 @@ class ExcelModel():
         self.isLoad = False
         self.qaList = []
         self.qList = []
+        self.db = None
         print("\n-----------------------------")
         self.ReadExcel()
         

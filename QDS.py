@@ -3,6 +3,29 @@ from PyQt5.QtWidgets import QApplication,QMainWindow
 from view import Make_Question_Page_Test, Add_Edit_Question_Page, Make_Question_Page
 from view import Select_Question_Page
 from model.ExcelModel import ExcelModel
+import pymysql as mysql
+import os
+import threading
+
+# 測試資料庫
+def TestDB(myDB):
+    cHandler = myDB.cursor()
+    query = "SHOW DATABASES;"
+    cHandler.execute(query)
+    result = cHandler.fetchall()
+
+    for row in result:
+	    print (row)
+
+# 開啟Proxy
+def StartProxy():
+    exe_name = "cloud_sql_proxy.exe"
+    sql_id = "psyched-circuit-286314:asia-east1:xtest00=tcp:3306"
+    key_name = "qds_key.json"
+    cmd1 = "-instances=" + sql_id
+    cmd2 = "-credential_file=" + key_name
+    full_cmd = exe_name + " " + cmd1 + " " + cmd2 + " "
+    os.popen("cd proxy" + " && " + full_cmd)
 
 # 開啟出題視窗
 def Show_MakeQuestionPage():
@@ -38,6 +61,14 @@ if __name__ == '__main__':
 
     EXCEL_PATH = "database/盈虧問題v3.xlsx"
     model = ExcelModel(EXCEL_PATH)
+
+    proxy = threading.Thread(target = StartProxy)
+    proxy.start()
+    proxy.join()
+
+    myDB = mysql.connect(host="35.194.198.56",port=3306,user="root",passwd="zzxcv1234")
+    model.db = myDB
+    TestDB(model.db)
 
     # 出題頁面
     MakeQuestionPage = Make_Question_Page.MakeQuestionPage(model)

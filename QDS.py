@@ -6,16 +6,7 @@ from model.ExcelModel import ExcelModel
 import pymysql as mysql
 import os
 import threading
-
-# 測試資料庫
-def TestDB(myDB):
-    cHandler = myDB.cursor()
-    query = "SHOW DATABASES;"
-    cHandler.execute(query)
-    result = cHandler.fetchall()
-
-    for row in result:
-	    print (row)
+from model import SQLExtend
 
 # 開啟Proxy
 def StartProxy():
@@ -62,13 +53,12 @@ if __name__ == '__main__':
     EXCEL_PATH = "database/盈虧問題v3.xlsx"
     model = ExcelModel(EXCEL_PATH)
 
-    proxy = threading.Thread(target = StartProxy)
-    proxy.start()
-    proxy.join()
+    #proxy = threading.Thread(target = StartProxy)
+    #proxy.start()
+    #proxy.join()
 
-    myDB = mysql.connect(host="35.194.198.56",port=3306,user="root",passwd="zzxcv1234")
-    model.db = myDB
-    TestDB(model.db)
+    #myDB = mysql.connect(host="35.194.198.56",port=3306,user="user01",passwd="user01",db="QuestionDatabase")
+    #model.db = myDB
 
     # 出題頁面
     MakeQuestionPage = Make_Question_Page.MakeQuestionPage(model)

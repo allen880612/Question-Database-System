@@ -57,10 +57,14 @@ def test5_subthread():
 	full_cmd = exe_name + " " + cmd1 + " " + cmd2 + " "
 	os.popen("cd proxy" + " && " + full_cmd)
 
+def test6(subject_name):
+	query = "INSERT INTO Subject VALUES ({0})".format(subject_name)
+	print(query)
+
 if __name__ == '__main__':
 	#tc = testClass()
 	#kk = test3(tc)
 	#kk.append(456)
 	#print(id(kk))
 	#print(id(tc.tkList))
-	test5()
+	test6("Math")

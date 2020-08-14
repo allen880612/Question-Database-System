@@ -295,3 +295,6 @@ class SelectQuestionPage(QMainWindow):
                 self.model.AddQuestion(dict_q)
                 self.comboboxView.CreateDictForLevel()
                 self.ResetPage()
+
+    def closeEvent(self, event):
+        self.model.db.close()

@@ -5,9 +5,8 @@
     "\\model",
     "\\test",
     "\\view",
-    "\\view\\UI",
-    "\\word"
+    "\\view\\UI"
   ],
-  "SelectedNode": "\\model\\ExcelModel.py",
+  "SelectedNode": "\\QDS.py",
   "PreviewInSolutionExplorer": false
 }

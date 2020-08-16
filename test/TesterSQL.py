@@ -76,6 +76,17 @@ def ShowLevel2(database):
     for row in result:
         print (row)
 
+def ShowQuestion(database):
+    handler = database.cursor()
+    handler.execute("USE QuestionDatabase;")
+    query = "SELECT * FROM FillingQuestion;"
+    handler.execute(query)
+
+    result = handler.fetchall()
+
+    for row in result:
+        print (row)
+
 # 開啟Proxy
 def StartProxy():
     exe_name = "cloud_sql_proxy.exe"
@@ -87,8 +98,10 @@ def StartProxy():
     os.popen("cd proxy" + " && " + full_cmd)
 
 if __name__ == '__main__':
-    proxy = threading.Thread(target = StartProxy)
-    proxy.start()
-    proxy.join()
-    myDB = mysql.connect(host="127.0.0.1",port=3306,user="user01",passwd="user01",db="QuestionDatabase")
+    #proxy = threading.Thread(target = StartProxy)
+    #proxy.start()
+    #proxy.join()
 	#db = mysql.connector.connect(host="192.168.179.148",user="newuser",passwd="12345678")
+    myDB = mysql.connect(host="127.0.0.1",port=3306,user="user01",passwd="user01",db="QuestionDatabase")
+    ShowQuestion(myDB)
+    myDB.close()

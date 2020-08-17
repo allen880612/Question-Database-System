@@ -8,8 +8,10 @@ def ExecuteAlterCommand(database, query):
 	try:
 		handler.execute(query)
 		database.commit()
-	except:
+	except Exception as e:
 		database.rollback()
+		print("execute error!")
+		print(e)
 
 def GetTableCount(database, table):
 	handler = database.cursor()
@@ -65,12 +67,13 @@ def GetLevel2Id(database, level2_name):
 	return GetIdFromTable(database, "Level2", level2_name)
 
 # 插入填充題
-def InsertFillingQuestion(database, answer, solution=None, image=None):
+def InsertFillingQuestion(database, question, path_id, solution=None, image=None):
 	handler = database.cursor()
 	handler.execute("SELECT COUNT(`Id`) FROM FillingQuestion;")
 	id = int(handler.fetchone()[0])
-	content = MyLibrary.DeleteAnswer(answer)
-	query = "INSERT INTO FillingQuestion (`Id`, `Content`, `Answer`, `Solution_Id`) VALUES ({0}, '{1}', '{2}', {3});".format(id, content, answer, "NULL")
+	answer = question.GetAnswer()
+	content = question.GetQuestion()
+	query = "INSERT INTO FillingQuestion (`Id`, `Content`, `Answer`, `Solution_Id`, `Path_Id`) VALUES ({0}, '{1}', '{2}', {3}, {4});".format(id, content, answer, "NULL", path_id)
 	ExecuteAlterCommand(database, query)
 
 # 更新 Subject 的名字
@@ -86,6 +89,13 @@ def UpdateLevel1Name(database, id, level1_name):
 # 更新 Level2 的名字
 def UpdateLevel2Name(database, id, level2_name):
 	query = "UPDATE Level2 SET `Name`='{0}' WHERE Id={1};".format(level2_name, id)
+	ExecuteAlterCommand(database, query)
+
+# 更新 填充題
+def UpdateFillingQuestion(database, question):
+	content = question.GetQuestion()
+	answer = question.GetAnswer()
+	query = "UPDATE FillingQuestion SET `Content`='{0}', `Answer`='{1}' WHERE `Id`={2};".format(content, answer, question.id)
 	ExecuteAlterCommand(database, query)
 
 # 得到所有路徑 (return list[str])
@@ -104,7 +114,8 @@ def SearchPathId(database, question_level=[[]]):
 	# FROM Subject, Level1, Level2
 	# NATURAL JOIN PathTable
 	# WHERE (Subject.Id=PathTable.Subject_Id and Level1.Id=PathTable.Level1_Id and Level2.Id=PathTable.Level2_Id) and ((Subject.Name="數學" and Level1.Name="盈虧問題" and Level2.Name="基本型") or (Subject.Name="數學" and Level1.Name="盈虧問題" and Level2.Name="份數轉化"))
-	
+	if MyLibrary.CheckListDimension(question_level) == 1:
+		question_level = [question_level]
 	handler = database.cursor()
 	pre_query = "SELECT PathTable.Id, Subject.Name, Level1.Name, Level2.Name FROM Subject, Level1, Level2 NATURAL JOIN PathTable "
 	condition1 = "WHERE (Subject.Id=PathTable.Subject_Id and Level1.Id=PathTable.Level1_Id and Level2.Id=PathTable.Level2_Id)"
@@ -133,9 +144,9 @@ def SearchQuestionByPath(database, path_id):
 	handler.execute(query)
 	result = handler.fetchall()
 	qList = []
-	count = 0
+	count = 1
 	for data in result:
-		qList.append(MyLibrary.Question(data[2], "NOIMAGE", "0", 0, qnumber=count))
+		qList.append(MyLibrary.Question(data[0], data[2], qnumber=count))
 		count+=1
 	return qList
 

@@ -17,8 +17,6 @@ class DBModel():
     # 得到題目List
     # qList = modelv2.GetQuestionList([["數學", "盈虧問題", "基本型"], ["數學", "盈虧問題", "份數轉化"]])
     def GetQuestionList(self, question_level):
-        if MyLibrary.CheckListDimension(question_level) == 1:
-            question_level = [question_level]
         path_id = SQLExtend.SearchPathId(self.db, question_level)
         qList = []
         for path in path_id:
@@ -75,12 +73,13 @@ class DBModel():
         print("insert path")
 
     # 新增問題
-    def AddQuestion(self):
-        pass
+    def AddQuestion(self, newQuestion, question_level):
+        path_id = SQLExtend.SearchPathId(self.db, question_level)
+        SQLExtend.InsertFillingQuestion(self.db, newQuestion, path_id[0])
 
     # 編輯問題
-    def EditQuestion(self):
-        pass
+    def EditQuestion(self, editQuestion):
+        SQLExtend.UpdateFillingQuestion(self.db, editQuestion)
 
     # 開啟Proxy
     def StartProxy(self):

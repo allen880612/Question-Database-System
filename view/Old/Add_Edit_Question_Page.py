@@ -341,7 +341,7 @@ class AddEditQuestionPage(QMainWindow):
 
         nowSlectQuestion = self.questionList[nowSlectIndex]
         self.ui.label_image_preview.clear() # 清空預覽圖片
-        self.ui.text_edit_question.setPlainText(nowSlectQuestion.GetQuestionAnswer())
+        self.ui.text_edit_question.setPlainText(nowSlectQuestion.GetAnswer())
 
         text = str(self.ui.text_edit_question.toPlainText())
         print(type(text), text)

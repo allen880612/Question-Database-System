@@ -152,11 +152,11 @@ class ReviseMakeQuestionPage(QMainWindow):
         level_key = self.GetLevelKey()
 
         if case == 0:
-            tmp_text = self.question_nonSelect_dict[level_key][current_row].GetQuestionAnswer()
+            tmp_text = self.question_nonSelect_dict[level_key][current_row].GetAnswer()
             self.preview_question_content.setText(tmp_text)
             self.listWidget_selected_question.setCurrentRow(-1)
         elif case == 1:
-            tmp_text = self.question_select_dict[level_key][current_row].GetQuestionAnswer()
+            tmp_text = self.question_select_dict[level_key][current_row].GetAnswer()
             self.preview_question_content.setText(tmp_text)
             self.listWidget_none_select_question.setCurrentRow(-1)
 
@@ -269,7 +269,7 @@ class ReviseMakeQuestionPage(QMainWindow):
         for i in range(0, len(qList)):
             questionIndex = "(" + str(i + 1) + ") " #題號
             if haveAnswer:
-                question = qList[i].GetQuestionAnswer()
+                question = qList[i].GetAnswer()
             else:
                 question = qList[i].GetQuestion()
             paragraph = word.add_paragraph(questionIndex + question, style = "question")

@@ -154,9 +154,8 @@ class AddEditQuestionPage(QMainWindow):
         self.questionList = self.model.GetQuestionList(questionType)
         self.ui.list_weight_question.clear()
         for i in range(len(self.questionList)):
-            if self.questionList[i].GetQuestionNumber() != 0:
-                q_head = str(self.questionList[i].GetQuestionNumber()) + '. ' + (self.questionList[i].GetQuestion())[:20]
-                self.ui.list_weight_question.addItem(q_head)
+            q_head = str(self.questionList[i].GetQuestionNumber()) + '. ' + (self.questionList[i].GetQuestion())[:20]
+            self.ui.list_weight_question.addItem(q_head)
         # self.ui.list_weight_question.addItems(self.questionList)
 
     # 真正新增題目
@@ -170,35 +169,15 @@ class AddEditQuestionPage(QMainWindow):
 
     # 獲取題目資訊，建立題目類別
     def CreateQuestion(self):
-        questionList = self.model.GetQuestionList(self.question_level)
-        newQuestionIndex = len(questionList)
-        q_info = copy.deepcopy(self.question_level)
-        q_info.append("") # Level 3
-        q_info.append("") # Level 4
-        q_info.append("") # Level 5
-        q_info.append(newQuestionIndex)
-        q_info.append(self.ui.text_edit_question.toPlainText())
-        q_info.append(self.GetImageIndex(str(newQuestionIndex))) # 新增&加入圖片
-        q_info.append(self.model.GetQuestionCount() - 1)
-
-        # 只有一題且那題是0 -> 編輯問題
-        if len(questionList) == 1 and questionList[0].GetQuestionNumber() == 0:
-            self.model.EditQuestion(q_info)
-        else: # 有很多題 -> 新增問題
-            # list = ['數學', '應用題', '典型應用題', '燕尾定理', '胖子', 2, '操你媽', 'NOIMAGE']
-            dict_q = dict(zip(self.model.GetOriginalDataFrame().columns, q_info))
-            # print(dict_q)
-            self.AddQuestion(dict_q)
+        newQuestion = MyLibrary.Question(0, self.ui.text_edit_question.toPlainText())
+        self.model.AddQuestion(newQuestion, self.question_level)
     
     # 儲存題目資訊
     def StoreQuestion(self):
         nowSelectIndex = self.ui.list_weight_question.currentRow()
         nowSelectQuestion = self.questionList[nowSelectIndex]
-        nowSelectQuestion.EditQuestion(self.ui.text_edit_question.toPlainText(), self.GetImageIndex(str(nowSelectQuestion.GetQuestionNumber())))
-        q_info = nowSelectQuestion.ConvertToList(self.question_level)
-        print("on edit question, q_info: ")
-        print(q_info)
-        self.model.EditQuestion(q_info, index=nowSelectQuestion.dataframe_index)
+        nowSelectQuestion.EditQuestion(self.ui.text_edit_question.toPlainText())
+        self.model.EditQuestion(nowSelectQuestion)
         new_item = str(nowSelectQuestion.GetQuestionNumber()) + '. ' + (nowSelectQuestion.GetQuestion())[:20] # 更新list widget item
         self.ui.list_weight_question.currentItem().setText(new_item)
 
@@ -322,18 +301,20 @@ class AddEditQuestionPage(QMainWindow):
 
         nowSlectQuestion = self.questionList[nowSlectIndex]
         self.ui.label_image_preview.clear() # 清空預覽圖片
-        self.ui.text_edit_question.setPlainText(nowSlectQuestion.GetQuestionAnswer())
+        self.ui.text_edit_question.setPlainText(nowSlectQuestion.GetAnswer())
 
         text = str(self.ui.text_edit_question.toPlainText())
         print(type(text), text)
 
         self.ui.list_weight_image.clear()
-        path = nowSlectQuestion.GetImage()
 
-        if path:
-            for p in path:
-                img_name = pathlib.PurePath(p).name
-                self.ui.list_weight_image.addItem(img_name)
+        # temp for 註解
+        #path = nowSlectQuestion.GetImage()
+
+        #if path:
+        #    for p in path:
+        #        img_name = pathlib.PurePath(p).name
+        #        self.ui.list_weight_image.addItem(img_name)
     
     # 接收 來自上一層的題目列表
     def GetQuestionLevelList(self, questionList):

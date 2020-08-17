@@ -246,7 +246,7 @@ class Ui_MainWindow(object):
         for i in range(0, len(qList)):
             questionIndex = "(" + str(i + 1) + ") " #題號
             if haveAnswer:
-                question = qList[i].GetQuestionAnswer()
+                question = qList[i].GetAnswer()
             else:
                 question = qList[i].GetQuestion()
             paragraph = word.add_paragraph(questionIndex + question, style = "question")

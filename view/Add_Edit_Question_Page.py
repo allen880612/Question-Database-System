@@ -4,7 +4,6 @@ from PyQt5.QtWidgets import QMainWindow, QFileDialog
 from PyQt5.QtGui import QPixmap
 from model import MyLibrary
 from view.UI import Add_Edit_Question_UI
-from view import ComboboxView as cbView
 from view import Add_Unit_Page
 import pathlib
 import copy
@@ -31,7 +30,6 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.setupUi(self)
 
         self.model = _model
-        self.comboboxView = cbView.ComboboxView(self.model)
 
         # 上一層所選的level的list
         self.question_level_list = []
@@ -71,7 +69,7 @@ class AddEditQuestionPage(QMainWindow):
 
     # 重設頁面
     def ResetPage(self):
-        defaultString = self.comboboxView.GetNoSelectString()
+        defaultString = self.model.DefaultString_NoSelect
         self.ClickAddMode()
         self.ui.label_question_level.setText(MyLibrary.GetQuestionShowText(self.question_level))
         self.mode = self.MODE_ADD_QUESTION
@@ -166,7 +164,7 @@ class AddEditQuestionPage(QMainWindow):
         self.model.AddQuestion(dict_q)
         self.ui.text_edit_question.clear()
         self.ui.list_weight_image.clear()
-        self.comboboxView.CreateDictForLevel()
+        self.model.QDSLevel()
         self.temp_importImage = "" # 清除上一題的圖片
         self.imageListPath = [] # 清除上一題的圖片
 
@@ -342,24 +340,3 @@ class AddEditQuestionPage(QMainWindow):
     def GetQuestionLevelList(self, questionList):
         self.question_level_list = questionList
         self.question_level = self.question_level_list[0]
-
-    ## 開啟 新增單元 視窗
-    #def OpenAddUnitView(self):
-    #    if self.Is_add_unit_view_open == False:
-    #        self.Is_add_unit_view_open = True
-    #        self.Add_Unit_View.show()
-    #        self.Add_Unit_View.ResetPage()
-
-    ## 接收 Add Unit View 的資料 函數 (有幾個參數就接幾個) (bool, list)
-    #def GetADdUnitViewData(self, is_close, list_input_content):
-    #    if is_close == True:
-    #        self.Is_add_unit_view_open = False
-
-    #        if list_input_content != []:
-    #            q_Info = copy.deepcopy(list_input_content)
-    #            q_Info.append(0) # add 題號
-    #            q_Info.append("default Content") # add 內容
-    #            q_Info.append("NOIMAGE") # add 圖片
-    #            dict_q = dict(zip(self.model.GetOriginalDataFrame().columns, q_Info))
-    #            self.model.AddQuestion(dict_q)
-    #            self.comboboxView.CreateDictForLevel()

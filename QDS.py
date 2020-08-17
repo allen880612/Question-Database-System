@@ -11,7 +11,6 @@ from model import SQLExtend
 
 # 開啟出題視窗
 def Show_MakeQuestionPage():
-    MakeQuestionPage.comboboxView.CreateDictForLevel()
     MakeQuestionPage.GetQuestionLevelList(SelectQuestionPage.GetLeafNodeBySort()) # 把選擇好的題目給Make Question Page
     MakeQuestionPage.ResetPage() # 重設Make Question Page
 
@@ -21,7 +20,6 @@ def Show_MakeQuestionPage():
 
 # 開啟編輯題目視窗
 def Show_AddEditQuestionPage():
-    AddEditQuestionPage.comboboxView.CreateDictForLevel()
     AddEditQuestionPage.GetQuestionLevelList(SelectQuestionPage.GetLeafNodeBySort())
     AddEditQuestionPage.ResetPage() # 重設 Add Edit Question Page 
 
@@ -34,7 +32,6 @@ def Show_SelectQuestionLevelPage():
     MakeQuestionPage.hide()
     AddEditQuestionPage.hide()
     SelectQuestionPage.show()
-    SelectQuestionPage.comboboxView.CreateDictForLevel()
 
 # 開啟視窗
 if __name__ == '__main__':
@@ -42,9 +39,8 @@ if __name__ == '__main__':
     MakeQuestionPage = QMainWindow()
 
     EXCEL_PATH = "database/盈虧問題v3.xlsx"
-    model = ExcelModel(EXCEL_PATH)
-    
-    modelv2 = DBModel()
+
+    model = DBModel()
 
     # 出題頁面
     MakeQuestionPage = Make_Question_Page.MakeQuestionPage(model)

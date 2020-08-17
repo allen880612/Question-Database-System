@@ -12,7 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class SelectQuestion_UI(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(960, 659)
+        MainWindow.resize(960, 682)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.centralwidget)
@@ -75,6 +75,9 @@ class SelectQuestion_UI(object):
         self.checkBox_level2_selectAll = QtWidgets.QCheckBox(self.centralwidget)
         self.checkBox_level2_selectAll.setObjectName("checkBox_level2_selectAll")
         self.gridLayout.addWidget(self.checkBox_level2_selectAll, 0, 1, 1, 1)
+        self.checkBox_level3_selectAll = QtWidgets.QCheckBox(self.centralwidget)
+        self.checkBox_level3_selectAll.setObjectName("checkBox_level3_selectAll")
+        self.gridLayout.addWidget(self.checkBox_level3_selectAll, 0, 2, 1, 1)
         self.gridLayout_3.addLayout(self.gridLayout, 2, 0, 1, 1)
         self.horizontalLayout.addLayout(self.gridLayout_3)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -94,5 +97,6 @@ class SelectQuestion_UI(object):
         self.button_make_question.setText(_translate("MainWindow", "出題"))
         self.checkBox_level1_selectAll.setText(_translate("MainWindow", "全選"))
         self.checkBox_level2_selectAll.setText(_translate("MainWindow", "全選"))
+        self.checkBox_level3_selectAll.setText(_translate("MainWindow", "全選"))
 
 

@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import QMainWindow, QMessageBox
 from PyQt5 import QtCore, QtWidgets, QtGui
-from view import ComboboxView as cbview
 from view.UI import Make_Question_UI_Test as mq_UI_Test
 from view.UI import Make_Question_UI as mq_UI
 from view import Revise_MakeQuestion_Page
@@ -24,7 +23,6 @@ class MakeQuestionPage(QMainWindow):
         self.ui.setupUi(self)
 
         self.model = _model
-        self.comboboxView = cbview.ComboboxView(self.model)
 
         # 上一層所選的level的list
         self.question_level_list = []
@@ -62,7 +60,7 @@ class MakeQuestionPage(QMainWindow):
     # 重設頁面
     def ResetPage(self):
         # 重設defaultString
-        defaultString = self.comboboxView.GetNoSelectString()
+        defaultString = self.model.DefaultString_NoSelect
 
         # 重建題目數
         self.DeletaAllQuestion()

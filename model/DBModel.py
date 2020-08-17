@@ -44,6 +44,9 @@ class DBModel():
 
                 tmp_level.append(level)
 
+    def GetQDSLevelValue(self, findkey):
+        return self.QDSLevel.get(findkey, False)
+
     # 開啟Proxy
     def StartProxy(self):
         exe_name = "cloud_sql_proxy.exe"

@@ -12,9 +12,8 @@ class CheckboxData(object):
 # Question Level Tree
 # (None -> 數學 & 國文etc, 數學 -> 應用題, XX題 etc)
 class QLT(object):
-	def __init__(self, cbView):
-		self.fuck = ""
-		self.comboboxView = cbView
+	def __init__(self, QDSLevel):
+		self.QDSLevel = QDSLevel
 		self.node_count = 0
 		self.head_node = QLTNode(-1, "None", False, [], weight=self.node_count)
 
@@ -23,7 +22,7 @@ class QLT(object):
 		self.DeleteTree()
 		self.head_node = QLTNode(-1, "None", False, [], weight=self.node_count)
 
-		noselect_list = self.comboboxView.GetDictValue("NOSELECT")
+		noselect_list = self.QDSLevel.get("NOSELECT", False)
 		head = self.head_node
 		depth = 0
 
@@ -37,7 +36,7 @@ class QLT(object):
 
 	# 在node下 再加一個node, questionLsit, depth
 	def AddNode(self, node, questionList, depth):
-		cb_list = self.comboboxView.GetDictValue(self.GetQuestionLevelTupleKey(questionList))
+		cb_list = self.QDSLevel.get(self.GetQuestionLevelTupleKey(questionList), False)
 
 		if cb_list == False:
 			return

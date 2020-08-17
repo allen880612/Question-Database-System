@@ -5,7 +5,6 @@ from PyQt5 import QtCore, QtWidgets
 from model import MyLibrary
 from model import QtExtend
 from view.UI import Select_Question_UI
-from view import ComboboxView as cbView
 from view import Add_Unit_Page
 import pathlib
 import os
@@ -22,8 +21,6 @@ class SelectQuestionPage(QMainWindow):
         self.ui.setupUi(self)
         self.model = _model
 
-        self.comboboxView = cbView.ComboboxView(self.model)
-
         # 題目階層的Layout
         self.questionLevelLayout = [self.ui.verticalLayout_lv1, self.ui.verticalLayout_lv2, self.ui.verticalLayout_lv3, self.ui.verticalLayout_lv4, self.ui.verticalLayout_lv5]
         # 查詢用check box dict
@@ -35,7 +32,7 @@ class SelectQuestionPage(QMainWindow):
         self.checkbox_leaf_list = []
 
         # Question Level Tree
-        self.QLT = QtExtend.QLT(self.comboboxView)
+        self.QLT = QtExtend.QLT(self.model.QDSLevel)
 
         # 新增單元頁面
         self.Add_Unit_View = Add_Unit_Page.AddUnitPage(self.model)
@@ -57,6 +54,7 @@ class SelectQuestionPage(QMainWindow):
 
         self.ui.checkBox_level1_selectAll.clicked.connect(lambda: self.ClickSelectAllCheckbox(self.ui.checkBox_level1_selectAll, 0))
         self.ui.checkBox_level2_selectAll.clicked.connect(lambda: self.ClickSelectAllCheckbox(self.ui.checkBox_level2_selectAll, 1))
+        self.ui.checkBox_level3_selectAll.clicked.connect(lambda: self.ClickSelectAllCheckbox(self.ui.checkBox_level3_selectAll, 2))
 
         #self.ui.button_make_question.connect(self.OpenMakeQuestionPage)
 
@@ -97,6 +95,7 @@ class SelectQuestionPage(QMainWindow):
         self.ui.button_make_question.setEnabled(self.IsMakeQuestionButtonEnable())
         self.ui.button_add_question.setEnabled(self.IsAddQuestionButtonEnable())
         self.UpdateSecondSelectAllButtonState()
+        self.UpdateThirdSelectAllButtonState()
     
     # 重設該Layout
     def ResetLayout(self, layout_level):
@@ -262,6 +261,16 @@ class SelectQuestionPage(QMainWindow):
         else:
             self.ui.checkBox_level2_selectAll.setVisible(True)
 
+    # 更新第三個全選按鈕的狀態
+    def UpdateThirdSelectAllButtonState(self):
+        # 第三層沒有東西
+        if len(self.layoutDict[self.ui.verticalLayout_lv3]) == 0:
+            self.ui.checkBox_level3_selectAll.setVisible(False) #關掉
+            self.ui.checkBox_level3_selectAll.setChecked(False) #取消勾選
+        # 第三層有東西
+        else:
+            self.ui.checkBox_level3_selectAll.setVisible(True)
+
     # 根據順序得到葉節點
     def GetLeafNodeBySort(self):
         self.checkbox_leaf_list.sort(key = lambda node: node.weight)
@@ -293,7 +302,7 @@ class SelectQuestionPage(QMainWindow):
                 q_info.append(self.model.GetQuestionCount() - 1)
                 dict_q = dict(zip(self.model.GetOriginalDataFrame().columns, q_Info))
                 self.model.AddQuestion(dict_q)
-                self.comboboxView.CreateDictForLevel()
+                self.model.CreateQDSLevel()
                 self.ResetPage()
 
     def closeEvent(self, event):

@@ -53,6 +53,16 @@ def UpdateLevel2Name(database, id, level2_name):
 	query = "UPDATE Level2 SET `Name`='{0}' WHERE Id={1};".format(level2_name, id)
 	ExecuteAlterCommand(database, query)
 
+# 得到所有路徑 (return list[str])
+def GetTotalPath(database):
+	handler = database.cursor()
+	pre_query = "SELECT Subject.Name, Level1.Name, Level2.Name FROM Subject, Level1, Level2 NATURAL JOIN PathTable "
+	condition1 = "WHERE (Subject.Id=PathTable.Subject_Id and Level1.Id=PathTable.Level1_Id and Level2.Id=PathTable.Level2_Id)"
+	query = pre_query + condition1
+	handler.execute(query)
+	path = [list(p) for p in handler.fetchall()]
+	return path
+
 # 搜尋路徑的Id (return list)
 def SearchPathId(database, question_level=[[]]):
 	# SELECT PathTable.Id, Subject.Name, Level1.Name, Level2.Name

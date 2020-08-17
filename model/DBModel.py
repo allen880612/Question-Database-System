@@ -12,6 +12,7 @@ class DBModel():
         # 仿造 下拉式選單
         self.DefaultString_NoSelect = "NOSELECT"
         self.QDSLevel = {}
+        self.CreateQDSLevel()
 
     # 得到題目List
     # qList = modelv2.GetQuestionList([["數學", "盈虧問題", "基本型"], ["數學", "盈虧問題", "份數轉化"]])
@@ -24,8 +25,24 @@ class DBModel():
 
     # 創建 QDSLevel
     def CreateQDSLevel(self):
-        self.QDSLevel[self.DefaultString_NoSelect] = SQLExtend.GetTotalSubjectName(self.db) # NOSELECT = [subject]
+        path_list = SQLExtend.GetTotalPath(self.db)
+        self.QDSLevel[self.DefaultString_NoSelect] = []
+        for path in path_list:
+            tmp_level = [] # [數學] -> [數學 盈虧問題] -> [數學 盈虧問題 基本型]
+            for level in path:
+                # 第一層 且 level不再字典中
+                if len(tmp_level) == 0:
+                    if level not in self.QDSLevel[self.DefaultString_NoSelect]:
+                        self.QDSLevel[self.DefaultString_NoSelect].append(level)
+                # 其他層
+                else:
+                    dict_key = MyLibrary.CreateDictKey(tmp_level)
+                    if not self.QDSLevel.get(dict_key):
+                        self.QDSLevel[dict_key] = []
+                    if level not in self.QDSLevel[dict_key]:
+                        self.QDSLevel[dict_key].append(level)
 
+                tmp_level.append(level)
 
     # 開啟Proxy
     def StartProxy(self):

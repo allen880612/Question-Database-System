@@ -164,7 +164,7 @@ class AddEditQuestionPage(QMainWindow):
         self.model.AddQuestion(dict_q)
         self.ui.text_edit_question.clear()
         self.ui.list_weight_image.clear()
-        self.model.QDSLevel()
+        self.model.CreateQDSLevel()
         self.temp_importImage = "" # 清除上一題的圖片
         self.imageListPath = [] # 清除上一題的圖片
 
@@ -198,7 +198,6 @@ class AddEditQuestionPage(QMainWindow):
         q_info = nowSelectQuestion.ConvertToList(self.question_level)
         print("on edit question, q_info: ")
         print(q_info)
-        print(self.model.dataframe.iloc[nowSelectQuestion.dataframe_index])
         self.model.EditQuestion(q_info, index=nowSelectQuestion.dataframe_index)
         new_item = str(nowSelectQuestion.GetQuestionNumber()) + '. ' + (nowSelectQuestion.GetQuestion())[:20] # 更新list widget item
         self.ui.list_weight_question.currentItem().setText(new_item)

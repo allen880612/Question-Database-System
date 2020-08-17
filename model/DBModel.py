@@ -74,6 +74,14 @@ class DBModel():
         SQLExtend.InsertPath(self.db, [subject_id, level1_id, level2_id])
         print("insert path")
 
+    # 新增問題
+    def AddQuestion(self):
+        pass
+
+    # 編輯問題
+    def EditQuestion(self):
+        pass
+
     # 開啟Proxy
     def StartProxy(self):
         exe_name = "cloud_sql_proxy.exe"

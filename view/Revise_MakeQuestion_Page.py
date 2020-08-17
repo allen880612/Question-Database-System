@@ -109,7 +109,7 @@ class ReviseMakeQuestionPage(QMainWindow):
 
         for level, number in self.question_level_tupleList:
             keys = MyLibrary.CreateDictKey(level)
-            qList = self.model.GetQuestionList(keys)
+            qList = self.model.GetQuestionList(level) # Get Question List
 
             # 一階初始化
             self.question_nonSelect_dict[keys] = []
@@ -237,17 +237,16 @@ class ReviseMakeQuestionPage(QMainWindow):
     #region 函式區
     def MakeQuestion(self):
         #excel
-        if self.model.IsLoad():
-            if not MyLibrary.IskWordOpen("word/answer.docx") or not MyLibrary.IskWordOpen("word/question.docx"):
-                QMessageBox.information(self, "警告", "Word開啟中！\n請關閉Word後再試一次", QMessageBox.Yes)
-                return
+        if not MyLibrary.IskWordOpen("word/answer.docx") or not MyLibrary.IskWordOpen("word/question.docx"):
+            QMessageBox.information(self, "警告", "Word開啟中！\n請關閉Word後再試一次", QMessageBox.Yes)
+            return
 
-            qList = self.GetQuestionList() # 要給Word建構的題目列表
-            random.shuffle(qList)
+        qList = self.GetQuestionList() # 要給Word建構的題目列表
+        random.shuffle(qList)
 
-            self.BulidWord(qList, "answer", True)  # 建造word 保留答案
-            self.BulidWord(qList, "question", False)  # 建造word 刪除答案
-            print("done")
+        self.BulidWord(qList, "answer", True)  # 建造word 保留答案
+        self.BulidWord(qList, "question", False)  # 建造word 刪除答案
+        print("done")
         #excel
 
     def BulidWord(self, qList, fileName, haveAnswer):

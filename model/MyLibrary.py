@@ -1,6 +1,7 @@
 import os
 import docx
 import copy
+import numpy as np
 
 # 刪除串列中重複的元素 (然後照加入順序排)
 def DeleteRepeatElement(oldList):
@@ -142,6 +143,14 @@ def IskWordOpen(file_path):
 # 得到顯示用的題目文字 (Ex: 盈虧問題 - 基本題) (add_question_strlist = ["盈虧問題 - 基本題"])
 def GetQuestionShowText(add_question_strlist):
     return " - ".join(add_question_strlist)
+
+# 檢查list 維度
+def CheckListDimension(check_list):
+    dimesion = 0
+    while type(check_list) == list:
+        dimesion += 1
+        check_list = check_list[0]
+    return dimesion
 
 #######################
 #temp

@@ -11,23 +11,58 @@ def ExecuteAlterCommand(database, query):
 	except:
 		database.rollback()
 
+def GetTableCount(database, table):
+	handler = database.cursor()
+	query = "SELECT COUNT(*) FROM {0};".format(table)
+	handler.execute(query)
+	count = int(handler.fetchone()[0])
+	return count
+
+# 向Subject, Level1, Level2 Table中插入一條
+def InsertToTable(database, table, name):
+	id = GetTableCount(database, table)
+	query = "INSERT INTO {0} VALUES ({1}, '{2}');".format(table, id, name)
+	ExecuteAlterCommand(database, query)
+
 # 插入一個科目
 def InsertSubject(database, subject_name):
-	query = "INSERT INTO Subject VALUES ('{0}');".format(subject_name)
-	ExecuteAlterCommand(database, query)
+	InsertToTable(database, "Subject", subject_name)
 
 # 插入一個Level1 (etc 盈虧問題 燕尾定理)
 def InsertLevel1(database, level1_name):
-	query = "INSERT INTO Level1 VALUES ('{0}');".format(level1_name)
-	ExecuteAlterCommand(database, query)
+	InsertToTable(database, "Level1", level1_name)
 
 # 插入一個Level2 (etc 基本型 倍數轉化)
 def InsertLevel2(database, level2_name):
-	handler = database.cursor()
-	handler.execute("SELECT COUNT(`Id`) FROM Level2;")
-	id = int(handler.fetchone()[0])
-	query = "INSERT INTO Level2 VALUES ({0}, '{1}');".format(id, level2_name)
+	InsertToTable(database, "Level2", level2_name)
+
+# 新增一條path (path = [0, 0, 0, 0...])
+def InsertPath(database, path):
+	id = GetTableCount(database, "PathTable")
+	query = "INSERT INTO PathTable VALUES ({0}, {1}, {2}, {3});".format(id, path[0], path[1], path[2])
 	ExecuteAlterCommand(database, query)
+
+# 從Table中得到id
+def GetIdFromTable(database, table, name):
+	handler = database.cursor()
+	query = "SELECT `Id` FROM {0} WHERE `Name`='{1}'".format(table, name)
+	handler.execute(query)
+	try:
+		return int(handler.fetchone()[0])
+	except:
+		return None
+
+# 得到subject 的id (如果不存在 返回False)
+def GetSubjectId(database, subject_name):
+	return GetIdFromTable(database, "Subject", subject_name)
+
+# 得到level1 的id (如果不存在 返回False)
+def GetLevel1Id(database, level1_name):
+	return GetIdFromTable(database, "Level1", level1_name)
+
+# 得到level2 的id (如果不存在 返回False)
+def GetLevel2Id(database, level2_name):
+	return GetIdFromTable(database, "Level2", level2_name)
 
 # 插入填充題
 def InsertFillingQuestion(database, answer, solution=None, image=None):

@@ -103,5 +103,7 @@ if __name__ == '__main__':
     #proxy.join()
 	#db = mysql.connector.connect(host="192.168.179.148",user="newuser",passwd="12345678")
     myDB = mysql.connect(host="127.0.0.1",port=3306,user="user01",passwd="user01",db="QuestionDatabase")
-    ShowQuestion(myDB)
+    handler = myDB.cursor()
+    kkk = SQLExtend.GetIdFromTable(myDB, "Level2", "三元")
+    print(kkk)
     myDB.close()

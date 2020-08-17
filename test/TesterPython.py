@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMessageBox
 import pymysql as mysql
 import threading
 import time
+from model import MyLibrary
 
 class testClass():
 	def __init__(self):
@@ -61,10 +62,14 @@ def test6(subject_name):
 	query = "INSERT INTO Subject VALUES ({0})".format(subject_name)
 	print(query)
 
+def test7():
+	ll = 1
+	MyLibrary.CheckListDimension(ll)
+
 if __name__ == '__main__':
 	#tc = testClass()
 	#kk = test3(tc)
 	#kk.append(456)
 	#print(id(kk))
 	#print(id(tc.tkList))
-	test6("Math")
+	test7()

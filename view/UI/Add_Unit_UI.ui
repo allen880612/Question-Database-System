@@ -31,6 +31,16 @@
             </property>
            </widget>
           </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="label_lv3">
+            <property name="text">
+             <string>第 1 層</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label_lv1">
             <property name="text">
@@ -57,6 +67,9 @@
              <set>Qt::AlignCenter</set>
             </property>
            </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLineEdit" name="textBox_lv3"/>
           </item>
          </layout>
         </item>

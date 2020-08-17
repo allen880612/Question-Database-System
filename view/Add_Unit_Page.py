@@ -18,9 +18,10 @@ class AddUnitPage(QMainWindow):
         self.ui = Add_Unit_UI.AddUnitPage_UI()
         self.ui.setupUi(self)
         self.model = _model
-        self.level = [self.ui.label_lv1, self.ui.label_lv2]
-        self.tBoxlevel = [self.ui.textBox_lv1, self.ui.textBox_lv2]
+        self.level = [self.ui.label_lv1, self.ui.label_lv2, self.ui.label_lv3]
+        self.tBoxlevel = [self.ui.textBox_lv1, self.ui.textBox_lv2, self.ui.textBox_lv3]
         self.is_click_button = False # 如果透過按下按鈕關閉視窗 這個為True
+        self.base_count = 3 # 單元基本上會有的數量
         self.Initialize()
 
     # 初始化
@@ -43,9 +44,13 @@ class AddUnitPage(QMainWindow):
     # ResetPage
     def ResetPage(self):
         self.is_click_button = False
+        #self.ui.textBox_lv1.setText("")
+        #self.ui.textBox_lv2.setText("")
+        #self.ui.textBox_lv3.setText("")
         self.ui.textBox_lv1.setText("")
         self.ui.textBox_lv2.setText("")
-        while self.GetNowLevelNum() > 2:
+        self.ui.textBox_lv3.setText("")
+        while self.GetNowLevelNum() > self.base_count:
             self.DeleteLevel()
 
     # 確定新增
@@ -61,11 +66,13 @@ class AddUnitPage(QMainWindow):
             if tBox == "":
                 input_correct = False
 
+        print(tBoxStr_list)
+
         # 防呆 - 5個都有值
         if input_correct == True:
-            check_question_list = self.model.GetQuestionList(tBoxStr_list)
+            check_question_list = self.model.IsPathExist(tBoxStr_list) # 檢查路徑是否存在
             not_have_unit = True
-            if len(check_question_list) > 0:
+            if check_question_list:
                 not_have_unit = False
 
             # 防呆 - 5個都有值 - 且未有單元 - 可正常關閉
@@ -131,7 +138,7 @@ class AddUnitPage(QMainWindow):
 
     # 更新UI
     def UpdateUI(self):
-        self.ui.button_delete_level.setEnabled(self.GetNowLevelNum() > 2)
+        self.ui.button_delete_level.setEnabled(self.GetNowLevelNum() > self.base_count)
     
     # 關閉視窗事件
     def closeEvent(self, event):

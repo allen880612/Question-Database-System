@@ -17,6 +17,8 @@ class DBModel():
     # 得到題目List
     # qList = modelv2.GetQuestionList([["數學", "盈虧問題", "基本型"], ["數學", "盈虧問題", "份數轉化"]])
     def GetQuestionList(self, question_level):
+        if MyLibrary.CheckListDimension(question_level) == 1:
+            question_level = [question_level]
         path_id = SQLExtend.SearchPathId(self.db, question_level)
         qList = []
         for path in path_id:
@@ -44,8 +46,33 @@ class DBModel():
 
                 tmp_level.append(level)
 
-    def GetQDSLevelValue(self, findkey):
-        return self.QDSLevel.get(findkey, False)
+    # 檢查路徑是否存在
+    def IsPathExist(self, path):
+        path_list = SQLExtend.GetTotalPath(self.db)
+        return path in path_list
+
+    # 新增一條 新的path (path = [str, str, str..])
+    def AddPath(self, path):
+        subject_id = SQLExtend.GetSubjectId(self.db, path[0])
+        level1_id = SQLExtend.GetLevel1Id(self.db, path[1])
+        level2_id = SQLExtend.GetLevel2Id(self.db, path[2])
+
+        # 三個Table 建立資料
+        if subject_id is None:
+            SQLExtend.InsertSubject(self.db, path[0])
+            subject_id = SQLExtend.GetSubjectId(self.db, path[0])
+
+        if level1_id is None:
+            SQLExtend.InsertLevel1(self.db, path[1])
+            level1_id = SQLExtend.GetLevel1Id(self.db, path[1])
+
+        if level2_id is None:
+            SQLExtend.InsertLevel2(self.db, path[2])
+            level2_id = SQLExtend.GetLevel2Id(self.db, path[2])
+
+        
+        SQLExtend.InsertPath(self.db, [subject_id, level1_id, level2_id])
+        print("insert path")
 
     # 開啟Proxy
     def StartProxy(self):

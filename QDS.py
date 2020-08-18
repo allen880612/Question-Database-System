@@ -8,6 +8,10 @@ import pymysql as mysql
 import os
 import threading
 from model import SQLExtend
+from PIL import Image, ImageQt
+from io import BytesIO
+from model import MyLibrary
+import docx
 
 # 開啟出題視窗
 def Show_MakeQuestionPage():
@@ -33,6 +37,14 @@ def Show_SelectQuestionLevelPage():
     AddEditQuestionPage.hide()
     SelectQuestionPage.show()
 
+def tryyyy(database):
+    img = SQLExtend.SearchImage(database, 7)
+    word = docx.Document()
+    imageParagraph = word.add_paragraph()
+    run = imageParagraph.add_run()
+    run.add_picture(BytesIO(img))
+    word.save("sdkjmpsdjkosdfjkod.docx")
+
 # 開啟視窗
 if __name__ == '__main__':
     app = QApplication(sys.argv)
@@ -41,6 +53,9 @@ if __name__ == '__main__':
     EXCEL_PATH = "database/盈虧問題v3.xlsx"
 
     model = DBModel()
+
+    IMAGE_PATH_FROM_DIALOG = "database/test3.jpg"
+    BLOB_string = MyLibrary.ConvertToBinaryData(IMAGE_PATH_FROM_DIALOG)
 
     # 出題頁面
     MakeQuestionPage = Make_Question_Page.MakeQuestionPage(model)

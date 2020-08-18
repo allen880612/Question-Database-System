@@ -117,6 +117,12 @@ def CheckListDimension(check_list):
         check_list = check_list[0]
     return dimesion
 
+def ConvertToBinaryData(fileName):
+    # Convert digital data to binary format
+    with open(fileName, 'rb') as file:
+        binaryData = file.read()
+    return binaryData
+
 #######################
 #temp
 def DeleteAnswer(str):

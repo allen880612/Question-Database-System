@@ -22,8 +22,7 @@ def GetTableCount(database, table):
 
 # 向Subject, Level1, Level2 Table中插入一條
 def InsertToTable(database, table, name):
-	id = GetTableCount(database, table)
-	query = "INSERT INTO {0} VALUES ({1}, '{2}');".format(table, id, name)
+	query = "INSERT INTO {0} (`Name`) VALUES ('{2}');".format(table, name)
 	ExecuteAlterCommand(database, query)
 
 # 插入一個科目
@@ -40,9 +39,48 @@ def InsertLevel2(database, level2_name):
 
 # 新增一條path (path = [0, 0, 0, 0...])
 def InsertPath(database, path):
-	id = GetTableCount(database, "PathTable")
-	query = "INSERT INTO PathTable VALUES ({0}, {1}, {2}, {3});".format(id, path[0], path[1], path[2])
+	query = "INSERT INTO PathTable (`Subject_Id`, `Level1_Id`, `Level2_Id`) VALUES ({0}, {1}, {2});".format(path[0], path[1], path[2])
 	ExecuteAlterCommand(database, query)
+
+# 插入填充題
+def InsertFillingQuestion(database, question, path_id, solution=None, image=None):
+	answer = question.GetAnswer()
+	content = question.GetQuestion()
+	query = "INSERT INTO FillingQuestion (`Content`, `Answer`, `Solution_Id`, `Path_Id`) VALUES ('{0}', '{1}', {2}, {3});".format(content, answer, "NULL", path_id)
+	ExecuteAlterCommand(database, query)
+
+# 插入圖片
+def InsertImage(database, source, image_blob, name=""):
+	handler = database.cursor()
+	#ExecuteAlterCommand(database, query, format_parement)
+	try:
+		handler.execute("INSERT INTO `Image` VALUES (%s, '%s', %s);", (1, source, image_blob))
+		database.commit()
+	except Exception as e:
+		database.rollback()
+		print("execute error!")
+		print(e)
+
+# 更新圖片
+def UpdateImage(database, id, image_blob):
+	handler = database.cursor()
+	try:
+		handler.execute("UPDATE `Image` SET `Image`=%s WHERE `Id`=7", (image_blob))
+		database.commit()
+	except Exception as e:
+		database.rollback()
+		print("execute error!")
+		print(e)
+
+# 搜尋圖片
+def SearchImage(database, id):
+	handler = database.cursor()
+	query = "SELECT `Image` FROM `Image` WHERE `Id`={0}".format(id)
+	handler.execute(query)
+	result = handler.fetchone()[0]
+	print(result)
+	print(type(result))
+	return result
 
 # 從Table中得到id
 def GetIdFromTable(database, table, name):
@@ -65,16 +103,6 @@ def GetLevel1Id(database, level1_name):
 # 得到level2 的id (如果不存在 返回False)
 def GetLevel2Id(database, level2_name):
 	return GetIdFromTable(database, "Level2", level2_name)
-
-# 插入填充題
-def InsertFillingQuestion(database, question, path_id, solution=None, image=None):
-	handler = database.cursor()
-	handler.execute("SELECT COUNT(`Id`) FROM FillingQuestion;")
-	id = int(handler.fetchone()[0])
-	answer = question.GetAnswer()
-	content = question.GetQuestion()
-	query = "INSERT INTO FillingQuestion (`Id`, `Content`, `Answer`, `Solution_Id`, `Path_Id`) VALUES ({0}, '{1}', '{2}', {3}, {4});".format(id, content, answer, "NULL", path_id)
-	ExecuteAlterCommand(database, query)
 
 # 更新 Subject 的名字
 def UpdateLevel1Name(database, id, subject):

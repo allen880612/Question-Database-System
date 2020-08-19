@@ -37,6 +37,9 @@ class AddEditQuestionPage(QMainWindow):
         # 這一頁所使用的question level (self.question_level_list[0])
         self.question_level = []
 
+        # 題目List
+        self.imageList = []
+
         #region 新增單元 視窗 變數 (移到主畫面)
         #self.Add_Unit_View = Add_Unit_Page.AddUnitPage(self.model)
         #self.Add_Unit_View.setWindowModality(Qt.ApplicationModal)

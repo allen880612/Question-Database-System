@@ -3,10 +3,13 @@ from model import MyLibrary
 # 科目 類型 題型 兩個問題 圖片 大概6個Table
 
 # 執行 插入 / 更新 / 刪除等 修改資料庫的指令
-def ExecuteAlterCommand(database, query):
+def ExecuteAlterCommand(database, query, format_parement=()):
 	handler = database.cursor()
 	try:
-		handler.execute(query)
+		if len(format_parement) == 0:
+			handler.execute(query)
+		else:
+			handler.execute(query, format_parement)
 		database.commit()
 	except Exception as e:
 		database.rollback()
@@ -49,38 +52,35 @@ def InsertFillingQuestion(database, question, path_id, solution=None, image=None
 	query = "INSERT INTO FillingQuestion (`Content`, `Answer`, `Solution_Id`, `Path_Id`) VALUES ('{0}', '{1}', {2}, {3});".format(content, answer, "NULL", path_id)
 	ExecuteAlterCommand(database, query)
 
-# 插入圖片
-def InsertImage(database, source, image_blob, name=""):
+# 插入圖片 (yet not test)
+def InsertImage(database, q_id, source, image_blob):
 	handler = database.cursor()
-	#ExecuteAlterCommand(database, query, format_parement)
-	try:
-		handler.execute("INSERT INTO `Image` VALUES (%s, '%s', %s);", (1, source, image_blob))
-		database.commit()
-	except Exception as e:
-		database.rollback()
-		print("execute error!")
-		print(e)
+	# 先插入一個空的
+	ExecuteAlterCommand(database, "INSERT INTO `Image` (`Question_Id`, `Source`) VALUES (%s, '%s');", (q_id, source))
+	id = int(handler.lastrowid)
+	# 在更新他
+	UpdateImage(database, id, image_blob)
 
 # 更新圖片
 def UpdateImage(database, id, image_blob):
 	handler = database.cursor()
-	try:
-		handler.execute("UPDATE `Image` SET `Image`=%s WHERE `Id`=7", (image_blob))
-		database.commit()
-	except Exception as e:
-		database.rollback()
-		print("execute error!")
-		print(e)
+	ExecuteAlterCommand(database, "UPDATE `Image` SET `Image`=%s WHERE `Id`=%s", (image_blob, id))
 
-# 搜尋圖片
-def SearchImage(database, id):
+# 以id 搜尋圖片 (return bytes)
+def SearchImageById(database, id):
 	handler = database.cursor()
 	query = "SELECT `Image` FROM `Image` WHERE `Id`={0}".format(id)
 	handler.execute(query)
 	result = handler.fetchone()[0]
-	print(result)
-	print(type(result))
 	return result
+
+# 以Question的id 以及 Source 搜尋圖片 (return (id, image)) (未完成)
+def SearchImageByQuestion(database, id, source):
+	handler = database.cursor()
+	query = "SELECT `Image` FROM `Image` WHERE `Id`={0}".format(id)
+	handler.execute(query)
+	result = handler.fetchall()[0]
+	print(result)
 
 # 從Table中得到id
 def GetIdFromTable(database, table, name):

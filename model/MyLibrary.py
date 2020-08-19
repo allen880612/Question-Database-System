@@ -19,26 +19,12 @@ def CreateDictKey(keyList):
 # Question Class
 class Question(object):
     def __init__(self, id, content, qnumber=0):
-        self.__questionType = "Filling" # 填充題
+        self.__questionType = "FillingQuestion" # 填充題
         self.__answer = content
         self.__haveImage = False
         self.__question = self.DeleteAnswer(content)
         self.__question_number = qnumber
         self.id = id
-
-    def PaserImage(self, images, imgPath):
-        # 篩掉無圖片的
-        # if not images:
-        if images == "NOIMAGE":
-            self.__haveImage = False
-            return False
-        # 用空格分多圖片路徑，存至list
-        imageList = []
-        tmpPaths = images.split(' ')
-        for img in tmpPaths:
-            imageList.append(imgPath + "\\" + img)  # 遍歷補路徑
-        self.__haveImage = True
-        return imageList
 
     def GetAnswer(self):
         return self.__answer
@@ -69,17 +55,14 @@ class Question(object):
                 addMode = True
         return newQuestion
 
-#建構篩選好的問題List
-def CreatQuestionList(df, questionType):
-    questionList = []
-    imagePath = "database\\" + "\\".join(questionType)  # base path
-    for index, row in df.iterrows():
-        questionList.append(Question(row["題目"], row["圖"], imagePath, row["編號"], row["題號"]))
-        #print(row)
-        #print(row["題目"], row["圖"])
-    # for q in questionList:
-    #     print(q.GetQuestion(), q.GetImage())
-    return questionList
+# QDS上 暫存用的圖片
+class QDSTempImage(object):
+    def __init__(self, content, id=-1, isOnServer=False):
+        self.Byte_content = content
+        self.Id = id
+        self.IsOnServer = isOnServer # 標示這圖片有沒有在Server上
+        self.IsShowOnListWidget = True # 標示這圖片該不該在ListWidget被看到
+
 
 # 依照list 取得資料夾路徑
 def GetFolderPathByList(dir_list):
@@ -117,26 +100,10 @@ def CheckListDimension(check_list):
         check_list = check_list[0]
     return dimesion
 
+# 讀取圖片變成二進制檔
 def ConvertToBinaryData(fileName):
     # Convert digital data to binary format
     with open(fileName, 'rb') as file:
         binaryData = file.read()
     return binaryData
 
-#######################
-#temp
-def DeleteAnswer(str):
-    newQuestion = ""
-    addMode = True  # Mode = True > add a char, False > add a space
-
-    for ch in str:
-        if addMode == True or ch == '】':
-            newQuestion += ch
-        elif addMode == False:
-            newQuestion += ' '
-
-        if ch == '【':
-            addMode = False
-        elif ch == '】':
-            addMode = True
-    return newQuestion

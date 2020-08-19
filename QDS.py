@@ -8,10 +8,6 @@ import pymysql as mysql
 import os
 import threading
 from model import SQLExtend
-from PIL import Image, ImageQt
-from io import BytesIO
-from model import MyLibrary
-import docx
 
 # 開啟出題視窗
 def Show_MakeQuestionPage():
@@ -50,12 +46,7 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     MakeQuestionPage = QMainWindow()
 
-    EXCEL_PATH = "database/盈虧問題v3.xlsx"
-
     model = DBModel()
-
-    IMAGE_PATH_FROM_DIALOG = "database/test3.jpg"
-    BLOB_string = MyLibrary.ConvertToBinaryData(IMAGE_PATH_FROM_DIALOG)
 
     # 出題頁面
     MakeQuestionPage = Make_Question_Page.MakeQuestionPage(model)

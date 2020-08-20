@@ -5,6 +5,7 @@ from PyQt5.QtGui import QPixmap
 from model import MyLibrary
 from view.UI import Add_Edit_Question_UI
 from view import Add_Unit_Page
+import PIL
 import pathlib
 import copy
 import os
@@ -15,7 +16,6 @@ class AddEditQuestionPage(QMainWindow):
     comboboxSelectOption = []
     questionList = []
     imageListPath = []
-    temp_importImage = ""
     MODE_ADD_QUESTION = "add_question"
     MODE_EDIT_QUESTION = "edit_question"
     mode = ""
@@ -37,7 +37,10 @@ class AddEditQuestionPage(QMainWindow):
         # 這一頁所使用的question level (self.question_level_list[0])
         self.question_level = []
 
-        # 題目List
+        # temp import Image
+        self.temp_importImage = None
+
+        # 圖片List
         self.imageList = []
 
         #region 新增單元 視窗 變數 (移到主畫面)
@@ -114,7 +117,7 @@ class AddEditQuestionPage(QMainWindow):
         # 未選擇單元 不該能修改
         self.ui.button_edit_question_mode.setEnabled(self.GetEditButtonEnable())
         # 未引入圖片 不能新增
-        self.ui.button_addToList_image.setEnabled(self.temp_importImage != "")
+        self.ui.button_addToList_image.setEnabled(self.temp_importImage != None)
 
         # 切換模式按鈕
         self.ui.button_add_question_mode.setEnabled(self.IsAddModeButtonEnable())
@@ -124,6 +127,8 @@ class AddEditQuestionPage(QMainWindow):
     def ClickEditMode(self):
         self.mode = self.MODE_EDIT_QUESTION
         self.ui.list_weight_image.clear()
+        self.imageList.clear()
+        temp_importImage = None
         self.LoadQuestionList()
         self.ui.label_image_preview.clear() # 清空預覽圖片
         self.ui.button_add_question.setText("儲存題目")
@@ -134,6 +139,8 @@ class AddEditQuestionPage(QMainWindow):
         self.mode = self.MODE_ADD_QUESTION
         self.ui.text_edit_question.clear()
         self.ui.list_weight_image.clear()
+        self.imageList.clear()
+        temp_importImage = None
         self.ui.list_weight_question.clear()
         self.LoadQuestionList()
         self.ui.label_image_preview.clear() # 清空預覽圖片
@@ -143,7 +150,7 @@ class AddEditQuestionPage(QMainWindow):
     # 點擊 新增題目 按鈕
     def ClickAddQuestionButton(self):
         if self.mode == self.MODE_ADD_QUESTION:
-            self.CreateQuestion()
+            self.AddQuestion()
         elif self.mode == self.MODE_EDIT_QUESTION:
             self.StoreQuestion()
 
@@ -151,32 +158,28 @@ class AddEditQuestionPage(QMainWindow):
     def LoadQuestionList(self):
         if self.mode == self.MODE_ADD_QUESTION:
             return
-        #if self.question_level == []:
-        #    return
-        questionType = self.question_level  # 搜尋的條件
-        self.questionList = self.model.GetQuestionList(questionType)
+        questionLevel = self.question_level  # 搜尋的條件
+        self.questionList = self.model.GetQuestionList(questionLevel)
+        # 重新添加題目
         self.ui.list_weight_question.clear()
         for i in range(len(self.questionList)):
             q_head = str(self.questionList[i].GetQuestionNumber()) + '. ' + (self.questionList[i].GetQuestion())[:20]
             self.ui.list_weight_question.addItem(q_head)
-        # self.ui.list_weight_question.addItems(self.questionList)
 
     # 真正新增題目
-    def AddQuestion(self, dict_q):
-        self.model.AddQuestion(dict_q)
+    def AddQuestion(self):
+        newQuestion = MyLibrary.Question(0, self.ui.text_edit_question.toPlainText())
+        self.model.AddQuestion(newQuestion, self.question_level, self.imageList)
+
         self.ui.text_edit_question.clear()
         self.ui.list_weight_image.clear()
         self.model.CreateQDSLevel()
-        self.temp_importImage = "" # 清除上一題的圖片
-        self.imageListPath = [] # 清除上一題的圖片
-
-    # 獲取題目資訊，建立題目類別
-    def CreateQuestion(self):
-        newQuestion = MyLibrary.Question(0, self.ui.text_edit_question.toPlainText())
-        self.model.AddQuestion(newQuestion, self.question_level)
+        self.temp_importImage = None # 清除上一題的圖片
+        self.imageList = [] # 清除上一題的圖片
     
     # 儲存題目資訊
     def StoreQuestion(self):
+        # 處理問題
         nowSelectIndex = self.ui.list_weight_question.currentRow()
         nowSelectQuestion = self.questionList[nowSelectIndex]
         nowSelectQuestion.EditQuestion(self.ui.text_edit_question.toPlainText())
@@ -184,6 +187,13 @@ class AddEditQuestionPage(QMainWindow):
         new_item = str(nowSelectQuestion.GetQuestionNumber()) + '. ' + (nowSelectQuestion.GetQuestion())[:20] # 更新list widget item
         self.ui.list_weight_question.currentItem().setText(new_item)
 
+        # 處理圖片
+        for image in self.imageList:
+            if image.IsUpdated:
+                if image.IsOnServer == True and image.IsShowOnListWidget == False:
+                    self.model.DeleteImage(image) # 刪除圖片
+                elif image.IsOnServer == False and image.IsShowOnListWidget == True:
+                    self.model.AddImage(nowSelectQuestion.id, nowSelectQuestion.GetType(), image.GetBytes()) # 新增圖片
     # 取得題號
     def GetQuestionIndex(self):
         qList = self.model.GetQuestionList(self.question_level)
@@ -203,18 +213,21 @@ class AddEditQuestionPage(QMainWindow):
     def ImportImage(self):
         img_path = QFileDialog.getOpenFileName(self, '插入圖片', 'c\\', 'Image files (*.jpg *.png)')
         file_name = img_path[0] #img_path[0] = absolate path of image
-        pixmap = QPixmap(file_name)
+        byte_content = MyLibrary.ConvertToBinaryData(file_name) # binary data
+        newTempImage = MyLibrary.QDSTempImage(byte_content)
+        self.temp_importImage = newTempImage
+
+        pixmap = newTempImage.GetPixmap()
         pixmap = self.FormatImage(pixmap)
-        self.ui.label_image_preview.setPixmap(QPixmap(pixmap))
-        self.temp_importImage = file_name
+        self.ui.label_image_preview.setPixmap(pixmap)
         self.UpdateUI() # 更新UI
 
     # 新增至圖片列表
     def AddToImageList(self):
         image_id = self.ui.list_weight_image.count() + 1
-        self.imageListPath.append(self.temp_importImage)
+        self.imageList.append(self.temp_importImage)
         self.ui.list_weight_image.addItem(str(image_id))
-        self.temp_importImage = ""
+        self.temp_importImage = None
         self.ui.label_image_preview.clear() # 清空預覽圖片
         self.UpdateUI()
 
@@ -233,8 +246,20 @@ class AddEditQuestionPage(QMainWindow):
                 self.ui.list_weight_image.item(i).setText(str(i))
                 
             self.ui.list_weight_image.takeItem(nowSelectImageIndex) # 刪除Item
-            self.imageListPath.pop(nowSelectImageIndex) # 刪除指定索引
+            self.imageList.pop(nowSelectImageIndex) # 刪除指定索引
             # self.ui.label_image_preview.clear()
+        elif self.mode == self.MODE_EDIT_QUESTION:
+            image_index = self.GetImageIndex(nowSelectImageIndex)
+            select_image = self.imageList[image_index]
+            # 圖片存在Server上
+            if select_image.IsOnServer:
+                select_image.IsUpdated = True
+                select_image.IsShowOnListWidget = False
+                print("onserver delete")
+            # 圖片不存在於Server上
+            else:
+                self.imageList.pop(image_index)
+            self.UpdateImageListWidget()
 
     # 取得圖片 題號 + 編號
     def GetImageIndex(self, question_index):
@@ -277,20 +302,16 @@ class AddEditQuestionPage(QMainWindow):
 
         # 編輯模式中 -> 點選圖片 > 預覽圖片
         if self.mode == self.MODE_EDIT_QUESTION:
-            dir_path = MyLibrary.GetFolderPathByList(self.question_level)
-            image_name = item.text()
-            dir_path = os.path.join(dir_path, image_name)
-            pixmap = QPixmap(dir_path)
-            pixmap = self.FormatImage(pixmap)
-            self.ui.label_image_preview.setPixmap(pixmap) # 設置圖片
+            # 先取得 所選列對應到image list 對應的 index
+            image_index = self.GetImageIndex(nowSelectImageIndex)
+            
+            select_image = self.imageList[image_index]
+            self.ui.label_image_preview.setPixmap(select_image.GetFormatPixmap()) # 設置圖片
        
         # 新增模式中 -> 點選圖片 > 預覽圖片
         if self.mode == self.MODE_ADD_QUESTION:
-            image_path = self.imageListPath[nowSelectImageIndex]
-            pixmap = QPixmap(image_path)
-            self.FormatImage(pixmap)
-            self.ui.label_image_preview.setPixmap(pixmap)
-
+            qds_temp_image = self.imageList[nowSelectImageIndex]
+            self.ui.label_image_preview.setPixmap(qds_temp_image.GetFormatPixmap())
 
     # 選擇題目 - 更新題目右側資訊
     def SelectQuestion(self, item):
@@ -298,6 +319,7 @@ class AddEditQuestionPage(QMainWindow):
         # self.ui.text_edit_question.setPlainText(item.text())
 
         nowSlectIndex = self.ui.list_weight_question.currentRow()
+
         # print(nowSlectIndex, type(nowSlectIndex))
         if self.mode == self.MODE_ADD_QUESTION or nowSlectIndex == -1:
             return
@@ -308,8 +330,9 @@ class AddEditQuestionPage(QMainWindow):
 
         text = str(self.ui.text_edit_question.toPlainText())
         print(type(text), text)
-
-        self.ui.list_weight_image.clear()
+        
+        self.imageList = self.model.GetImagesByQuestion(nowSlectQuestion)
+        self.UpdateImageListWidget()
 
         # temp for 註解
         #path = nowSlectQuestion.GetImage()
@@ -319,6 +342,28 @@ class AddEditQuestionPage(QMainWindow):
         #        img_name = pathlib.PurePath(p).name
         #        self.ui.list_weight_image.addItem(img_name)
     
+    # image list_widget裡面的東西全部更新
+    def UpdateImageListWidget(self):
+        k = 1
+        self.ui.list_weight_image.clear()
+        for image in self.imageList:
+            if image.IsShowOnListWidget:
+                self.ui.list_weight_image.addItem(str(k))
+                k += 1
+
+    # 選擇圖片時 取得真正在image List出現的image index
+    def GetImageIndex(self, nowSelectImageIndex):
+        image_index = 0
+        temp_index = 0
+        for image in self.imageList:
+            if image.IsShowOnListWidget: # 如果他在list widget中
+                if temp_index == nowSelectImageIndex: # 而且index = 所選的列
+                    break
+                else:
+                    temp_index += 1
+            image_index += 1
+        return image_index
+
     # 接收 來自上一層的題目列表
     def GetQuestionLevelList(self, questionList):
         self.question_level_list = questionList

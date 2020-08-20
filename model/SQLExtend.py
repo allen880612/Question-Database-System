@@ -2,14 +2,13 @@ import pymysql as mysql
 from model import MyLibrary
 # 科目 類型 題型 兩個問題 圖片 大概6個Table
 
-# 執行 插入 / 更新 / 刪除等 修改資料庫的指令
-def ExecuteAlterCommand(database, query, format_parement=()):
-	handler = database.cursor()
+# 執行 插入 / 更新 / 刪除等 修改資料庫的指令 (return cursor)
+def ExecuteAlterCommand(database, cursor, query, format_parement=()):
 	try:
 		if len(format_parement) == 0:
-			handler.execute(query)
+			cursor.execute(query)
 		else:
-			handler.execute(query, format_parement)
+			cursor.execute(query, format_parement)
 		database.commit()
 	except Exception as e:
 		database.rollback()
@@ -25,8 +24,9 @@ def GetTableCount(database, table):
 
 # 向Subject, Level1, Level2 Table中插入一條
 def InsertToTable(database, table, name):
-	query = "INSERT INTO {0} (`Name`) VALUES ('{2}');".format(table, name)
-	ExecuteAlterCommand(database, query)
+	cursor = database.cursor()
+	query = "INSERT INTO {0} (`Name`) VALUES ('{1}');".format(table, name)
+	ExecuteAlterCommand(database, cursor, query)
 
 # 插入一個科目
 def InsertSubject(database, subject_name):
@@ -42,29 +42,33 @@ def InsertLevel2(database, level2_name):
 
 # 新增一條path (path = [0, 0, 0, 0...])
 def InsertPath(database, path):
+	cursor = database.cursor()
 	query = "INSERT INTO PathTable (`Subject_Id`, `Level1_Id`, `Level2_Id`) VALUES ({0}, {1}, {2});".format(path[0], path[1], path[2])
-	ExecuteAlterCommand(database, query)
+	ExecuteAlterCommand(database, cursor, query)
 
 # 插入填充題
 def InsertFillingQuestion(database, question, path_id, solution=None, image=None):
+	cursor = database.cursor()
 	answer = question.GetAnswer()
 	content = question.GetQuestion()
 	query = "INSERT INTO FillingQuestion (`Content`, `Answer`, `Solution_Id`, `Path_Id`) VALUES ('{0}', '{1}', {2}, {3});".format(content, answer, "NULL", path_id)
-	ExecuteAlterCommand(database, query)
+	ExecuteAlterCommand(database, cursor, query)
+	return int(cursor.lastrowid)
 
 # 插入圖片 (yet not test)
 def InsertImage(database, q_id, source, image_blob):
-	handler = database.cursor()
+	cursor = database.cursor()
 	# 先插入一個空的
-	ExecuteAlterCommand(database, "INSERT INTO `Image` (`Question_Id`, `Source`) VALUES (%s, '%s');", (q_id, source))
-	id = int(handler.lastrowid)
+	ExecuteAlterCommand(database, cursor, "INSERT INTO `Image` (`Question_Id`, `Source`) VALUES ({0}, '{1}');".format(q_id, source))
+	id = int(cursor.lastrowid) 
 	# 在更新他
 	UpdateImage(database, id, image_blob)
 
 # 更新圖片
 def UpdateImage(database, id, image_blob):
+	cursor = database.cursor()
 	handler = database.cursor()
-	ExecuteAlterCommand(database, "UPDATE `Image` SET `Image`=%s WHERE `Id`=%s", (image_blob, id))
+	ExecuteAlterCommand(database, cursor, "UPDATE `Image` SET `Image`=%s WHERE `Id`=%s", (image_blob, id))
 
 # 以id 搜尋圖片 (return bytes)
 def SearchImageById(database, id):
@@ -74,13 +78,19 @@ def SearchImageById(database, id):
 	result = handler.fetchone()[0]
 	return result
 
-# 以Question的id 以及 Source 搜尋圖片 (return (id, image)) (未完成)
-def SearchImageByQuestion(database, id, source):
+# 以Question的id 以及 Source 搜尋圖片 (return list for (id, image))
+def SearchImageByQuestion(database, q_id, source):
 	handler = database.cursor()
-	query = "SELECT `Image` FROM `Image` WHERE `Id`={0}".format(id)
+	query = "SELECT `Id`, `Image` FROM `Image` WHERE `Question_Id`={0} and `Source`='{1}';".format(q_id, source)
 	handler.execute(query)
-	result = handler.fetchall()[0]
-	print(result)
+	result = handler.fetchall()
+	return result
+
+# 以id 刪除圖片 (return list for (id, image))
+def DeleteImageById(database, image_id):
+	cursor = database.cursor()
+	query = "DELETE FROM `Image` WHERE `Id`={0};".format(image_id)
+	ExecuteAlterCommand(database, cursor, query)
 
 # 從Table中得到id
 def GetIdFromTable(database, table, name):
@@ -106,25 +116,27 @@ def GetLevel2Id(database, level2_name):
 
 # 更新 Subject 的名字
 def UpdateLevel1Name(database, id, subject):
+	cursor = database.cursor()
 	query = "UPDATE Subject SET `Name`='{0}' WHERE Id={1};".format(subject, id)
-	ExecuteAlterCommand(database, query)
+	ExecuteAlterCommand(database, cursor, query)
 
 # 更新 Level1 的名字
 def UpdateLevel1Name(database, id, level1_name):
 	query = "UPDATE Level1 SET `Name`='{0}' WHERE Id={1};".format(level1_name, id)
-	ExecuteAlterCommand(database, query)
+	ExecuteAlterCommand(database, cursor, query)
 
 # 更新 Level2 的名字
 def UpdateLevel2Name(database, id, level2_name):
 	query = "UPDATE Level2 SET `Name`='{0}' WHERE Id={1};".format(level2_name, id)
-	ExecuteAlterCommand(database, query)
+	ExecuteAlterCommand(database, cursor, query)
 
 # 更新 填充題
 def UpdateFillingQuestion(database, question):
+	cursor = database.cursor()
 	content = question.GetQuestion()
 	answer = question.GetAnswer()
 	query = "UPDATE FillingQuestion SET `Content`='{0}', `Answer`='{1}' WHERE `Id`={2};".format(content, answer, question.id)
-	ExecuteAlterCommand(database, query)
+	ExecuteAlterCommand(database, cursor, query)
 
 # 得到所有路徑 (return list[str])
 def GetTotalPath(database):

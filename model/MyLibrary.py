@@ -1,7 +1,9 @@
 import os
 import docx
 import copy
-import numpy as np
+from PIL import Image, ImageQt
+from PyQt5.QtCore import Qt
+from io import BytesIO
 
 # 刪除串列中重複的元素 (然後照加入順序排)
 def DeleteRepeatElement(oldList):
@@ -39,6 +41,9 @@ class Question(object):
         self.__answer = answer
         self.__question = self.DeleteAnswer(answer)
 
+    def GetType(self):
+        return self.__questionType
+
     def DeleteAnswer(self, str):
         newQuestion = ""
         addMode = True  # Mode = True > add a char, False > add a space
@@ -57,12 +62,25 @@ class Question(object):
 
 # QDS上 暫存用的圖片
 class QDSTempImage(object):
-    def __init__(self, content, id=-1, isOnServer=False):
+    def __init__(self, content, id=-1, isOnServer=False, isUpdated=True):
         self.Byte_content = content
         self.Id = id
         self.IsOnServer = isOnServer # 標示這圖片有沒有在Server上
         self.IsShowOnListWidget = True # 標示這圖片該不該在ListWidget被看到
+        self.IsUpdated = isUpdated # 標示這圖片有沒有更新過
 
+    def GetPixmap(self):
+        img = Image.open(BytesIO(self.Byte_content))
+        pixmap = img.toqpixmap()
+        return pixmap
+
+    def GetFormatPixmap(self):
+        pixmap = self.GetPixmap()
+        pixmap = pixmap.scaled(256, 256, Qt.KeepAspectRatio)
+        return pixmap
+
+    def GetBytes(self):
+        return self.Byte_content
 
 # 依照list 取得資料夾路徑
 def GetFolderPathByList(dir_list):

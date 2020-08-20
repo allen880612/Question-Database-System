@@ -72,14 +72,37 @@ class DBModel():
         SQLExtend.InsertPath(self.db, [subject_id, level1_id, level2_id])
         print("insert path")
 
-    # 新增問題
-    def AddQuestion(self, newQuestion, question_level):
+    # 新增問題 (type(newQuestion) = class.Question, question_level = [str, str, str], type(imageList) = list[class.QDSTempImage])
+    def AddQuestion(self, newQuestion, question_level, imageList):
         path_id = SQLExtend.SearchPathId(self.db, question_level)
-        SQLExtend.InsertFillingQuestion(self.db, newQuestion, path_id[0])
+        q_id = SQLExtend.InsertFillingQuestion(self.db, newQuestion, path_id[0])
+        print(newQuestion.GetType())
+        for qds_temp_image in imageList:
+            self.AddImage(q_id, newQuestion.GetType(), qds_temp_image.GetBytes())
 
     # 編輯問題
     def EditQuestion(self, editQuestion):
         SQLExtend.UpdateFillingQuestion(self.db, editQuestion)
+
+    # 新增圖片
+    def AddImage(self, question_id, source, image_blob):
+        SQLExtend.InsertImage(self.db, question_id, source, image_blob)
+
+    # 刪除圖片
+    def DeleteImage(self, image):
+        SQLExtend.DeleteImageById(self.db, image.Id)
+
+    # 用question 得到圖片群
+    def GetImagesByQuestion(self, question):
+        images = SQLExtend.SearchImageByQuestion(self.db, question.id, question.GetType())
+        imageList = []
+        for image in images:
+            image_id = image[0]
+            image_content = image[1]
+            qds_temp_image = MyLibrary.QDSTempImage(image_content, image_id, isOnServer=True, isUpdated=False)
+            imageList.append(qds_temp_image)
+
+        return imageList
 
     # 開啟Proxy
     def StartProxy(self):

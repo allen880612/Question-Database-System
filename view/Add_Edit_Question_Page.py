@@ -213,6 +213,8 @@ class AddEditQuestionPage(QMainWindow):
     def ImportImage(self):
         img_path = QFileDialog.getOpenFileName(self, '插入圖片', 'c\\', 'Image files (*.jpg *.png)')
         file_name = img_path[0] #img_path[0] = absolate path of image
+        if file_name == "":
+            return
         byte_content = MyLibrary.ConvertToBinaryData(file_name) # binary data
         newTempImage = MyLibrary.QDSTempImage(byte_content)
         self.temp_importImage = newTempImage

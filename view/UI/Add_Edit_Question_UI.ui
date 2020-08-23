@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>960</width>
-    <height>480</height>
+    <height>484</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,28 +20,48 @@
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
-      <item row="4" column="0">
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item row="1" column="1">
+       <widget class="QLabel" name="label_add_edit_question">
+        <property name="font">
+         <font>
+          <family>微軟正黑體 Light</family>
+          <pointsize>18</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>新增題目</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="2">
+       <widget class="QPushButton" name="button_return">
+        <property name="text">
+         <string>返回</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
-         <widget class="QPushButton" name="button_add_question_mode">
+         <widget class="QRadioButton" name="radioButton_FillingQuestion">
           <property name="text">
-           <string>新增題目</string>
+           <string>填充題</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="button_edit_question_mode">
+         <widget class="QRadioButton" name="radioButton_SelectQuestion">
           <property name="text">
-           <string>修改題目</string>
+           <string>選擇題</string>
           </property>
          </widget>
         </item>
        </layout>
       </item>
-      <item row="3" column="0">
-       <widget class="QListWidget" name="list_weight_question"/>
-      </item>
-      <item row="3" column="2">
+      <item row="7" column="2">
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <layout class="QGridLayout" name="gridLayout_3">
@@ -56,12 +76,18 @@
             <property name="text">
              <string>圖片預覽</string>
             </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
            </widget>
           </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label_image_list">
             <property name="text">
              <string>圖片列表</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -82,7 +108,7 @@
            </widget>
           </item>
           <item row="4" column="1">
-           <layout class="QVBoxLayout" name="verticalLayout_3">
+           <layout class="QVBoxLayout" name="verticalLayout_questionList">
             <item>
              <widget class="QPushButton" name="button_import_image">
               <property name="text">
@@ -142,22 +168,15 @@
         </item>
        </layout>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_question_list">
-        <property name="text">
-         <string>題目列表</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
+      <item row="7" column="1">
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
          <widget class="QLabel" name="label_3">
           <property name="text">
            <string>題目內容</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -166,31 +185,80 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="1">
-       <widget class="QLabel" name="label_add_edit_question">
+      <item row="8" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QPushButton" name="button_add_question_mode">
+          <property name="text">
+           <string>新增題目</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="button_edit_question_mode">
+          <property name="text">
+           <string>修改題目</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="7" column="0">
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QLabel" name="label_question_list">
+          <property name="text">
+           <string>題目列表</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QListWidget" name="list_weight_question"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>選項列表</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QListWidget" name="list_widget_option"/>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <item>
+           <widget class="QPushButton" name="button_add_option">
+            <property name="text">
+             <string>新增選項</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="button_remove_option">
+            <property name="text">
+             <string>移除選項</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLabel" name="label_question_level">
         <property name="font">
          <font>
-          <family>微軟正黑體 Light</family>
-          <pointsize>18</pointsize>
+          <family>微軟正黑體</family>
+          <pointsize>14</pointsize>
          </font>
         </property>
-        <property name="text">
-         <string>新增題目</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="2">
-       <widget class="QPushButton" name="button_return">
-        <property name="text">
-         <string>返回</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLabel" name="label_question_level">
         <property name="text">
          <string>TextLabel</string>
         </property>

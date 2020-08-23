@@ -18,7 +18,10 @@ class AddEditQuestionPage(QMainWindow):
     imageListPath = []
     MODE_ADD_QUESTION = "add_question"
     MODE_EDIT_QUESTION = "edit_question"
+    MODE_FILLING_QUESTION = "FillingQuestion_Mode"
+    MODE_SELECT_QUESTION = "SelectQuestion_Mode"
     mode = ""
+    question_mode = ""
     #Add_Unit_View = "" 
     Is_add_unit_view_open = False
 
@@ -69,6 +72,12 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.button_add_question_mode.clicked.connect(self.ClickAddMode)
         self.ui.list_weight_image.currentItemChanged.connect(self.SelectImage) # 選擇圖片
         
+        self.ui.radioButton_FillingQuestion.toggled.connect(self.ClickFillingQuestionMode)
+        self.ui.radioButton_SelectQuestion.toggled.connect(self.ClickSelectQuestionMode)
+
+        self.ui.button_add_option.clicked.connect(self.ClickAddOptionButton)
+        self.ui.button_remove_option.clicked.connect(self.ClickRemoveOptionButton)
+
         # 新增單元 視窗 (移到選擇路徑畫面)
         # self.ui.button_add_unit.clicked.connect(self.OpenAddUnitView)
         # self.Add_Unit_View.add_unit_signal.connect(self.GetADdUnitViewData)
@@ -76,30 +85,18 @@ class AddEditQuestionPage(QMainWindow):
     # 重設頁面
     def ResetPage(self):
         defaultString = self.model.DefaultString_NoSelect
+        self.question_mode = ""
         self.ClickAddMode()
+        self.ui.radioButton_FillingQuestion.click()
         self.ui.label_question_level.setText(MyLibrary.GetQuestionShowText(self.question_level))
         self.mode = self.MODE_ADD_QUESTION
 
     # 新增按鈕是否可以按下
     def GetAddQuestionButtonEnable(self):
-        #flag = True
-        ## print(f"text={not len(self.ui.text_edit_question.toPlainText()) == 0}")
-        #flag &= (not len(self.ui.text_edit_question.toPlainText()) == 0)
-        ## print(f"cBox={len(self.comboboxSelectOption) == self.cBoxNum}")
-        #flag &= (len(self.comboboxSelectOption) == 0)
-        ## print(f"flag={flag}")
-        #return flag
         return len(self.ui.text_edit_question.toPlainText()) != 0
 
     # 編輯按鈕是否可以按下
     def GetEditButtonEnable(self):
-        #flag = True
-        # print(f"text={not len(self.ui.text_edit_question.toPlainText()) == 0}")
-        # flag = flag and (not len(self.ui.text_edit_question.toPlainText()) == 0)
-        # print(f"cBox={len(self.comboboxSelectOption) == self.cBoxNum}")
-        #flag = flag and (len(self.comboboxSelectOption) == self.cBoxNum)
-        #print(f"flag={flag}")
-        #return flag 
         return True
 
     # 新增題目模式 按鈕 是否可以被按下
@@ -122,6 +119,10 @@ class AddEditQuestionPage(QMainWindow):
         # 切換模式按鈕
         self.ui.button_add_question_mode.setEnabled(self.IsAddModeButtonEnable())
         self.ui.button_edit_question_mode.setEnabled(self.IsEditModeButtonEnable())
+
+    # 每次切換操作後，重設UI
+    def ResetUI(self):
+        pass
 
     # 切換至編輯模式
     def ClickEditMode(self):
@@ -147,12 +148,47 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.button_add_question.setText("新增題目")
         self.UpdateUI()
 
+    # 切換至填充題模式
+    def ClickFillingQuestionMode(self):
+        if self.question_mode != self.MODE_FILLING_QUESTION:
+            self.question_mode = self.MODE_FILLING_QUESTION
+            self.SetFillingQuestionMode()
+
+    # 切換至選擇題模式
+    def ClickSelectQuestionMode(self):
+        if self.question_mode != self.MODE_SELECT_QUESTION:
+            self.question_mode = self.MODE_SELECT_QUESTION
+            self.SetSelectQuestionMode()
+
+    # 設置成 填充題模式
+    def SetFillingQuestionMode(self):
+        self.ui.label.setVisible(False)
+        self.ui.list_widget_option.setVisible(False)
+        self.ui.button_add_option.setVisible(False)
+        self.ui.button_remove_option.setVisible(False)
+
+    # 設置成 選擇題模式
+    def SetSelectQuestionMode(self):
+        self.ui.label.setVisible(True)
+        self.ui.list_widget_option.setVisible(True)
+        self.ui.button_add_option.setVisible(True)
+        self.ui.button_remove_option.setVisible(True)
+
     # 點擊 新增題目 按鈕
     def ClickAddQuestionButton(self):
         if self.mode == self.MODE_ADD_QUESTION:
             self.AddQuestion()
         elif self.mode == self.MODE_EDIT_QUESTION:
             self.StoreQuestion()
+
+    # 點擊新增選項按鈕
+    def ClickAddOptionButton(self):
+        id = int(self.ui.list_widget_option.count() + 1)
+        self.ui.list_widget_option.addItem(str(id))
+
+    # 點擊移除選項按鈕
+    def ClickRemoveOptionButton(self):
+        pass
 
     # 獲取題目表
     def LoadQuestionList(self):
@@ -262,36 +298,6 @@ class AddEditQuestionPage(QMainWindow):
             else:
                 self.imageList.pop(image_index)
             self.UpdateImageListWidget()
-
-    # 取得圖片 題號 + 編號
-    def GetImageIndex(self, question_index):
-        # imageListPath 為空 -> 沒圖片
-        if self.imageListPath == []:
-            return "NOIMAGE"
-
-        # 創建儲存圖片用資料夾
-        dir_path = "database"
-        for dir in self.question_level:
-            dir_path = os.path.join(dir_path, dir)
-        print("new path: " + dir_path)
-        if not os.path.exists(dir_path): # 如果資料夾不存在 才建立資料夾
-            os.makedirs(dir_path)
-
-        # 搬運圖片至資料夾 & 製造回傳字串
-        str_image_index = ""
-        for i in range(len(self.imageListPath)):
-            file_extensionName = os.path.splitext(self.imageListPath[i])[-1] # 取得副檔名
-            newFileName = "" # 製造新檔名 (題號_圖片編號.副檔名)
-            if len(self.imageListPath) == 1:
-                newFileName = question_index + file_extensionName # 題號.副檔名
-            else:
-                newFileName = question_index + "_" + str(i + 1) + file_extensionName # 題號_圖片編號.副檔名
-            shutil.copy(self.imageListPath[i], os.path.join(dir_path, newFileName)) # 搬運圖片
-            str_image_index += newFileName # 製造回傳字串
-            if i + 1 < len(self.imageListPath):
-                str_image_index += " "
-
-        return str_image_index
        
     # 選擇圖片 - 更新預覽圖片
     def SelectImage(self, item):
@@ -336,14 +342,6 @@ class AddEditQuestionPage(QMainWindow):
         self.imageList = self.model.GetImagesByQuestion(nowSlectQuestion)
         self.UpdateImageListWidget()
 
-        # temp for 註解
-        #path = nowSlectQuestion.GetImage()
-
-        #if path:
-        #    for p in path:
-        #        img_name = pathlib.PurePath(p).name
-        #        self.ui.list_weight_image.addItem(img_name)
-    
     # image list_widget裡面的東西全部更新
     def UpdateImageListWidget(self):
         k = 1

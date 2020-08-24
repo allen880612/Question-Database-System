@@ -72,17 +72,36 @@ class DBModel():
         SQLExtend.InsertPath(self.db, [subject_id, level1_id, level2_id])
         print("insert path")
 
-    # 新增問題 (type(newQuestion) = class.Question, question_level = [str, str, str], type(imageList) = list[class.QDSTempImage])
-    def AddQuestion(self, newQuestion, question_level, imageList):
+    # 新增填充問題 (type(newQuestion) = class.Question, question_level = [str, str, str], type(imageList) = list[class.QDSTempImage])
+    def AddFillingQuestion(self, newQuestion, question_level, imageList):
         path_id = SQLExtend.SearchPathId(self.db, question_level)
         q_id = SQLExtend.InsertFillingQuestion(self.db, newQuestion, path_id[0])
         print(newQuestion.GetType())
         for qds_temp_image in imageList:
             self.AddImage(q_id, newQuestion.GetType(), qds_temp_image.GetBytes())
 
-    # 編輯問題
-    def EditQuestion(self, editQuestion):
+    # 編輯填充問題
+    def EditFillingQuestion(self, editQuestion):
         SQLExtend.UpdateFillingQuestion(self.db, editQuestion)
+
+    # 新增選擇題
+    def AddSelectQuestion(self, newQuestion, question_level):
+        path_id = SQLExtend.SearchPathId(self.db, question_level)
+        q_id = SQLExtend.InsertSelectQuestion(self.db, newQuestion, path_id[0])
+        print(newQuestion.GetType())
+        # 新增題目圖片
+        for qds_temp_image in newQuestion.GetImages():
+            self.AddImage(q_id, newQuestion.GetType(), qds_temp_image.GetBytes())
+        # 新增選項圖片
+        for k, v in newQuestion.option.items():
+            option_type = v.GetType()
+            option_imageList = v.GetImages()
+            for qds_temp_image in option_imageList:
+                self.AddImage(q_id, option_type, qds_temp_image.GetBytes())
+
+    # 編輯選擇題
+    def EditSelectQuestion(self):
+        pass
 
     # 新增圖片
     def AddImage(self, question_id, source, image_blob):

@@ -55,6 +55,16 @@ def InsertFillingQuestion(database, question, path_id, solution=None, image=None
 	ExecuteAlterCommand(database, cursor, query)
 	return int(cursor.lastrowid)
 
+# 插入填充題
+def InsertSelectQuestion(database, question, path_id):
+	cursor = database.cursor()
+	answer = "1"
+	content = question.GetQuestion()
+	option_content = [question.GetOption(1).GetContent(), question.GetOption(2).GetContent(), question.GetOption(3).GetContent(), question.GetOption(4).GetContent()]
+	query = "INSERT INTO SelectQuestion (`Content`, `Answer`, `Option1`, `Option2`, `Option3`, `Option4`, `Path_Id`) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', {6})".format(content, answer, option_content[0], option_content[1], option_content[2], option_content[3], path_id)
+	ExecuteAlterCommand(database, cursor, query)
+	return int(cursor.lastrowid)
+
 # 插入圖片 (yet not test)
 def InsertImage(database, q_id, source, image_blob):
 	cursor = database.cursor()

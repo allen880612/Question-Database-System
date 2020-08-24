@@ -19,30 +19,31 @@ def CreateDictKey(keyList):
         return tuple(keyList)
 
 # Question Class
+# 註記 填充題的圖片List另外放 不再類別裡 選擇題的在類別裡
 class Question(object):
     def __init__(self, id, content, qnumber=0):
-        self.__questionType = "FillingQuestion" # 填充題
-        self.__answer = content
-        self.__haveImage = False
-        self.__question = self.DeleteAnswer(content)
-        self.__question_number = qnumber
+        self.questionType = "FillingQuestion" # 填充題
+        self.answer = content
+        self.haveImage = False
+        self.question = self.DeleteAnswer(content)
+        self.question_number = qnumber
         self.id = id
 
     def GetAnswer(self):
-        return self.__answer
+        return self.answer
 
     def GetQuestion(self):
-        return self.__question
+        return self.question
 
     def GetQuestionNumber(self):
-        return self.__question_number
+        return self.question_number
 
     def EditQuestion(self, answer):
-        self.__answer = answer
-        self.__question = self.DeleteAnswer(answer)
+        self.answer = answer
+        self.question = self.DeleteAnswer(answer)
 
     def GetType(self):
-        return self.__questionType
+        return self.questionType
 
     def DeleteAnswer(self, str):
         newQuestion = ""
@@ -59,6 +60,54 @@ class Question(object):
             elif ch == '】':
                 addMode = True
         return newQuestion
+
+class SelectQuestion(Question):
+    def __init__(self, id, content, qnumber=0, isUpdate=True):
+        self.questionType = "SelectQuestion"
+        self.question = ""
+        self.answer = []
+        self.haveImage = False
+        self.Images = []
+        self.question_number = qnumber
+        self.id = id
+        self.option = { "Option1" : SelectOption(1), "Option2" : SelectOption(2), "Option3" : SelectOption(3), "Option4" : SelectOption(4)}
+        self.IsUpdate = isUpdate
+
+    def GetOption(self, option_number):
+        option_key = "Option" + str(option_number)
+        if (self.option.get(option_key, None) is None):
+            self.option[option_key] = SelectOption(option_number)
+        return self.option[option_key]
+
+    def SetQuestionContent(self, content):
+        self.question = content
+
+    def GetImages(self):
+        return self.Images;
+
+    def SetImages(self, images):
+        self.Images = images
+
+class SelectOption(object):
+    def __init__(self, option_number, content="", images=[]):
+        self.OptionType = "Option" + str(option_number)
+        self.Images = []
+        self.Content = content
+
+    def GetType(self):
+        return self.OptionType
+
+    def GetContent(self):
+        return self.Content
+
+    def SetContent(self, content):
+        self.Content = content
+
+    def GetImages(self):
+        return self.Images
+
+    def SetImages(self, images):
+        self.Images = images
 
 # QDS上 暫存用的圖片
 class QDSTempImage(object):

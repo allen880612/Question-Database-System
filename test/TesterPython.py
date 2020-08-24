@@ -10,6 +10,17 @@ class testClass():
 	def __init__(self):
 		self.tkList = [1, 2, 3]
 
+class baseClass():
+	def __init__(self):
+		self.count = 30
+		self.__zzxcv = 64
+
+class childClass(baseClass):
+	def __init__(self):
+		super().__init__()
+		self.count = 20
+		self.q = self._baseClass__zzxcv
+
 def test1():
 	tList = [1, 2, 3]
 	print(tList)
@@ -65,6 +76,10 @@ def test6(subject_name):
 def test7():
 	ll = 1
 	MyLibrary.CheckListDimension(ll)
+	
+def test8():
+	kkk = childClass()
+	print(kkk.q)
 
 if __name__ == '__main__':
 	#tc = testClass()
@@ -72,4 +87,4 @@ if __name__ == '__main__':
 	#kk.append(456)
 	#print(id(kk))
 	#print(id(tc.tkList))
-	test7()
+	test8()

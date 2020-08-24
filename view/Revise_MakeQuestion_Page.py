@@ -278,15 +278,15 @@ class ReviseMakeQuestionPage(QMainWindow):
             try:
                 # print("have", qList[i].HaveImage())
                 # print("image", qList[i].GetImage())
-                if qList[i].HaveImage() and qList[i].GetImage():
-                    print(qList[i].GetImage())
+                if qList[i].HaveImage() and qList[i].GetImages():
+                    print(qList[i].GetImages())
                     #run = word.paragraphs[i + 1].add_run()
                     imageParagraph = word.add_paragraph() # 為了讓圖片靠右，直接新增一個段落，方便用alignment
                     imageParagraph.alignment = 2
                     run = imageParagraph.add_run()
                     #run.add_break() #不換段換行
-                    for image in qList[i].GetImage():
-                        run.add_picture(image, height=docx.shared.Cm(2.6))
+                    for image in qList[i].GetImages():
+                        run.add_picture(image.GetWordImage(), height=docx.shared.Cm(2.6))
             except:
                 print("Insert image fail!")
         

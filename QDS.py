@@ -33,14 +33,6 @@ def Show_SelectQuestionLevelPage():
     AddEditQuestionPage.hide()
     SelectQuestionPage.show()
 
-def tryyyy(database):
-    img = SQLExtend.SearchImage(database, 7)
-    word = docx.Document()
-    imageParagraph = word.add_paragraph()
-    run = imageParagraph.add_run()
-    run.add_picture(BytesIO(img))
-    word.save("sdkjmpsdjkosdfjkod.docx")
-
 # 開啟視窗
 if __name__ == '__main__':
     app = QApplication(sys.argv)

@@ -187,7 +187,7 @@ def SearchPathId(database, question_level=[[]]):
 	path_id = [int(tup[0]) for tup in handler.fetchall()]
 	return path_id
 
-# 以路徑搜尋Question (return Question List)
+# 以路徑搜尋Question (return Question List) (目前只搜尋填充題)
 def SearchQuestionByPath(database, path_id):
 	handler = database.cursor()
 	query = "SELECT * FROM FillingQuestion WHERE FillingQuestion.Path_Id={0};".format(str(path_id))
@@ -196,7 +196,19 @@ def SearchQuestionByPath(database, path_id):
 	qList = []
 	count = 1
 	for data in result:
-		qList.append(MyLibrary.Question(data[0], data[2], qnumber=count))
+		q_id = data[0]
+		q_source = "FillingQuestion"
+		q_content = data[2]
+		# 建立圖片
+		images = SearchImageByQuestion(database, q_id, q_source) # 搜尋圖片 -> (id, image)
+		image_list = []
+		for qds_temp_image in images:
+			image_id = qds_temp_image[0]
+			image_content = qds_temp_image[1]
+			image_list.append(MyLibrary.QDSTempImage(image_content, image_id, isOnServer=True, isUpdated=False))
+
+		# 新增進題目List
+		qList.append(MyLibrary.Question(q_id, q_content, qnumber=count, images=image_list))
 		count+=1
 	return qList
 

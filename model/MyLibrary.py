@@ -21,10 +21,10 @@ def CreateDictKey(keyList):
 # Question Class
 # 註記 填充題的圖片List另外放 不再類別裡 選擇題的在類別裡
 class Question(object):
-    def __init__(self, id, content, qnumber=0):
+    def __init__(self, id, content, qnumber=0, images=[]):
         self.questionType = "FillingQuestion" # 填充題
         self.answer = content
-        self.haveImage = False
+        self.Images = images
         self.question = self.DeleteAnswer(content)
         self.question_number = qnumber
         self.id = id
@@ -45,6 +45,15 @@ class Question(object):
     def GetType(self):
         return self.questionType
 
+    def HaveImage(self):
+        return len(self.Images) != 0
+
+    def GetImages(self):
+        return self.Images
+
+    def SetImages(self, images):
+        self.Images = images
+
     def DeleteAnswer(self, str):
         newQuestion = ""
         addMode = True  # Mode = True > add a char, False > add a space
@@ -62,12 +71,11 @@ class Question(object):
         return newQuestion
 
 class SelectQuestion(Question):
-    def __init__(self, id, content, qnumber=0, isUpdate=True):
+    def __init__(self, id, content, qnumber=0, images=[], isUpdate=True):
         self.questionType = "SelectQuestion"
         self.question = ""
         self.answer = []
-        self.haveImage = False
-        self.Images = []
+        self.Images = images
         self.question_number = qnumber
         self.id = id
         self.option = { "Option1" : SelectOption(1), "Option2" : SelectOption(2), "Option3" : SelectOption(3), "Option4" : SelectOption(4)}
@@ -81,12 +89,6 @@ class SelectQuestion(Question):
 
     def SetQuestionContent(self, content):
         self.question = content
-
-    def GetImages(self):
-        return self.Images;
-
-    def SetImages(self, images):
-        self.Images = images
 
 class SelectOption(object):
     def __init__(self, option_number, content="", images=[]):
@@ -131,6 +133,10 @@ class QDSTempImage(object):
     def GetBytes(self):
         return self.Byte_content
 
+    # 轉換給word用的
+    def GetWordImage(self):
+        return BytesIO(self.GetBytes())
+
 # 依照list 取得資料夾路徑
 def GetFolderPathByList(dir_list):
     dir_path = "database"
@@ -173,4 +179,3 @@ def ConvertToBinaryData(fileName):
     with open(fileName, 'rb') as file:
         binaryData = file.read()
     return binaryData
-

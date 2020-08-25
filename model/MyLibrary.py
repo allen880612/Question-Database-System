@@ -19,7 +19,6 @@ def CreateDictKey(keyList):
         return tuple(keyList)
 
 # Question Class
-# 註記 填充題的圖片List另外放 不再類別裡 選擇題的在類別裡
 class Question(object):
     def __init__(self, id, content, qnumber=0, images=[]):
         self.questionType = "FillingQuestion" # 填充題
@@ -73,7 +72,7 @@ class Question(object):
 class SelectQuestion(Question):
     def __init__(self, id, content, qnumber=0, images=[], isUpdate=True):
         self.questionType = "SelectQuestion"
-        self.question = ""
+        self.question = content
         self.answer = []
         self.Images = images
         self.question_number = qnumber
@@ -93,7 +92,7 @@ class SelectQuestion(Question):
 class SelectOption(object):
     def __init__(self, option_number, content="", images=[]):
         self.OptionType = "Option" + str(option_number)
-        self.Images = []
+        self.Images = images
         self.Content = content
 
     def GetType(self):

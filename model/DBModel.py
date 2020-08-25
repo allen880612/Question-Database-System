@@ -19,8 +19,17 @@ class DBModel():
     def GetQuestionList(self, question_level):
         path_id = SQLExtend.SearchPathId(self.db, question_level)
         qList = []
+        # 添加填充題
         for path in path_id:
             qList += SQLExtend.SearchQuestionByPath(self.db, path)
+        # 添加選擇題
+        for path in path_id:
+            qList += SQLExtend.SearchSelectQuestionByPath(self.db, path)
+
+        count = 0
+        for question in qList:
+            question.question_number = int(count + 1)
+            count += 1
         return qList
 
     # 創建 QDSLevel
@@ -76,7 +85,6 @@ class DBModel():
     def AddFillingQuestion(self, newQuestion, question_level, imageList):
         path_id = SQLExtend.SearchPathId(self.db, question_level)
         q_id = SQLExtend.InsertFillingQuestion(self.db, newQuestion, path_id[0])
-        print(newQuestion.GetType())
         for qds_temp_image in imageList:
             self.AddImage(q_id, newQuestion.GetType(), qds_temp_image.GetBytes())
 

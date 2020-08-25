@@ -170,7 +170,7 @@ class AddEditQuestionPage(QMainWindow):
             self.SetFillingQuestionMode()
 
             self.ui.text_edit_question.clear()
-
+            self.tmp_SelectQuestion = None
     # 切換至選擇題模式
     def ClickSelectQuestionMode(self):
         if self.question_mode != self.MODE_SELECT_QUESTION:
@@ -180,6 +180,7 @@ class AddEditQuestionPage(QMainWindow):
             self.ui.text_edit_question.clear()
             self.SetSelectQuestionMode()
 
+            self.ui.list_weight_question.clear()
             self.ui.list_weight_question.addItem("question")
             for i in range(4):
                 self.ClickAddOptionButton()
@@ -201,7 +202,6 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.button_add_option.setVisible(True)
         self.ui.button_remove_option.setVisible(True)
 
-        self.ui.list_weight_question.clear()
         self.ui.list_widget_option.clear()
 
     # 點擊 新增題目 按鈕
@@ -252,21 +252,28 @@ class AddEditQuestionPage(QMainWindow):
     
     # 儲存題目資訊
     def StoreQuestion(self):
-        # 處理問題
-        nowSelectIndex = self.ui.list_weight_question.currentRow()
-        nowSelectQuestion = self.questionList[nowSelectIndex]
-        nowSelectQuestion.EditQuestion(self.ui.text_edit_question.toPlainText())
-        self.model.EditFillingQuestion(nowSelectQuestion)
-        new_item = str(nowSelectQuestion.GetQuestionNumber()) + '. ' + (nowSelectQuestion.GetQuestion())[:20] # 更新list widget item
-        self.ui.list_weight_question.currentItem().setText(new_item)
+        # 儲存填充題資訊
+        if self.tmp_SelectQuestion is None:
+            # 處理問題
+            nowSelectIndex = self.ui.list_weight_question.currentRow()
+            nowSelectQuestion = self.questionList[nowSelectIndex]
+            nowSelectQuestion.EditQuestion(self.ui.text_edit_question.toPlainText())
+            self.model.EditFillingQuestion(nowSelectQuestion)
+            new_item = str(nowSelectQuestion.GetQuestionNumber()) + '. ' + (nowSelectQuestion.GetQuestion())[:20] # 更新list widget item
+            self.ui.list_weight_question.currentItem().setText(new_item)
 
-        # 處理圖片
-        for image in self.imageList:
-            if image.IsUpdated:
-                if image.IsOnServer == True and image.IsShowOnListWidget == False:
-                    self.model.DeleteImage(image) # 刪除圖片
-                elif image.IsOnServer == False and image.IsShowOnListWidget == True:
-                    self.model.AddImage(nowSelectQuestion.id, nowSelectQuestion.GetType(), image.GetBytes()) # 新增圖片
+            # 處理圖片
+            for image in self.imageList:
+                if image.IsUpdated:
+                    if image.IsOnServer == True and image.IsShowOnListWidget == False:
+                        self.model.DeleteImage(image) # 刪除圖片
+                    elif image.IsOnServer == False and image.IsShowOnListWidget == True:
+                        self.model.AddImage(nowSelectQuestion.id, nowSelectQuestion.GetType(), image.GetBytes()) # 新增圖片
+        # 儲存選擇題資訊
+        else:
+            editQuestion = self.tmp_SelectQuestion
+
+
     # 取得題號
     def GetQuestionIndex(self):
         qList = self.model.GetQuestionList(self.question_level)
@@ -371,30 +378,53 @@ class AddEditQuestionPage(QMainWindow):
         if nowSlectIndex == -1:
             return
 
-        # 選擇題模式中
-        if self.question_mode == self.MODE_SELECT_QUESTION:
-            self.ui.list_widget_option.setCurrentRow(-1) # 選項列表取消Focus
-            self.select_question_edit_what = "question"
+        # 編輯模式中 選擇題時出現選擇題的View
+        if self.mode == self.MODE_EDIT_QUESTION:
+            if self.questionList[nowSlectIndex].GetType() == "SelectQuestion":
+                self.ui.label.setVisible(True)
+                self.ui.list_widget_option.setVisible(True)
+                self.ui.list_widget_option.clear()
+                for i in range(4):
+                    self.ClickAddOptionButton()
+            else:
+                self.ui.label.setVisible(False)
+                self.ui.list_widget_option.setVisible(False)
 
-            self.ui.text_edit_question.setPlainText(self.tmp_SelectQuestion.GetQuestion()) # 更新文字框
-            self.imageList = self.tmp_SelectQuestion.GetImages()
-            self.UpdateImageListWidget()
-
-            return
-
-        # 新增模式中 且 新增填充題
+        # 新增模式中 且 新增選擇題
         if self.mode == self.MODE_ADD_QUESTION:
-            return
+            if self.question_mode == self.MODE_SELECT_QUESTION:
+                self.ui.list_widget_option.setCurrentRow(-1) # 選項列表取消Focus
+                self.select_question_edit_what = "question"
 
-        nowSlectQuestion = self.questionList[nowSlectIndex]
-        self.ui.label_image_preview.clear() # 清空預覽圖片
-        self.ui.text_edit_question.setPlainText(nowSlectQuestion.GetAnswer())
+                self.ui.text_edit_question.setPlainText(self.tmp_SelectQuestion.GetQuestion()) # 更新文字框
+                self.imageList = self.tmp_SelectQuestion.GetImages()
+                self.UpdateImageListWidget()
+                return
+            
+        # 編輯模式中
+        if self.mode == self.MODE_EDIT_QUESTION:
+            nowSlectQuestion = self.questionList[nowSlectIndex]
+            # 編輯填充題
+            if nowSlectQuestion.GetType() == "FillingQuestion":
+                self.tmp_SelectQuestion = None
+                self.select_question_edit_what = ""
+                self.ui.label_image_preview.clear() # 清空預覽圖片
+                self.ui.text_edit_question.setPlainText(nowSlectQuestion.GetAnswer())
 
-        text = str(self.ui.text_edit_question.toPlainText())
-        print(type(text), text)
+                text = str(self.ui.text_edit_question.toPlainText())
+                print(type(text), text)
         
-        self.imageList = self.model.GetImagesByQuestion(nowSlectQuestion)
-        self.UpdateImageListWidget()
+                self.imageList = self.model.GetImagesByQuestion(nowSlectQuestion)
+                self.UpdateImageListWidget()
+            elif nowSlectQuestion.GetType() == "SelectQuestion":
+                self.tmp_SelectQuestion = nowSlectQuestion
+                self.ui.list_widget_option.setCurrentRow(-1) # 選項列表取消Focus
+                self.select_question_edit_what = "question"
+
+                self.ui.text_edit_question.setPlainText(nowSlectQuestion.GetQuestion()) # 更新文字框
+                self.imageList = nowSlectQuestion.GetImages()
+                self.UpdateImageListWidget()
+                return
 
     # 選擇選項 - 選擇題模式中
     def SelectOption(self, item):
@@ -402,15 +432,14 @@ class AddEditQuestionPage(QMainWindow):
         if nowSelectIndex == -1:
             return
 
+        print(self.tmp_SelectQuestion.GetQuestion())
         option = self.tmp_SelectQuestion.GetOption(nowSelectIndex + 1)
-        # 選擇題模式中
-        if self.question_mode == self.MODE_SELECT_QUESTION:
-            self.ui.list_weight_question.setCurrentRow(-1) # 題目列表取消Focus
-            self.select_question_edit_what = option.GetType()
+        self.ui.list_weight_question.setCurrentRow(-1) # 題目列表取消Focus
+        self.select_question_edit_what = option.GetType()
             
-            self.ui.text_edit_question.setPlainText(option.Content) # 更新文字框
-            self.imageList = option.GetImages()
-            self.UpdateImageListWidget()
+        self.ui.text_edit_question.setPlainText(option.Content) # 更新文字框
+        self.imageList = option.GetImages()
+        self.UpdateImageListWidget()
 
     # image list_widget裡面的東西全部更新
     def UpdateImageListWidget(self):
@@ -441,9 +470,16 @@ class AddEditQuestionPage(QMainWindow):
 
     # 輸入事件
     def InputTextEdit(self, widget):
-        if self.question_mode == self.MODE_SELECT_QUESTION:
-            new_content = widget.toPlainText()
-            self.ChangeSelectQuestionContent(new_content)
+        # 新增題目模式
+        if self.mode == self.MODE_ADD_QUESTION:
+            if self.question_mode == self.MODE_SELECT_QUESTION:
+                new_content = widget.toPlainText()
+                self.ChangeSelectQuestionContent(new_content)
+        # 編輯題目模式
+        elif self.mode == self.MODE_EDIT_QUESTION:
+            if self.tmp_SelectQuestion is not None:
+                new_content = widget.toPlainText()
+                self.ChangeSelectQuestionContent(new_content)
 
     # 改變選擇題 或 其選項的Content
     def ChangeSelectQuestionContent(self, newContent):

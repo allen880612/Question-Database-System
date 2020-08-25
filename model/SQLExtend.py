@@ -96,6 +96,15 @@ def SearchImageByQuestion(database, q_id, source):
 	result = handler.fetchall()
 	return result
 
+# 搜尋選擇題中出現的所有圖片 (含選項)
+def SearchImageBySelectQuestion(database, q_id):
+	handler = database.cursor()
+	s = ["SelectQuestion", "Option1", "Option2", "Option3", "Option4"]
+	query = "SELECT `Id`, `Source`, `Image` FROM `Image` WHERE `Question_Id`={0} and (`Source`='{1}' or `Source`='{2}' or `Source`='{3}' or `Source`='{4}' or `Source`='{5}');".format(q_id, s[0], s[1], s[2], s[3], s[4])
+	handler.execute(query)
+	result = handler.fetchall()
+	return result
+
 # 以id 刪除圖片 (return list for (id, image))
 def DeleteImageById(database, image_id):
 	cursor = database.cursor()
@@ -200,7 +209,7 @@ def SearchQuestionByPath(database, path_id):
 		q_source = "FillingQuestion"
 		q_content = data[2]
 		# 建立圖片
-		images = SearchImageByQuestion(database, q_id, q_source) # 搜尋圖片 -> (id, image)
+		images = SearchImageByQuestion(database, q_id, q_source) # 搜尋圖片 -> (id, image) <- 這句跑得有點慢 優化沒做好
 		image_list = []
 		for qds_temp_image in images:
 			image_id = qds_temp_image[0]
@@ -210,6 +219,45 @@ def SearchQuestionByPath(database, path_id):
 		# 新增進題目List
 		qList.append(MyLibrary.Question(q_id, q_content, qnumber=count, images=image_list))
 		count+=1
+	return qList
+
+# 以路徑搜尋Question (return Question List) (搜尋選擇題)
+def SearchSelectQuestionByPath(database, path_id):
+	handler = database.cursor()
+	query = "SELECT * FROM SelectQuestion WHERE SelectQuestion.Path_Id={0};".format(str(path_id))
+	handler.execute(query)
+	result = handler.fetchall()
+	qList = []
+	count = 1
+	for data in result:
+		q_id = data[0]
+		q_source = "SelectQuestion"
+		q_content = data[1]
+		q_answer = data[2]
+		q_option_content = [data[3], data[4], data[5], data[6]]
+		select_question_images = SearchImageBySelectQuestion(database, q_id) # (id, source, images)
+		imageList = [ [], [], [], [], [] ]
+		for image in select_question_images:
+			image_id, source, image_content = image[0], image[1], image[2]
+			temp_image = MyLibrary.QDSTempImage(image_content, image_id, isOnServer=True, isUpdated=False)
+			if source == "SelectQuestion":
+				imageList[0].append(temp_image)
+			elif source == "Option1":
+				imageList[1].append(temp_image)
+			elif source == "Option2":
+				imageList[2].append(temp_image)
+			elif source == "Option3":
+				imageList[3].append(temp_image)
+			elif source == "Option4":
+				imageList[4].append(temp_image)
+		# 建立選擇題
+		select_question = MyLibrary.SelectQuestion(q_id, q_content, images=imageList[0], isUpdate=False)
+		select_question.answer = q_answer
+		select_question.option["Option1"] = MyLibrary.SelectOption(1, q_option_content[0], imageList[1])
+		select_question.option["Option2"] = MyLibrary.SelectOption(2, q_option_content[1], imageList[2])
+		select_question.option["Option3"] = MyLibrary.SelectOption(3, q_option_content[2], imageList[3])
+		select_question.option["Option4"] = MyLibrary.SelectOption(4, q_option_content[3], imageList[4])
+		qList.append(select_question)
 	return qList
 
 # 得到所有科目的名稱 (return list:[str])

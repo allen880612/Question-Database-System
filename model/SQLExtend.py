@@ -55,7 +55,7 @@ def InsertFillingQuestion(database, question, path_id, solution=None, image=None
 	ExecuteAlterCommand(database, cursor, query)
 	return int(cursor.lastrowid)
 
-# 插入填充題
+# 插入選擇題題
 def InsertSelectQuestion(database, question, path_id):
 	cursor = database.cursor()
 	answer = "1"
@@ -155,6 +155,15 @@ def UpdateFillingQuestion(database, question):
 	content = question.GetQuestion()
 	answer = question.GetAnswer()
 	query = "UPDATE FillingQuestion SET `Content`='{0}', `Answer`='{1}' WHERE `Id`={2};".format(content, answer, question.id)
+	ExecuteAlterCommand(database, cursor, query)
+
+def UpdateSelectQuestion(database, question):
+	cursor = database.cursor()
+	q_content = question.GetQuestion()
+	q_answer = question.GetAnswer()
+	option_content = [question.GetOption(1).GetContent(), question.GetOption(2).GetContent(), question.GetOption(3).GetContent(), question.GetOption(4).GetContent()]
+	q_id = question.id
+	query = "UPDATE SelectQuestion SET `Content`='{0}', `Answer`='{1}', `Option1`='{2}', `Option2`='{3}', `Option3`='{4}', `Option4`='{5}' WHERE `Id`={6};".format(q_content, q_answer, option_content[0], option_content[1], option_content[2], option_content[3], q_id)
 	ExecuteAlterCommand(database, cursor, query)
 
 # 得到所有路徑 (return list[str])

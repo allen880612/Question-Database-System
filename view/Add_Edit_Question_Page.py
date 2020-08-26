@@ -51,6 +51,9 @@ class AddEditQuestionPage(QMainWindow):
         # 選擇題模式中選到哪個部分 (問題? 答案? 選項?)
         self.select_question_edit_what = ""
 
+        # 編輯的問題
+        self.editQuestion = None
+
         #region 新增單元 視窗 變數 (移到主畫面)
         #self.Add_Unit_View = Add_Unit_Page.AddUnitPage(self.model)
         #self.Add_Unit_View.setWindowModality(Qt.ApplicationModal)
@@ -135,6 +138,7 @@ class AddEditQuestionPage(QMainWindow):
     # 切換至編輯模式
     def ClickEditMode(self):
         self.mode = self.MODE_EDIT_QUESTION
+        self.editQuestion = None
         self.ui.list_weight_image.clear()
         self.imageList.clear()
         temp_importImage = None
@@ -149,6 +153,7 @@ class AddEditQuestionPage(QMainWindow):
     # 切換至新增模式
     def ClickAddMode(self):
         self.mode = self.MODE_ADD_QUESTION
+        self.editQuestion = None
         self.ui.text_edit_question.clear()
         self.ui.list_weight_image.clear()
         self.imageList.clear()
@@ -253,26 +258,32 @@ class AddEditQuestionPage(QMainWindow):
     # 儲存題目資訊
     def StoreQuestion(self):
         # 儲存填充題資訊
-        if self.tmp_SelectQuestion is None:
+        if self.editQuestion.GetType() == "FillingQuestion":
             # 處理問題
-            nowSelectIndex = self.ui.list_weight_question.currentRow()
-            nowSelectQuestion = self.questionList[nowSelectIndex]
+            nowSelectQuestion = self.editQuestion
             nowSelectQuestion.EditQuestion(self.ui.text_edit_question.toPlainText())
             self.model.EditFillingQuestion(nowSelectQuestion)
+            # 處理圖片
+            self.model.UpdateDBImageList(self.imageList, nowSelectQuestion.id, nowSelectQuestion.GetType())
             new_item = str(nowSelectQuestion.GetQuestionNumber()) + '. ' + (nowSelectQuestion.GetQuestion())[:20] # 更新list widget item
             self.ui.list_weight_question.currentItem().setText(new_item)
+            print("edit")
 
-            # 處理圖片
-            for image in self.imageList:
-                if image.IsUpdated:
-                    if image.IsOnServer == True and image.IsShowOnListWidget == False:
-                        self.model.DeleteImage(image) # 刪除圖片
-                    elif image.IsOnServer == False and image.IsShowOnListWidget == True:
-                        self.model.AddImage(nowSelectQuestion.id, nowSelectQuestion.GetType(), image.GetBytes()) # 新增圖片
         # 儲存選擇題資訊
-        else:
-            editQuestion = self.tmp_SelectQuestion
+        elif self.editQuestion.GetType() == "SelectQuestion":
+            nowEditQuestion = self.tmp_SelectQuestion
+            # 再更新的時候已經改了 -> 不用對question Edit
+            # 更新資料庫
+            self.model.EditSelectQuestion(nowEditQuestion)
 
+            # 更新 list widget
+            index = nowEditQuestion.GetQuestionNumber()
+            new_item = str(nowEditQuestion.GetQuestionNumber()) + '. ' + (nowEditQuestion.GetQuestion())[:20]
+            self.ui.list_weight_question.item(index - 1).setText(new_item)
+
+            # 更新原題目
+            self.DeepCopySelectQuestion(self.editQuestion, nowEditQuestion)
+            print("edit done")
 
     # 取得題號
     def GetQuestionIndex(self):
@@ -401,28 +412,33 @@ class AddEditQuestionPage(QMainWindow):
                 self.UpdateImageListWidget()
                 return
             
+        self.editQuestion = self.questionList[nowSlectIndex]
         # 編輯模式中
         if self.mode == self.MODE_EDIT_QUESTION:
-            nowSlectQuestion = self.questionList[nowSlectIndex]
             # 編輯填充題
-            if nowSlectQuestion.GetType() == "FillingQuestion":
+            if self.editQuestion.GetType() == "FillingQuestion":
                 self.tmp_SelectQuestion = None
                 self.select_question_edit_what = ""
                 self.ui.label_image_preview.clear() # 清空預覽圖片
-                self.ui.text_edit_question.setPlainText(nowSlectQuestion.GetAnswer())
+                self.ui.text_edit_question.setPlainText(self.editQuestion.GetAnswer())
 
                 text = str(self.ui.text_edit_question.toPlainText())
                 print(type(text), text)
         
-                self.imageList = self.model.GetImagesByQuestion(nowSlectQuestion)
+                self.imageList = self.model.GetImagesByQuestion(self.editQuestion)
                 self.UpdateImageListWidget()
-            elif nowSlectQuestion.GetType() == "SelectQuestion":
-                self.tmp_SelectQuestion = nowSlectQuestion
+            # 編輯選擇題
+            # editQuestion -> 預編輯的題目, tmpSelectQuestion先複製他出來
+            # (讓接下來選選項 換答案的操作 不影響原題目)
+            # 如果editQuestion切換其他選擇題 or 換成填充題 放棄tmpSelectQuestion
+            elif self.editQuestion.GetType() == "SelectQuestion":
+                if self.tmp_SelectQuestion is None or self.tmp_SelectQuestion.id != self.editQuestion.id:
+                    self.tmp_SelectQuestion = copy.deepcopy(self.editQuestion)
                 self.ui.list_widget_option.setCurrentRow(-1) # 選項列表取消Focus
                 self.select_question_edit_what = "question"
 
-                self.ui.text_edit_question.setPlainText(nowSlectQuestion.GetQuestion()) # 更新文字框
-                self.imageList = nowSlectQuestion.GetImages()
+                self.ui.text_edit_question.setPlainText(self.tmp_SelectQuestion.GetQuestion()) # 更新文字框
+                self.imageList = self.tmp_SelectQuestion.GetImages()
                 self.UpdateImageListWidget()
                 return
 
@@ -432,6 +448,8 @@ class AddEditQuestionPage(QMainWindow):
         if nowSelectIndex == -1:
             return
 
+        print(self.tmp_SelectQuestion.id)
+        print(self.editQuestion.id)
         print(self.tmp_SelectQuestion.GetQuestion())
         option = self.tmp_SelectQuestion.GetOption(nowSelectIndex + 1)
         self.ui.list_weight_question.setCurrentRow(-1) # 題目列表取消Focus
@@ -496,3 +514,13 @@ class AddEditQuestionPage(QMainWindow):
         elif self.select_question_edit_what != "":
             option = self.tmp_SelectQuestion.option[self.select_question_edit_what]
             option.SetImages(images)
+
+    # 深層複製select question
+    def DeepCopySelectQuestion(self, select, copy):
+        select.SetQuestionContent(copy.GetQuestion())
+        select.answer = copy.GetAnswer()
+        select.SetImages(copy.GetImages())
+        select.option["Option1"] = copy.GetOption(1)
+        select.option["Option2"] = copy.GetOption(2)
+        select.option["Option3"] = copy.GetOption(3)
+        select.option["Option4"] = copy.GetOption(4)

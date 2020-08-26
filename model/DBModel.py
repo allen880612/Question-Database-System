@@ -91,6 +91,7 @@ class DBModel():
     # 編輯填充問題
     def EditFillingQuestion(self, editQuestion):
         SQLExtend.UpdateFillingQuestion(self.db, editQuestion)
+        # 填充題的image list 更新在別的地方
 
     # 新增選擇題
     def AddSelectQuestion(self, newQuestion, question_level):
@@ -108,9 +109,15 @@ class DBModel():
                 self.AddImage(q_id, option_type, qds_temp_image.GetBytes())
 
     # 編輯選擇題
-    def EditSelectQuestion(self):
-        pass
+    def EditSelectQuestion(self, question):
+        SQLExtend.UpdateSelectQuestion(self.db, question)
 
+        # todo -> add image to database
+        # 處理圖片
+        self.UpdateDBImageList(question.GetImages(), question.id, question.GetType())
+        for k, v in question.option.items():
+            self.UpdateDBImageList(v.GetImages(), question.id, v.GetType())
+        
     # 新增圖片
     def AddImage(self, question_id, source, image_blob):
         SQLExtend.InsertImage(self.db, question_id, source, image_blob)
@@ -118,6 +125,15 @@ class DBModel():
     # 刪除圖片
     def DeleteImage(self, image):
         SQLExtend.DeleteImageById(self.db, image.Id)
+
+    # 更新資料庫裡的圖片
+    def UpdateDBImageList(self, imageList, q_id, q_type):
+        for image in imageList:
+            if image.IsUpdated:
+                if image.IsOnServer == True and image.IsShowOnListWidget == False:
+                    self.DeleteImage(image) # 刪除圖片
+                elif image.IsOnServer == False and image.IsShowOnListWidget == True:
+                    self.AddImage(q_id, q_type, image.GetBytes()) # 新增圖片
 
     # 用question 得到圖片群
     def GetImagesByQuestion(self, question):

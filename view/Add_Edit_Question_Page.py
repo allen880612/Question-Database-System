@@ -220,10 +220,29 @@ class AddEditQuestionPage(QMainWindow):
     def ClickAddOptionButton(self):
         id = int(self.ui.list_widget_option.count() + 1)
         self.ui.list_widget_option.addItem(str(id))
+        self.ui.list_widget_option.item(id - 1).setCheckState(False)
+        if self.tmp_SelectQuestion is not None:
+            self.tmp_SelectQuestion.GetOption(id)
 
     # 點擊移除選項按鈕
     def ClickRemoveOptionButton(self):
-        pass
+        nowSelectIndex = self.ui.list_widget_option.currentRow()
+        
+        if nowSelectIndex == -1:
+            return
+
+        for i in range(nowSelectIndex, len(self.tmp_SelectQuestion.option) - 1):
+            option_next = self.tmp_SelectQuestion.GetOption(i + 1)
+            self.tmp_SelectQuestion.option["Option" + str(i)] = option_next
+        last_option = "Option" + str(len(self.tmp_SelectQuestion.option))
+
+        if self.tmp_SelectQuestion.option.get(last_option, False) is not False:
+            del self.tmp_SelectQuestion.option[last_option]
+        print(self.tmp_SelectQuestion.option)
+
+        for i in range(nowSelectIndex + 1, self.ui.list_widget_option.count()):
+            self.ui.list_widget_option.item(i).setText(str(i))
+        self.ui.list_widget_option.takeItem(nowSelectIndex)
 
     # 獲取題目表
     def LoadQuestionList(self):
@@ -448,9 +467,6 @@ class AddEditQuestionPage(QMainWindow):
         if nowSelectIndex == -1:
             return
 
-        print(self.tmp_SelectQuestion.id)
-        print(self.editQuestion.id)
-        print(self.tmp_SelectQuestion.GetQuestion())
         option = self.tmp_SelectQuestion.GetOption(nowSelectIndex + 1)
         self.ui.list_weight_question.setCurrentRow(-1) # 題目列表取消Focus
         self.select_question_edit_what = option.GetType()

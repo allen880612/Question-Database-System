@@ -104,6 +104,9 @@ class SelectOption(object):
     def SetContent(self, content):
         self.Content = content
 
+    def HaveImage(self):
+        return len(self.Images) != 0
+
     def GetImages(self):
         return self.Images
 

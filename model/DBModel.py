@@ -134,6 +134,7 @@ class DBModel():
                     self.DeleteImage(image) # 刪除圖片
                 elif image.IsOnServer == False and image.IsShowOnListWidget == True:
                     self.AddImage(q_id, q_type, image.GetBytes()) # 新增圖片
+                    image.IsOnServer = True
 
     # 用question 得到圖片群
     def GetImagesByQuestion(self, question):

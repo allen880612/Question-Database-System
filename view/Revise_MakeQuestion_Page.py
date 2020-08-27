@@ -254,6 +254,12 @@ class ReviseMakeQuestionPage(QMainWindow):
         heading = " - ".join(self.question_level_tupleList[0][0])
         word.add_heading(heading, 0) #新增那個醜醜藍字
 
+        #新增大題 style
+        mainPhaseStyle = word.styles.add_style("main_phase", docx.enum.style.WD_STYLE_TYPE.PARAGRAPH)
+        mainPhaseStyle.font.size = docx.shared.Pt(18)
+        mainPhaseStyle.font.name = "Times New Roman"
+        mainPhaseStyle._element.rPr.rFonts.set(docx.oxml.ns.qn("w:eastAsia"), "細明體") #??? 過了兩年我還是看不太懂
+
         #新增題目 style
         questionStyle = word.styles.add_style("question", docx.enum.style.WD_STYLE_TYPE.PARAGRAPH) #新增一樣式 (樣式名稱, 樣式類型)
         questionStyle.font.size = docx.shared.Pt(12) #更改此樣式的文字大小
@@ -264,32 +270,88 @@ class ReviseMakeQuestionPage(QMainWindow):
         questionStyle.paragraph_format.first_line_indent = docx.shared.Pt(-18) # 設定首縮排/凸排 (正值 = 縮排, 負值 = 凸排)
         questionStyle.paragraph_format.left_indent = docx.shared.Pt(18) # ↓注意，重點來了，設定"整個段落"縮排  (正常來說應該不用設定，但是設定凸排的時候，他會順便把整個段落也往左移動，所以要他媽的移回來)
 
-        #imageList = self.excel.GetFilteredImage(self.comboboxSelectOption)
-        #新增題目
+        #新增題目 - 填充題
+        if self.HaveFillingQuestion(qList):
+            paragraph = word.add_paragraph("一、填充題", style = "main_phase")
         for i in range(0, len(qList)):
-            questionIndex = "(" + str(i + 1) + ") " #題號
-            if haveAnswer:
-                question = qList[i].GetAnswer()
-            else:
-                question = qList[i].GetQuestion()
-            paragraph = word.add_paragraph(questionIndex + question, style = "question")
-            #paragraph = word.add_paragraph(questionIndex + questionList[i], style = "question") #題號 + 題目 一題作為一個段落
-            paragraph.alignment = 0 #設定段落對齊 0 = 靠左, 1 = 置中, 2 = 靠右, 3 = 左右對齊 (WD_PARAGRAPH_ALIGNMENT)
-            try:
-                # print("have", qList[i].HaveImage())
-                # print("image", qList[i].GetImage())
-                if qList[i].HaveImage() and qList[i].GetImages():
-                    print(qList[i].GetImages())
-                    #run = word.paragraphs[i + 1].add_run()
-                    imageParagraph = word.add_paragraph() # 為了讓圖片靠右，直接新增一個段落，方便用alignment
-                    imageParagraph.alignment = 2
-                    run = imageParagraph.add_run()
-                    #run.add_break() #不換段換行
-                    for image in qList[i].GetImages():
-                        run.add_picture(image.GetWordImage(), height=docx.shared.Cm(2.6))
-            except:
-                print("Insert image fail!")
+            if qList[i].GetType() == "FillingQuestion":
+                questionIndex = "(" + str(i + 1) + ") " #題號
+                if haveAnswer:
+                    question = qList[i].GetAnswer()
+                else:
+                    question = qList[i].GetQuestion()
+                paragraph = word.add_paragraph(questionIndex + question, style = "question")
+                #paragraph = word.add_paragraph(questionIndex + questionList[i], style = "question") #題號 + 題目 一題作為一個段落
+                paragraph.alignment = 0 #設定段落對齊 0 = 靠左, 1 = 置中, 2 = 靠右, 3 = 左右對齊 (WD_PARAGRAPH_ALIGNMENT)
+                try:
+                    # print("have", qList[i].HaveImage())
+                    # print("image", qList[i].GetImage())
+                    if qList[i].HaveImage():
+                        #run = word.paragraphs[i + 1].add_run()
+                        imageParagraph = word.add_paragraph() # 為了讓圖片靠右，直接新增一個段落，方便用alignment
+                        imageParagraph.alignment = 2
+                        run = imageParagraph.add_run()
+                        #run.add_break() #不換段換行
+                        for image in qList[i].GetImages():
+                            run.add_picture(image.GetWordImage(), height=docx.shared.Cm(2.6))
+                except:
+                    print("Insert image fail!")
         
+        # 新增題目 - 選擇題
+        if self.HaveSelectQuestion(qList):
+            paragraph = word.add_paragraph("二、選擇題", style = "main_phase")
+        count = 1
+        for question in qList:
+            if question.GetType() == "SelectQuestion":
+                if haveAnswer:
+                    answer_area = "( {0} )".format(str(question.GetAnswer()))
+                else:
+                    answer_area = "( {0} )".format(" ")
+                questionIndex = "(" + str(count) + ") "
+                count += 1
+                question_area = answer_area + " " + questionIndex + question.GetQuestion()
+
+                paragraph = word.add_paragraph(question_area, style = "question")
+                paragraph.alignment = 0
+                run = paragraph.add_run()
+                try:
+                    if question.HaveImage():
+                        run.add_break()
+                        for image in question.GetImages():
+                            run.add_picture(image.GetWordImage(), height=docx.shared.Cm(2.6))
+                except:
+                    print("Insert select image fail!")
+
+                # 新增選項
+                option_count = 1
+                for k, options in question.option.items():
+                    run.add_break()
+                    option = "(" + str(option_count) + ") " + options.GetContent()
+                    option_count += 1
+                    run = paragraph.add_run(option)
+                    try:
+                        if options.HaveImage():
+                            run.add_break()
+                            for image in options.GetImages():
+                                run.add_picture(image.GetWordImage(), height=docx.shared.Cm(2.6))
+                    except Exception as e:
+                        print("Insert option image fail!")
+                        print(e)
+
         savePath = "word/" + fileName + ".docx"
         word.save(savePath) #存檔 (存在word資料夾)
     #endregion
+
+    # 檢查有沒有填充題
+    def HaveFillingQuestion(self, qList):
+        for question in qList:
+            if question.GetType() == "FillingQuestion":
+                return True
+        return False
+
+    # 檢查有沒有選擇題
+    def HaveSelectQuestion(self, qList):
+        for question in qList:
+            if question.GetType() == "SelectQuestion":
+                return True
+        return False

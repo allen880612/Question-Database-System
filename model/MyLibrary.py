@@ -77,26 +77,42 @@ class SelectQuestion(Question):
         self.Images = images
         self.question_number = qnumber
         self.id = id
-        self.option = { "Option1" : SelectOption(1), "Option2" : SelectOption(2), "Option3" : SelectOption(3), "Option4" : SelectOption(4)}
+        self.option = []
         self.IsUpdate = isUpdate
 
+    def AddOption(self, option_number):
+        self.option.append(SelectOption(option_number))
+
     def GetOption(self, option_number):
-        option_key = "Option" + str(option_number)
-        if (self.option.get(option_key, None) is None):
-            self.option[option_key] = SelectOption(option_number)
-        return self.option[option_key]
+        if option_number - 1 < len(self.option):
+            return self.option[option_number - 1]
+        return None
+
+    def RemoveOption(self, option_number):
+        index = option_number - 1
+        # 沒東東可以刪
+        if (index >= len(self.option)):
+            return
+
+        self.option.pop(index) # 刪除那個選項
+
+        # Reset Option Number
+        count = 1
+        for v in self.option:
+            v.OptionNumber = count
+            count += 1
 
     def SetQuestionContent(self, content):
         self.question = content
 
 class SelectOption(object):
     def __init__(self, option_number, content="", images=[]):
-        self.OptionType = "Option" + str(option_number)
+        self.OptionNumber = option_number
         self.Images = images
         self.Content = content
 
     def GetType(self):
-        return self.OptionType
+        return "Option" + str(OptionNumber)
 
     def GetContent(self):
         return self.Content
@@ -112,6 +128,9 @@ class SelectOption(object):
 
     def SetImages(self, images):
         self.Images = images
+
+    def GetNumber(self):
+        return self.OptionNumber
 
 # QDS上 暫存用的圖片
 class QDSTempImage(object):

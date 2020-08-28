@@ -102,7 +102,7 @@ class DBModel():
         for qds_temp_image in newQuestion.GetImages():
             self.AddImage(q_id, newQuestion.GetType(), qds_temp_image.GetBytes())
         # 新增選項圖片
-        for k, v in newQuestion.option.items():
+        for v in newQuestion.option:
             option_type = v.GetType()
             option_imageList = v.GetImages()
             for qds_temp_image in option_imageList:
@@ -115,7 +115,7 @@ class DBModel():
         # todo -> add image to database
         # 處理圖片
         self.UpdateDBImageList(question.GetImages(), question.id, question.GetType())
-        for k, v in question.option.items():
+        for v in question.option:
             self.UpdateDBImageList(v.GetImages(), question.id, v.GetType())
         
     # 新增圖片

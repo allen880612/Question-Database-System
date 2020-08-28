@@ -230,7 +230,7 @@ def SearchQuestionByPath(database, path_id):
 		count+=1
 	return qList
 
-# 以路徑搜尋Question (return Question List) (搜尋選擇題)
+# 以路徑搜尋Question (return Question List) (搜尋選擇題) *待修正
 def SearchSelectQuestionByPath(database, path_id):
 	handler = database.cursor()
 	query = "SELECT * FROM SelectQuestion WHERE SelectQuestion.Path_Id={0};".format(str(path_id))
@@ -262,10 +262,10 @@ def SearchSelectQuestionByPath(database, path_id):
 		# 建立選擇題
 		select_question = MyLibrary.SelectQuestion(q_id, q_content, images=imageList[0], isUpdate=False)
 		select_question.answer = q_answer
-		select_question.option["Option1"] = MyLibrary.SelectOption(1, q_option_content[0], imageList[1])
-		select_question.option["Option2"] = MyLibrary.SelectOption(2, q_option_content[1], imageList[2])
-		select_question.option["Option3"] = MyLibrary.SelectOption(3, q_option_content[2], imageList[3])
-		select_question.option["Option4"] = MyLibrary.SelectOption(4, q_option_content[3], imageList[4])
+		select_question.option.append(MyLibrary.SelectOption(1, q_option_content[0], imageList[1]))
+		select_question.option.append(MyLibrary.SelectOption(2, q_option_content[1], imageList[2]))
+		select_question.option.append(MyLibrary.SelectOption(3, q_option_content[2], imageList[3]))
+		select_question.option.append(MyLibrary.SelectOption(4, q_option_content[3], imageList[4]))
 		qList.append(select_question)
 	return qList
 

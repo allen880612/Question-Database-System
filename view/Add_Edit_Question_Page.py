@@ -187,9 +187,9 @@ class AddEditQuestionPage(QMainWindow):
 
             self.ui.list_weight_question.clear()
             self.ui.list_weight_question.addItem("question")
+            self.tmp_SelectQuestion = MyLibrary.SelectQuestion(0, "") # 重設新增選擇題題題
             for i in range(4):
                 self.ClickAddOptionButton()
-            self.tmp_SelectQuestion = MyLibrary.SelectQuestion(0, "") # 重設新增選擇題題題
 
     # 設置成 填充題模式
     def SetFillingQuestionMode(self):
@@ -222,7 +222,7 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.list_widget_option.addItem(str(id))
         self.ui.list_widget_option.item(id - 1).setCheckState(False)
         if self.tmp_SelectQuestion is not None:
-            self.tmp_SelectQuestion.GetOption(id)
+            self.tmp_SelectQuestion.AddOption(id)
 
     # 點擊移除選項按鈕
     def ClickRemoveOptionButton(self):
@@ -230,19 +230,12 @@ class AddEditQuestionPage(QMainWindow):
         
         if nowSelectIndex == -1:
             return
-
-        for i in range(nowSelectIndex, len(self.tmp_SelectQuestion.option) - 1):
-            option_next = self.tmp_SelectQuestion.GetOption(i + 1)
-            self.tmp_SelectQuestion.option["Option" + str(i)] = option_next
-        last_option = "Option" + str(len(self.tmp_SelectQuestion.option))
-
-        if self.tmp_SelectQuestion.option.get(last_option, False) is not False:
-            del self.tmp_SelectQuestion.option[last_option]
-        print(self.tmp_SelectQuestion.option)
-
+        
         for i in range(nowSelectIndex + 1, self.ui.list_widget_option.count()):
             self.ui.list_widget_option.item(i).setText(str(i))
         self.ui.list_widget_option.takeItem(nowSelectIndex)
+
+        self.tmp_SelectQuestion.RemoveOption(nowSelectIndex + 1)
 
     # 獲取題目表
     def LoadQuestionList(self):
@@ -469,7 +462,7 @@ class AddEditQuestionPage(QMainWindow):
 
         option = self.tmp_SelectQuestion.GetOption(nowSelectIndex + 1)
         self.ui.list_weight_question.setCurrentRow(-1) # 題目列表取消Focus
-        self.select_question_edit_what = option.GetType()
+        self.select_question_edit_what = str(option.GetNumber())
             
         self.ui.text_edit_question.setPlainText(option.Content) # 更新文字框
         self.imageList = option.GetImages()
@@ -520,7 +513,7 @@ class AddEditQuestionPage(QMainWindow):
         if self.select_question_edit_what == "question":
             self.tmp_SelectQuestion.SetQuestionContent(newContent)
         elif self.select_question_edit_what != "":
-            option = self.tmp_SelectQuestion.option[self.select_question_edit_what]
+            option = self.tmp_SelectQuestion.GetOption(int(self.select_question_edit_what))
             option.SetContent(newContent)
 
     # 改變選擇題 或 其選項的 images (images = list)
@@ -528,7 +521,7 @@ class AddEditQuestionPage(QMainWindow):
         if self.select_question_edit_what == "question":
             self.tmp_SelectQuestion.SetImages(images)
         elif self.select_question_edit_what != "":
-            option = self.tmp_SelectQuestion.option[self.select_question_edit_what]
+            option = self.tmp_SelectQuestion.GetOption(int(select_question_edit_what))
             option.SetImages(images)
 
     # 深層複製select question
@@ -536,7 +529,8 @@ class AddEditQuestionPage(QMainWindow):
         select.SetQuestionContent(copy.GetQuestion())
         select.answer = copy.GetAnswer()
         select.SetImages(copy.GetImages())
-        select.option["Option1"] = copy.GetOption(1)
-        select.option["Option2"] = copy.GetOption(2)
-        select.option["Option3"] = copy.GetOption(3)
-        select.option["Option4"] = copy.GetOption(4)
+        self.option = copy.option
+
+    def DeepCopySelectOption(self, option, copy):
+        option.SetContent(copy.GetContent())
+        option.SetImages(copy.GetImages())

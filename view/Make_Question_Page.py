@@ -36,6 +36,9 @@ class MakeQuestionPage(QMainWindow):
         # UI上 的題數輸入框
         self.question_tbox = []
 
+        # dict 用來拿最大題數
+        self.question_dict = {}
+
         # 微調題目頁面
         self.Revise_MakeQuestion_View = Revise_MakeQuestion_Page.ReviseMakeQuestionPage(self.model)
         self.Is_revise_question_view_open = False
@@ -53,7 +56,7 @@ class MakeQuestionPage(QMainWindow):
         self.ui.button_make_question.clicked.connect(self.OpenReviseQuestionView)
         self.ui.lineEdit_total_number.setValidator(QtGui.QIntValidator(self.ui.lineEdit_total_number)) # 設置總題數只能輸入數字
         self.ui.lineEdit_total_number.editingFinished.connect(self.AverageQuestionNumber) # LineEdit事件 - 輸入完後均等題目數
-
+        
         # 註冊 調整題目頁面之信號
         self.Revise_MakeQuestion_View.revise_make_question_signal.connect(self.GetReviseMakeQuestionViewData)
 
@@ -61,11 +64,15 @@ class MakeQuestionPage(QMainWindow):
     def ResetPage(self):
         # 重設defaultString
         defaultString = self.model.DefaultString_NoSelect
-
+        
         # 重建題目數
         self.DeletaAllQuestion()
         for question in self.question_level_list:
             self.SetQuestion(question)
+
+        for level in self.question_level_list:
+            d_key = MyLibrary.CreateDictKey(level)
+            self.question_dict[d_key] = self.model.GetQuestionList(level)
 
         # 重置總題數 & 等分題數
         self.ui.lineEdit_total_number.setText("40")
@@ -134,11 +141,22 @@ class MakeQuestionPage(QMainWindow):
     # 輸入題數後發生之事件
     def InputQuestionNumberEvent(self):
         update_total_number = 0
+        tbox_count = 0
         for tbox in self.question_tbox:
+            max_count = 10
+            # 沒有輸入
             if tbox.text() == "":
                 tbox.setText("0")
+            # 成功輸入
             else:
-                update_total_number += int(tbox.text())
+                # 輸入的超過ㄌ
+                if int(tbox.text()) > max_count:
+                    tbox.setText(str(max_count))
+                    update_total_number += max_count
+                    self.ShowTips(tbox_count)
+                else:
+                    update_total_number += int(tbox.text())
+            tbox_count += 1
         self.ui.lineEdit_total_number.setText(str(update_total_number))
 
     # 接收 來自上一層的題目列表
@@ -151,7 +169,21 @@ class MakeQuestionPage(QMainWindow):
         print("-----")
         print(qqq)
         print(len(qqq))
+       
+    # Show Tips
+    def ShowTips(self, tbox_count):
+        question_level = MyLibrary.GetQuestionShowText(self.question_level_list[tbox_count])
+        QMessageBox.information(self, "警告", question_level + "\n超過最大題數!", QMessageBox.Yes)
+    
+    # 取得超過題目最大數量的題目階層
+    def GetOverQuestionLevel():
+        pass
 
+    # 題目超過最大題數
+    def IsQuestionOverMaxNumber(self):
+        pass
+
+    ########################################################################
     # 移駕至調整題目頁面
     #region 函式區
     def Confirm(self):

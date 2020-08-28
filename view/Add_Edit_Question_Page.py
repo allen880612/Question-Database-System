@@ -219,7 +219,7 @@ class AddEditQuestionPage(QMainWindow):
     # 點擊新增選項按鈕
     def ClickAddOptionButton(self):
         id = int(self.ui.list_widget_option.count() + 1)
-        self.ui.list_widget_option.addItem(str(id))
+        self.ui.list_widget_option.addItem(str(chr(id + 64)))
         self.ui.list_widget_option.item(id - 1).setCheckState(False)
         if self.tmp_SelectQuestion is not None:
             self.tmp_SelectQuestion.AddOption(id)
@@ -257,8 +257,9 @@ class AddEditQuestionPage(QMainWindow):
             self.model.AddFillingQuestion(newQuestion, self.question_level, self.imageList)
         # 新增選擇題
         elif self.question_mode == self.MODE_SELECT_QUESTION:
+            answer = self.GetSelectQuestionAnswerFromListWidget()
+            self.tmp_SelectQuestion.SetAnswer(answer) 
             self.model.AddSelectQuestion(self.tmp_SelectQuestion, self.question_level)
-            #self.model.AddQuestion(newQuestion, self.question_level, self.imageList)
             self.tmp_SelectQuestion = MyLibrary.SelectQuestion(0, "")
 
         self.ui.text_edit_question.clear()
@@ -463,7 +464,7 @@ class AddEditQuestionPage(QMainWindow):
         option = self.tmp_SelectQuestion.GetOption(nowSelectIndex + 1)
         self.ui.list_weight_question.setCurrentRow(-1) # 題目列表取消Focus
         self.select_question_edit_what = str(option.GetNumber())
-            
+        
         self.ui.text_edit_question.setPlainText(option.Content) # 更新文字框
         self.imageList = option.GetImages()
         self.UpdateImageListWidget()
@@ -534,3 +535,17 @@ class AddEditQuestionPage(QMainWindow):
     def DeepCopySelectOption(self, option, copy):
         option.SetContent(copy.GetContent())
         option.SetImages(copy.GetImages())
+
+    def IsListItemChecked(self, item):
+        if item.checkState() == 2:
+            return True
+        return False
+
+    # 將List Widget的checkstate 轉換成answer
+    def GetSelectQuestionAnswerFromListWidget(self):
+        answer = []
+        for i in range(0, self.ui.list_widget_option.count()):
+            item = self.ui.list_widget_option.item(i)
+            if self.IsListItemChecked(item):
+                answer.append(chr(i + 1 + 64))
+        return answer

@@ -5,8 +5,9 @@
     "\\model",
     "\\test",
     "\\view",
-    "\\view\\UI"
+    "\\view\\UI",
+    "\\word"
   ],
-  "SelectedNode": "\\view\\Revise_MakeQuestion_Page.py",
+  "SelectedNode": "\\view\\Add_Unit_Page.py",
   "PreviewInSolutionExplorer": false
 }

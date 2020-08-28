@@ -246,6 +246,7 @@ class ReviseMakeQuestionPage(QMainWindow):
 
         self.BulidWord(qList, "answer", True)  # 建造word 保留答案
         self.BulidWord(qList, "question", False)  # 建造word 刪除答案
+        MyLibrary.OpenWord("answer.docx")
         print("done")
         #excel
 

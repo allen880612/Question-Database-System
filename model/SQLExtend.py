@@ -58,7 +58,7 @@ def InsertFillingQuestion(database, question, path_id, solution=None, image=None
 # 插入選擇題題
 def InsertSelectQuestion(database, question, path_id):
 	cursor = database.cursor()
-	answer = "1"
+	answer = " ".join(question.GetAnswer())
 	content = question.GetQuestion()
 	option_content = [question.GetOption(1).GetContent(), question.GetOption(2).GetContent(), question.GetOption(3).GetContent(), question.GetOption(4).GetContent()]
 	query = "INSERT INTO SelectQuestion (`Content`, `Answer`, `Option1`, `Option2`, `Option3`, `Option4`, `Path_Id`) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', {6})".format(content, answer, option_content[0], option_content[1], option_content[2], option_content[3], path_id)

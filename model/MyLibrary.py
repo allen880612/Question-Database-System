@@ -105,6 +105,9 @@ class SelectQuestion(Question):
     def SetQuestionContent(self, content):
         self.question = content
 
+    def SetAnswer(self, answer):
+        self.answer = answer
+
 class SelectOption(object):
     def __init__(self, option_number, content="", images=[]):
         self.OptionNumber = option_number
@@ -200,3 +203,8 @@ def ConvertToBinaryData(fileName):
     with open(fileName, 'rb') as file:
         binaryData = file.read()
     return binaryData
+
+# 真實開啟word
+def OpenWord(file_name):
+	full_cmd = file_name
+	os.popen("cd word" + " && " + full_cmd)

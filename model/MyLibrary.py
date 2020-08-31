@@ -81,7 +81,7 @@ class SelectQuestion(Question):
         self.IsUpdate = isUpdate
 
     def AddOption(self, option_number):
-        self.option.append(SelectOption(option_number))
+        self.option.append(SelectOption(option_number, images=[]))
 
     def GetOption(self, option_number):
         if option_number - 1 < len(self.option):
@@ -115,7 +115,7 @@ class SelectOption(object):
         self.Content = content
 
     def GetType(self):
-        return "Option" + str(OptionNumber)
+        return "Option" + str(self.OptionNumber)
 
     def GetContent(self):
         return self.Content

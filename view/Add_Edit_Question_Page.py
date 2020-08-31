@@ -21,7 +21,7 @@ class AddEditQuestionPage(QMainWindow):
     MODE_SELECT_QUESTION = "SelectQuestion_Mode"
     mode = ""
     question_mode = ""
-    #Add_Unit_View = "" 
+    MAX_OPTION_COUNT = 8
     Is_add_unit_view_open = False
 
     # 建構子
@@ -131,6 +131,9 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.button_add_question_mode.setEnabled(self.IsAddModeButtonEnable())
         self.ui.button_edit_question_mode.setEnabled(self.IsEditModeButtonEnable())
 
+        if self.ui.button_remove_option.isVisible() == True:
+            self.ui.button_remove_option.setEnabled(self.ui.list_widget_option.currentRow() > -1)
+
     # 每次切換操作後，重設UI
     def ResetUI(self):
         pass
@@ -187,9 +190,17 @@ class AddEditQuestionPage(QMainWindow):
 
             self.ui.list_weight_question.clear()
             self.ui.list_weight_question.addItem("question")
+            #self.ui.list_weight_question.setCurrentRow(0)
             self.tmp_SelectQuestion = MyLibrary.SelectQuestion(0, "") # 重設新增選擇題題題
             for i in range(4):
                 self.ClickAddOptionButton()
+                
+            self.UpdateUI()
+            # tester
+            #print("########")
+            #for opt in self.tmp_SelectQuestion.option:
+            #    print(id(opt.Images))
+            #print("########")
 
     # 設置成 填充題模式
     def SetFillingQuestionMode(self):
@@ -224,6 +235,10 @@ class AddEditQuestionPage(QMainWindow):
         if self.tmp_SelectQuestion is not None:
             self.tmp_SelectQuestion.AddOption(id)
 
+        # 超過最大數 不得新增
+        if self.ui.list_widget_option.count() >= self.MAX_OPTION_COUNT:
+            self.ui.button_add_option.setEnabled(False)
+
     # 點擊移除選項按鈕
     def ClickRemoveOptionButton(self):
         nowSelectIndex = self.ui.list_widget_option.currentRow()
@@ -232,10 +247,14 @@ class AddEditQuestionPage(QMainWindow):
             return
         
         for i in range(nowSelectIndex + 1, self.ui.list_widget_option.count()):
-            self.ui.list_widget_option.item(i).setText(str(i))
+            self.ui.list_widget_option.item(i).setText(str(chr(i + 64)))
         self.ui.list_widget_option.takeItem(nowSelectIndex)
 
         self.tmp_SelectQuestion.RemoveOption(nowSelectIndex + 1)
+
+        # 少於最大數 可以新增
+        if self.ui.list_widget_option.count() < self.MAX_OPTION_COUNT:
+            self.ui.button_add_option.setEnabled(False)
 
     # 獲取題目表
     def LoadQuestionList(self):
@@ -260,6 +279,7 @@ class AddEditQuestionPage(QMainWindow):
             answer = self.GetSelectQuestionAnswerFromListWidget()
             self.tmp_SelectQuestion.SetAnswer(answer) 
             self.model.AddSelectQuestion(self.tmp_SelectQuestion, self.question_level)
+            self.select_question_edit_what = ""
             self.tmp_SelectQuestion = MyLibrary.SelectQuestion(0, "")
 
         self.ui.text_edit_question.clear()
@@ -464,7 +484,6 @@ class AddEditQuestionPage(QMainWindow):
         option = self.tmp_SelectQuestion.GetOption(nowSelectIndex + 1)
         self.ui.list_weight_question.setCurrentRow(-1) # 題目列表取消Focus
         self.select_question_edit_what = str(option.GetNumber())
-        
         self.ui.text_edit_question.setPlainText(option.Content) # 更新文字框
         self.imageList = option.GetImages()
         self.UpdateImageListWidget()
@@ -522,7 +541,7 @@ class AddEditQuestionPage(QMainWindow):
         if self.select_question_edit_what == "question":
             self.tmp_SelectQuestion.SetImages(images)
         elif self.select_question_edit_what != "":
-            option = self.tmp_SelectQuestion.GetOption(int(select_question_edit_what))
+            option = self.tmp_SelectQuestion.GetOption(int(self.select_question_edit_what))
             option.SetImages(images)
 
     # 深層複製select question

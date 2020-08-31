@@ -160,8 +160,7 @@ class DBModel():
 
     # 連結 SQL資料庫
     def ConnectDatabase(self):
-        proxy = threading.Thread(target = self.StartProxy)
-        proxy.start()
-        proxy.join()
-
+        #proxy = threading.Thread(target = self.StartProxy)
+        #proxy.start()
+        #proxy.join()
         self.db = mysql.connect(host="35.194.198.56",port=3306,user="user01",passwd="user01",db="QuestionDatabase")

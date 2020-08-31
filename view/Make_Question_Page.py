@@ -55,7 +55,7 @@ class MakeQuestionPage(QMainWindow):
         #self.ui.button_make_question.clicked.connect(self.Confirm)
         self.ui.button_make_question.clicked.connect(self.OpenReviseQuestionView)
         self.ui.lineEdit_total_number.setValidator(QtGui.QIntValidator(self.ui.lineEdit_total_number)) # 設置總題數只能輸入數字
-        self.ui.lineEdit_total_number.editingFinished.connect(self.AverageQuestionNumber) # LineEdit事件 - 輸入完後均等題目數
+        self.ui.lineEdit_total_number.editingFinished.connect(self.InputOnTotleNumber) # LineEdit事件 - 輸入完後均等題目數
         
         # 註冊 調整題目頁面之信號
         self.Revise_MakeQuestion_View.revise_make_question_signal.connect(self.GetReviseMakeQuestionViewData)
@@ -70,13 +70,14 @@ class MakeQuestionPage(QMainWindow):
         for question in self.question_level_list:
             self.SetQuestion(question)
 
+        self.question_dict.clear()
         for level in self.question_level_list:
             d_key = MyLibrary.CreateDictKey(level)
             self.question_dict[d_key] = self.model.GetQuestionList(level)
 
         # 重置總題數 & 等分題數
         self.ui.lineEdit_total_number.setText("40")
-        self.AverageQuestionNumber()
+        self.InputOnTotleNumber() # -> 移到show Event
         self.Is_revise_question_view_open = False
 
     # 刪除所有題目
@@ -143,7 +144,8 @@ class MakeQuestionPage(QMainWindow):
         update_total_number = 0
         tbox_count = 0
         for tbox in self.question_tbox:
-            max_count = 10
+            qList = self.question_dict[MyLibrary.CreateDictKey(self.question_level_list[tbox_count])]
+            max_count = len(qList)
             # 沒有輸入
             if tbox.text() == "":
                 tbox.setText("0")
@@ -153,10 +155,32 @@ class MakeQuestionPage(QMainWindow):
                 if int(tbox.text()) > max_count:
                     tbox.setText(str(max_count))
                     update_total_number += max_count
-                    self.ShowTips(tbox_count)
+                    self.ShowTips(MyLibrary.GetQuestionShowText(self.question_level_list[tbox_count]))
                 else:
                     update_total_number += int(tbox.text())
             tbox_count += 1
+        self.ui.lineEdit_total_number.setText(str(update_total_number))
+
+    # 輸入總題數時發生的事情
+    def InputOnTotleNumber(self):
+        self.AverageQuestionNumber() # 先均分每一題
+        
+        # 每一題取最大題數
+        update_total_number = 0
+        tbox_count = 0
+        tips_content = []
+        for tbox in self.question_tbox:
+            qList = self.question_dict[MyLibrary.CreateDictKey(self.question_level_list[tbox_count])]
+            max_count = len(qList)
+            if int(tbox.text()) > max_count:
+                tbox.setText(str(max_count))
+                update_total_number += max_count
+                tips_content.append(MyLibrary.GetQuestionShowText(self.question_level_list[tbox_count]))
+            else:
+                update_total_number += int(tbox.text())
+            tbox_count += 1
+        if tips_content != []:
+            self.ShowTips("\n".join(tips_content))
         self.ui.lineEdit_total_number.setText(str(update_total_number))
 
     # 接收 來自上一層的題目列表
@@ -169,20 +193,11 @@ class MakeQuestionPage(QMainWindow):
         print("-----")
         print(qqq)
         print(len(qqq))
-       
+
     # Show Tips
-    def ShowTips(self, tbox_count):
-        question_level = MyLibrary.GetQuestionShowText(self.question_level_list[tbox_count])
-        QMessageBox.information(self, "警告", question_level + "\n超過最大題數!", QMessageBox.Yes)
+    def ShowTips(self, information):
+        QMessageBox.information(self, "警告", information + "\n超過最大題數!", QMessageBox.Yes)
     
-    # 取得超過題目最大數量的題目階層
-    def GetOverQuestionLevel():
-        pass
-
-    # 題目超過最大題數
-    def IsQuestionOverMaxNumber(self):
-        pass
-
     ########################################################################
     # 移駕至調整題目頁面
     #region 函式區
@@ -273,3 +288,7 @@ class MakeQuestionPage(QMainWindow):
     def GetReviseMakeQuestionViewData(self, is_close):
         if is_close == True:
             self.Is_revise_question_view_open = False
+
+    #####################################################
+    #def showEvent(self, event):
+    #    self.InputOnTotleNumber()

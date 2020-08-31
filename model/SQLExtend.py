@@ -55,13 +55,14 @@ def InsertFillingQuestion(database, question, path_id, solution=None, image=None
 	ExecuteAlterCommand(database, cursor, query)
 	return int(cursor.lastrowid)
 
-# 插入選擇題題
+# 插入選擇題
 def InsertSelectQuestion(database, question, path_id):
 	cursor = database.cursor()
 	answer = " ".join(question.GetAnswer())
 	content = question.GetQuestion()
-	option_content = [question.GetOption(1).GetContent(), question.GetOption(2).GetContent(), question.GetOption(3).GetContent(), question.GetOption(4).GetContent()]
-	query = "INSERT INTO SelectQuestion (`Content`, `Answer`, `Option1`, `Option2`, `Option3`, `Option4`, `Path_Id`) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', {6})".format(content, answer, option_content[0], option_content[1], option_content[2], option_content[3], path_id)
+	option_content = GetSelectOptionContent(question)
+	print("option: " + " ".join(option_content))
+	query = "INSERT INTO SelectQuestion (`Content`, `Answer`, `Option1`, `Option2`, `Option3`, `Option4`, `Option5`, `Option6`, `Option7`, `Option8`, `Path_Id`) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', {10});".format(content, answer, option_content[0], option_content[1], option_content[2], option_content[3], option_content[4], option_content[5], option_content[6], option_content[7], path_id)
 	ExecuteAlterCommand(database, cursor, query)
 	return int(cursor.lastrowid)
 
@@ -99,8 +100,8 @@ def SearchImageByQuestion(database, q_id, source):
 # 搜尋選擇題中出現的所有圖片 (含選項)
 def SearchImageBySelectQuestion(database, q_id):
 	handler = database.cursor()
-	s = ["SelectQuestion", "Option1", "Option2", "Option3", "Option4"]
-	query = "SELECT `Id`, `Source`, `Image` FROM `Image` WHERE `Question_Id`={0} and (`Source`='{1}' or `Source`='{2}' or `Source`='{3}' or `Source`='{4}' or `Source`='{5}');".format(q_id, s[0], s[1], s[2], s[3], s[4])
+	s = ["SelectQuestion", "Option1", "Option2", "Option3", "Option4", "Option5", "Option6", "Option7", "Option8"]
+	query = "SELECT `Id`, `Source`, `Image` FROM `Image` WHERE `Question_Id`={0} and (`Source`='{1}' or `Source`='{2}' or `Source`='{3}' or `Source`='{4}' or `Source`='{5}' or `Source`='{6}' or `Source`='{7}' or `Source`='{8}' or `Source`='{9}');".format(q_id, s[0], s[1], s[2], s[3], s[4], s[5], s[6], s[7], s[8])
 	handler.execute(query)
 	result = handler.fetchall()
 	return result
@@ -161,9 +162,9 @@ def UpdateSelectQuestion(database, question):
 	cursor = database.cursor()
 	q_content = question.GetQuestion()
 	q_answer = question.GetAnswer()
-	option_content = [question.GetOption(1).GetContent(), question.GetOption(2).GetContent(), question.GetOption(3).GetContent(), question.GetOption(4).GetContent()]
+	option_content = GetSelectOptionContent(question)
 	q_id = question.id
-	query = "UPDATE SelectQuestion SET `Content`='{0}', `Answer`='{1}', `Option1`='{2}', `Option2`='{3}', `Option3`='{4}', `Option4`='{5}' WHERE `Id`={6};".format(q_content, q_answer, option_content[0], option_content[1], option_content[2], option_content[3], q_id)
+	query = "UPDATE SelectQuestion SET `Content`='{0}', `Answer`='{1}', `Option1`='{2}', `Option2`='{3}', `Option3`='{4}', `Option4`='{5}', `Option5`='{6}', `Option6`='{7}', `Option7`='{8}', `Option8`='{9}' WHERE `Id`={10};".format(q_content, q_answer, option_content[0], option_content[1], option_content[2], option_content[3], option_content[4], option_content[5], option_content[6], option_content[7], q_id)
 	ExecuteAlterCommand(database, cursor, query)
 
 # 得到所有路徑 (return list[str])
@@ -242,10 +243,10 @@ def SearchSelectQuestionByPath(database, path_id):
 		q_id = data[0]
 		q_source = "SelectQuestion"
 		q_content = data[1]
-		q_answer = data[2]
-		q_option_content = [data[3], data[4], data[5], data[6]]
+		q_answer = data[2].split(' ')
+		q_option_content = [data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10]]
 		select_question_images = SearchImageBySelectQuestion(database, q_id) # (id, source, images)
-		imageList = [ [], [], [], [], [] ]
+		imageList = [ [], [], [], [], [], [], [], [], [] ] # 9個
 		for image in select_question_images:
 			image_id, source, image_content = image[0], image[1], image[2]
 			temp_image = MyLibrary.QDSTempImage(image_content, image_id, isOnServer=True, isUpdated=False)
@@ -259,6 +260,15 @@ def SearchSelectQuestionByPath(database, path_id):
 				imageList[3].append(temp_image)
 			elif source == "Option4":
 				imageList[4].append(temp_image)
+			elif source == "Option5":
+				imageList[5].append(temp_image)
+			elif source == "Option6":
+				imageList[6].append(temp_image)
+			elif source == "Option7":
+				imageList[7].append(temp_image)
+			elif source == "Option8":
+				imageList[8].append(temp_image)
+
 		# 建立選擇題
 		select_question = MyLibrary.SelectQuestion(q_id, q_content, images=imageList[0], isUpdate=False)
 		select_question.answer = q_answer
@@ -266,6 +276,10 @@ def SearchSelectQuestionByPath(database, path_id):
 		select_question.option.append(MyLibrary.SelectOption(2, q_option_content[1], imageList[2]))
 		select_question.option.append(MyLibrary.SelectOption(3, q_option_content[2], imageList[3]))
 		select_question.option.append(MyLibrary.SelectOption(4, q_option_content[3], imageList[4]))
+		select_question.option.append(MyLibrary.SelectOption(5, q_option_content[4], imageList[5]))
+		select_question.option.append(MyLibrary.SelectOption(6, q_option_content[5], imageList[6]))
+		select_question.option.append(MyLibrary.SelectOption(7, q_option_content[6], imageList[7]))
+		select_question.option.append(MyLibrary.SelectOption(8, q_option_content[7], imageList[8]))
 		qList.append(select_question)
 	return qList
 
@@ -312,3 +326,7 @@ def GetLevel2NameByLevel1(database, subject, level1):
 	handler.execute(query)
 	level2_name_list = [name[0] for name in handler.fetchall()]
 	return level2_name_list
+
+##############################
+def GetSelectOptionContent(question):
+	return [question.option[i].GetContent() if i < len(question.option) else "NULL" for i in range(0, 8)]

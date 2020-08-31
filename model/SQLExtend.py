@@ -272,15 +272,23 @@ def SearchSelectQuestionByPath(database, path_id):
 		# 建立選擇題
 		select_question = MyLibrary.SelectQuestion(q_id, q_content, images=imageList[0], isUpdate=False)
 		select_question.answer = q_answer
-		select_question.option.append(MyLibrary.SelectOption(1, q_option_content[0], imageList[1]))
-		select_question.option.append(MyLibrary.SelectOption(2, q_option_content[1], imageList[2]))
-		select_question.option.append(MyLibrary.SelectOption(3, q_option_content[2], imageList[3]))
-		select_question.option.append(MyLibrary.SelectOption(4, q_option_content[3], imageList[4]))
-		select_question.option.append(MyLibrary.SelectOption(5, q_option_content[4], imageList[5]))
-		select_question.option.append(MyLibrary.SelectOption(6, q_option_content[5], imageList[6]))
-		select_question.option.append(MyLibrary.SelectOption(7, q_option_content[6], imageList[7]))
-		select_question.option.append(MyLibrary.SelectOption(8, q_option_content[7], imageList[8]))
+		for count in range(0, 8):
+			index = count + 1
+			if q_option_content[count] is not None:
+				select_question.option.append(MyLibrary.SelectOption(index, q_option_content[count], imageList[index]))
+		#select_question.option.append(MyLibrary.SelectOption(1, q_option_content[0], imageList[1]))
+		#select_question.option.append(MyLibrary.SelectOption(2, q_option_content[1], imageList[2]))
+		#select_question.option.append(MyLibrary.SelectOption(3, q_option_content[2], imageList[3]))
+		#select_question.option.append(MyLibrary.SelectOption(4, q_option_content[3], imageList[4]))
+		#select_question.option.append(MyLibrary.SelectOption(5, q_option_content[4], imageList[5]))
+		#select_question.option.append(MyLibrary.SelectOption(6, q_option_content[5], imageList[6]))
+		#select_question.option.append(MyLibrary.SelectOption(7, q_option_content[6], imageList[7]))
+		#select_question.option.append(MyLibrary.SelectOption(8, q_option_content[7], imageList[8]))
 		qList.append(select_question)
+
+		print(q_answer)
+		content = [opt.GetContent() for opt in select_question.option]
+		print(content)
 	return qList
 
 # 得到所有科目的名稱 (return list:[str])

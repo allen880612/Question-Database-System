@@ -428,8 +428,13 @@ class AddEditQuestionPage(QMainWindow):
                 self.ui.label.setVisible(True)
                 self.ui.list_widget_option.setVisible(True)
                 self.ui.list_widget_option.clear()
-                for i in range(4):
+                for i in range(len(self.questionList[nowSlectIndex].option)):
                     self.ClickAddOptionButton()
+                # 重設 選項 答案
+                q_answer = self.questionList[nowSlectIndex].GetAnswer()
+                for i in range(0, self.ui.list_widget_option.count()):
+                    if self.ui.list_widget_option.item(i).text() in q_answer:
+                        self.ui.list_widget_option.item(i).setCheckState(2)
             else:
                 self.ui.label.setVisible(False)
                 self.ui.list_widget_option.setVisible(False)

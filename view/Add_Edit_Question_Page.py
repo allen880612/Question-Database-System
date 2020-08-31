@@ -101,6 +101,7 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.radioButton_FillingQuestion.click()
         self.ui.label_question_level.setText(MyLibrary.GetQuestionShowText(self.question_level))
         self.mode = self.MODE_ADD_QUESTION
+        self.question_mode = self.MODE_FILLING_QUESTION
 
     # 新增按鈕是否可以按下
     def GetAddQuestionButtonEnable(self):
@@ -277,6 +278,8 @@ class AddEditQuestionPage(QMainWindow):
         if self.question_mode == self.MODE_FILLING_QUESTION:
             newQuestion = MyLibrary.Question(0, self.ui.text_edit_question.toPlainText())
             self.model.AddFillingQuestion(newQuestion, self.question_level, self.imageList)
+            print("新增填充題 done")
+
         # 新增選擇題
         elif self.question_mode == self.MODE_SELECT_QUESTION:
             answer = self.GetSelectQuestionAnswerFromListWidget()
@@ -291,6 +294,7 @@ class AddEditQuestionPage(QMainWindow):
             self.model.AddSelectQuestion(self.tmp_SelectQuestion, self.question_level)
             self.select_question_edit_what = ""
             self.tmp_SelectQuestion = MyLibrary.SelectQuestion(0, "")
+            print("新增選擇題 done")
 
         self.ui.text_edit_question.clear()
         self.ui.list_weight_image.clear()
@@ -310,7 +314,7 @@ class AddEditQuestionPage(QMainWindow):
             self.model.UpdateDBImageList(self.imageList, nowSelectQuestion.id, nowSelectQuestion.GetType())
             new_item = str(nowSelectQuestion.GetQuestionNumber()) + '. ' + (nowSelectQuestion.GetQuestion())[:20] # 更新list widget item
             self.ui.list_weight_question.currentItem().setText(new_item)
-            print("edit")
+            print("編輯填充題 done")
 
         # 儲存選擇題資訊
         elif self.editQuestion.GetType() == "SelectQuestion":
@@ -334,7 +338,7 @@ class AddEditQuestionPage(QMainWindow):
 
             # 更新原題目
             self.DeepCopySelectQuestion(self.editQuestion, nowEditQuestion)
-            print("edit done")
+            print("編輯選擇題 done")
 
     # 取得題號
     def GetQuestionIndex(self):

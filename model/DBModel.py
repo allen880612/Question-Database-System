@@ -158,9 +158,18 @@ class DBModel():
         full_cmd = exe_name + " " + cmd1 + " " + cmd2 + " "
         os.popen("cd proxy" + " && " + full_cmd)
 
+    # 使用proxy 連線
+    def UseProxy(self):
+        proxy = threading.Thread(target = self.StartProxy)
+        proxy.start()
+        proxy.join()
+        self.db = mysql.connect(host="127.0.0.1",port=3306,user="user01",passwd="user01",db="QuestionDatabase")
+
+    # 使用SQL 連線
+    def UseSQLIP(self):
+        self.db = mysql.connect(host="35.194.198.56",port=3306,user="user01",passwd="user01",db="QuestionDatabase")
+
     # 連結 SQL資料庫
     def ConnectDatabase(self):
-        #proxy = threading.Thread(target = self.StartProxy)
-        #proxy.start()
-        #proxy.join()
-        self.db = mysql.connect(host="35.194.198.56",port=3306,user="user01",passwd="user01",db="QuestionDatabase")
+        #self.UseProxy()
+        self.UseSQLIP()

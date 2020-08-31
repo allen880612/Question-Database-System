@@ -61,9 +61,12 @@ def InsertSelectQuestion(database, question, path_id):
 	answer = " ".join(question.GetAnswer())
 	content = question.GetQuestion()
 	option_content = GetSelectOptionContent(question)
-	print("option: " + " ".join(option_content))
-	query = "INSERT INTO SelectQuestion (`Content`, `Answer`, `Option1`, `Option2`, `Option3`, `Option4`, `Option5`, `Option6`, `Option7`, `Option8`, `Path_Id`) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', {10});".format(content, answer, option_content[0], option_content[1], option_content[2], option_content[3], option_content[4], option_content[5], option_content[6], option_content[7], path_id)
-	ExecuteAlterCommand(database, cursor, query)
+	print(option_content)
+	#print("option: " + " ".join(option_content))
+	#query = "INSERT INTO SelectQuestion (`Content`, `Answer`, `Option1`, `Option2`, `Option3`, `Option4`, `Option5`, `Option6`, `Option7`, `Option8`, `Path_Id`) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', {10});".format(content, answer, option_content[0], option_content[1], option_content[2], option_content[3], option_content[4], option_content[5], option_content[6], option_content[7], path_id)
+	query = "INSERT INTO SelectQuestion (`Content`, `Answer`, `Option1`, `Option2`, `Option3`, `Option4`, `Option5`, `Option6`, `Option7`, `Option8`, `Path_Id`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
+	parement = (content, answer, option_content[0], option_content[1], option_content[2], option_content[3], option_content[4], option_content[5], option_content[6], option_content[7], path_id)
+	ExecuteAlterCommand(database, cursor, query, parement)
 	return int(cursor.lastrowid)
 
 # 插入圖片 (yet not test)
@@ -158,14 +161,19 @@ def UpdateFillingQuestion(database, question):
 	query = "UPDATE FillingQuestion SET `Content`='{0}', `Answer`='{1}' WHERE `Id`={2};".format(content, answer, question.id)
 	ExecuteAlterCommand(database, cursor, query)
 
+# 更新 選擇題
 def UpdateSelectQuestion(database, question):
 	cursor = database.cursor()
 	q_content = question.GetQuestion()
-	q_answer = question.GetAnswer()
+	q_answer = " ".join(question.GetAnswer())
+	print(len(question.option))
 	option_content = GetSelectOptionContent(question)
+	print(option_content)
 	q_id = question.id
-	query = "UPDATE SelectQuestion SET `Content`='{0}', `Answer`='{1}', `Option1`='{2}', `Option2`='{3}', `Option3`='{4}', `Option4`='{5}', `Option5`='{6}', `Option6`='{7}', `Option7`='{8}', `Option8`='{9}' WHERE `Id`={10};".format(q_content, q_answer, option_content[0], option_content[1], option_content[2], option_content[3], option_content[4], option_content[5], option_content[6], option_content[7], q_id)
-	ExecuteAlterCommand(database, cursor, query)
+	#query = "UPDATE SelectQuestion SET `Content`='{0}', `Answer`='{1}', `Option1`='{2}', `Option2`='{3}', `Option3`='{4}', `Option4`='{5}', `Option5`='{6}', `Option6`='{7}', `Option7`='{8}', `Option8`='{9}' WHERE `Id`={10};".format(q_content, q_answer, option_content[0], option_content[1], option_content[2], option_content[3], option_content[4], option_content[5], option_content[6], option_content[7], q_id)
+	query = "UPDATE SelectQuestion SET `Content`=%s, `Answer`=%s, `Option1`=%s, `Option2`=%s, `Option3`=%s, `Option4`=%s, `Option5`=%s, `Option6`=%s, `Option7`=%s, `Option8`=%s WHERE `Id`=%s;"
+	parement = (q_content, q_answer, option_content[0], option_content[1], option_content[2], option_content[3], option_content[4], option_content[5], option_content[6], option_content[7], q_id)
+	ExecuteAlterCommand(database, cursor, query, parement)
 
 # 得到所有路徑 (return list[str])
 def GetTotalPath(database):
@@ -337,4 +345,4 @@ def GetLevel2NameByLevel1(database, subject, level1):
 
 ##############################
 def GetSelectOptionContent(question):
-	return [question.option[i].GetContent() if i < len(question.option) else "NULL" for i in range(0, 8)]
+	return [question.option[i].GetContent() if i < len(question.option) else None for i in range(0, 8)]

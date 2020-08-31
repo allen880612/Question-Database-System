@@ -1,6 +1,6 @@
 from functools import partial
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMainWindow, QFileDialog
+from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMessageBox
 from PyQt5.QtGui import QPixmap
 from model import MyLibrary
 from view.UI import Add_Edit_Question_UI
@@ -133,6 +133,8 @@ class AddEditQuestionPage(QMainWindow):
 
         if self.ui.button_remove_option.isVisible() == True:
             self.ui.button_remove_option.setEnabled(self.ui.list_widget_option.currentRow() > -1)
+        if self.ui.button_add_option.isVisible() == True:
+            self.ui.button_add_option.setEnabled(self.ui.list_widget_option.count() < self.MAX_OPTION_COUNT)
 
     # 每次切換操作後，重設UI
     def ResetUI(self):
@@ -183,8 +185,7 @@ class AddEditQuestionPage(QMainWindow):
     def ClickSelectQuestionMode(self):
         if self.question_mode != self.MODE_SELECT_QUESTION:
             self.question_mode = self.MODE_SELECT_QUESTION
-            self.select_question_edit_what = ""
-
+            
             self.ui.text_edit_question.clear()
             self.SetSelectQuestionMode()
 
@@ -192,6 +193,8 @@ class AddEditQuestionPage(QMainWindow):
             self.ui.list_weight_question.addItem("question")
             #self.ui.list_weight_question.setCurrentRow(0)
             self.tmp_SelectQuestion = MyLibrary.SelectQuestion(0, "") # 重設新增選擇題題題
+            self.select_question_edit_what = "question"
+
             for i in range(4):
                 self.ClickAddOptionButton()
                 
@@ -254,7 +257,7 @@ class AddEditQuestionPage(QMainWindow):
 
         # 少於最大數 可以新增
         if self.ui.list_widget_option.count() < self.MAX_OPTION_COUNT:
-            self.ui.button_add_option.setEnabled(False)
+            self.ui.button_add_option.setEnabled(True)
 
     # 獲取題目表
     def LoadQuestionList(self):
@@ -277,7 +280,14 @@ class AddEditQuestionPage(QMainWindow):
         # 新增選擇題
         elif self.question_mode == self.MODE_SELECT_QUESTION:
             answer = self.GetSelectQuestionAnswerFromListWidget()
-            self.tmp_SelectQuestion.SetAnswer(answer) 
+            self.tmp_SelectQuestion.SetAnswer(answer)
+
+            # 跳出警示
+            alert = self.GetStoreQuestionTips(self.tmp_SelectQuestion)
+            if len(alert) != 0:
+                self.ShowTips("\n".join(alert))
+                return
+
             self.model.AddSelectQuestion(self.tmp_SelectQuestion, self.question_level)
             self.select_question_edit_what = ""
             self.tmp_SelectQuestion = MyLibrary.SelectQuestion(0, "")
@@ -304,7 +314,15 @@ class AddEditQuestionPage(QMainWindow):
 
         # 儲存選擇題資訊
         elif self.editQuestion.GetType() == "SelectQuestion":
+            self.tmp_SelectQuestion.SetAnswer(self.GetSelectQuestionAnswerFromListWidget())
             nowEditQuestion = self.tmp_SelectQuestion
+
+            # 跳出警示
+            alert = self.GetStoreQuestionTips(nowEditQuestion)
+            if len(alert) != 0:
+                self.ShowTips("\n".join(alert))
+                return
+
             # 再更新的時候已經改了 -> 不用對question Edit
             # 更新資料庫
             self.model.EditSelectQuestion(nowEditQuestion)
@@ -422,23 +440,31 @@ class AddEditQuestionPage(QMainWindow):
         if nowSlectIndex == -1:
             return
 
-        # 編輯模式中 選擇題時出現選擇題的View
+        # 編輯模式中
         if self.mode == self.MODE_EDIT_QUESTION:
+            # 選擇題時出現選擇題的View
             if self.questionList[nowSlectIndex].GetType() == "SelectQuestion":
                 self.ui.label.setVisible(True)
                 self.ui.list_widget_option.setVisible(True)
-                self.ui.list_widget_option.clear()
-                for i in range(len(self.questionList[nowSlectIndex].option)):
-                    self.ClickAddOptionButton()
-                # 重設 選項 答案
-                q_answer = self.questionList[nowSlectIndex].GetAnswer()
-                for i in range(0, self.ui.list_widget_option.count()):
-                    if self.ui.list_widget_option.item(i).text() in q_answer:
-                        self.ui.list_widget_option.item(i).setCheckState(2)
+                if self.tmp_SelectQuestion is None or self.tmp_SelectQuestion.id != self.questionList[nowSlectIndex].id:
+                    self.ui.list_widget_option.clear()
+                    for i in range(len(self.questionList[nowSlectIndex].option)):
+                        self.ClickAddOptionButton()
+                    # 重設 選項 答案
+                    q_answer = self.questionList[nowSlectIndex].GetAnswer()
+                    for i in range(0, self.ui.list_widget_option.count()):
+                        if self.ui.list_widget_option.item(i).text() in q_answer:
+                            self.ui.list_widget_option.item(i).setCheckState(2)
+                
+                self.ui.button_add_option.setVisible(True)
+                self.ui.button_remove_option.setVisible(True)
+            # 填充題
             else:
                 self.ui.label.setVisible(False)
                 self.ui.list_widget_option.setVisible(False)
-
+                self.ui.button_add_option.setVisible(False)
+                self.ui.button_remove_option.setVisible(False)
+            
         # 新增模式中 且 新增選擇題
         if self.mode == self.MODE_ADD_QUESTION:
             if self.question_mode == self.MODE_SELECT_QUESTION:
@@ -550,11 +576,11 @@ class AddEditQuestionPage(QMainWindow):
             option.SetImages(images)
 
     # 深層複製select question
-    def DeepCopySelectQuestion(self, select, copy):
-        select.SetQuestionContent(copy.GetQuestion())
-        select.answer = copy.GetAnswer()
-        select.SetImages(copy.GetImages())
-        self.option = copy.option
+    def DeepCopySelectQuestion(self, select, copyquestion):
+        select.SetQuestionContent(copyquestion.GetQuestion())
+        select.answer = copyquestion.GetAnswer()
+        select.SetImages(copyquestion.GetImages())
+        select.option = copy.deepcopy(copyquestion.option)
 
     def DeepCopySelectOption(self, option, copy):
         option.SetContent(copy.GetContent())
@@ -573,3 +599,23 @@ class AddEditQuestionPage(QMainWindow):
             if self.IsListItemChecked(item):
                 answer.append(chr(i + 1 + 64))
         return answer
+
+    # 儲存題目時彈跳的Tips
+    def GetStoreQuestionTips(self, question):
+        # 選擇題的狀況
+        if question.GetType() == "SelectQuestion":
+            alert = []
+            if question.GetQuestion() == "":
+                alert.append("沒有題目內容!")
+            if len(question.option) == 0:
+                alert.append("沒有選項!")
+            for opt in question.option:
+                if opt.GetContent() == "":
+                    alert.append("選項" + str(chr(opt.GetNumber() + 64)) + " 沒有內容!")
+            if len(question.GetAnswer()) == 0:
+                alert.append("沒有勾選答案!")
+            return alert
+        return []
+
+    def ShowTips(self, information):
+        QMessageBox.information(self, "警告", information, QMessageBox.Yes)

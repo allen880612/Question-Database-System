@@ -275,8 +275,10 @@ class ReviseMakeQuestionPage(QMainWindow):
         if self.HaveFillingQuestion(qList):
             paragraph = word.add_paragraph("一、填充題", style = "main_phase")
         for i in range(0, len(qList)):
+            count = 1
             if qList[i].GetType() == "FillingQuestion":
-                questionIndex = "(" + str(i + 1) + ") " #題號
+                questionIndex = "(" + str(count) + ") " #題號
+                count += 1
                 if haveAnswer:
                     question = qList[i].GetAnswer()
                 else:
@@ -305,7 +307,7 @@ class ReviseMakeQuestionPage(QMainWindow):
         for question in qList:
             if question.GetType() == "SelectQuestion":
                 if haveAnswer:
-                    answer_area = "( {0} )".format(str(question.GetAnswer()))
+                    answer_area = "( {0} )".format(" ".join(question.GetAnswer()))
                 else:
                     answer_area = "( {0} )".format(" ")
                 questionIndex = "(" + str(count) + ") "
@@ -325,7 +327,7 @@ class ReviseMakeQuestionPage(QMainWindow):
 
                 # 新增選項
                 option_count = 1
-                for k, options in question.option.items():
+                for options in question.option:
                     run.add_break()
                     option = "(" + str(option_count) + ") " + options.GetContent()
                     option_count += 1

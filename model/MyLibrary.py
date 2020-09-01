@@ -189,6 +189,9 @@ class QDSSolution(object):
     def SetImages(self, images):
         self.Images = images
 
+    def GetType(self):
+        return "Solution"
+
 # 依照list 取得資料夾路徑
 def GetFolderPathByList(dir_list):
     dir_path = "database"

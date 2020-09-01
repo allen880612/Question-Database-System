@@ -78,6 +78,14 @@ def InsertImage(database, q_id, source, image_blob):
 	# 在更新他
 	UpdateImage(database, id, image_blob)
 
+# 插入詳解
+def InsertSolution(database, q_id, source, solution):
+	cursor = database.cursor()
+	content = solution.GetContent()
+	query = "INSERT INTO `Solution` (`Question_Id`, `Source`, `Content`) VALUES (%s, %s, %s);"
+	ExecuteAlterCommand(database, cursor, query, (q_id, source, content))
+	return int(cursor.lastrowid)
+
 # 更新圖片
 def UpdateImage(database, id, image_blob):
 	cursor = database.cursor()
@@ -175,6 +183,13 @@ def UpdateSelectQuestion(database, question):
 	parement = (q_content, q_answer, option_content[0], option_content[1], option_content[2], option_content[3], option_content[4], option_content[5], option_content[6], option_content[7], q_id)
 	ExecuteAlterCommand(database, cursor, query, parement)
 
+# 更新詳解
+def UpdateSolution(database, q_id, source, solution):
+	cursor = database.cursor()
+	content = solution.GetContent()
+	query = "UPDATE Solution SET `Content`='{0}' WHERE `Question_Id`={1} and `Source`='{2}'".format(content, q_id, source)
+	ExecuteAlterCommand(database, cursor, query)
+
 # 得到所有路徑 (return list[str])
 def GetTotalPath(database):
 	handler = database.cursor()
@@ -214,6 +229,27 @@ def SearchPathId(database, question_level=[[]]):
 	path_id = [int(tup[0]) for tup in handler.fetchall()]
 	return path_id
 
+# 查詢詳解 (return QDS Solution)
+def SearchSolution(database, q_id, source):
+	cursor = database.cursor()
+	query = "SELECT `Id`, `Content` FROM Solution WHERE `Question_Id`={0} and `Source`='{1}';".format(q_id, source)
+	cursor.execute(query)
+	data = cursor.fetchone()
+	if data is None:
+		return None
+
+	# (id, Content)
+	solution = MyLibrary.QDSSolution(int(data[0]), data[1])
+	image_result = SearchImageByQuestion(database, q_id, solution.GetType())
+	image_list = []
+	for data in image_result:
+		image_id = int(data[0])
+		image_content = data[1]
+		image_list.append(MyLibrary.QDSTempImage(image_content, image_id, isOnServer=True, isUpdated=False))
+
+	solution.SetImages(image_list)
+	return solution
+
 # 以路徑搜尋Question (return Question List) (目前只搜尋填充題)
 def SearchQuestionByPath(database, path_id):
 	handler = database.cursor()
@@ -226,7 +262,7 @@ def SearchQuestionByPath(database, path_id):
 		q_id = data[0]
 		q_source = "FillingQuestion"
 		q_content = data[2]
-		# 建立圖片
+		# 建立題目圖片
 		images = SearchImageByQuestion(database, q_id, q_source) # 搜尋圖片 -> (id, image) <- 這句跑得有點慢 優化沒做好
 		image_list = []
 		for qds_temp_image in images:
@@ -234,12 +270,17 @@ def SearchQuestionByPath(database, path_id):
 			image_content = qds_temp_image[1]
 			image_list.append(MyLibrary.QDSTempImage(image_content, image_id, isOnServer=True, isUpdated=False))
 
+		# 查詢詳解
+		solution = SearchSolution(database, q_id, q_source)
 		# 新增進題目List
-		qList.append(MyLibrary.Question(q_id, q_content, qnumber=count, images=image_list))
+		newQuestion = MyLibrary.Question(q_id, q_content, qnumber=count, images=image_list)
+		newQuestion.SetSolution(solution)
+		qList.append(newQuestion)
 		count+=1
+
 	return qList
 
-# 以路徑搜尋Question (return Question List) (搜尋選擇題) *待修正
+# 以路徑搜尋Question (return Question List) (搜尋選擇題)
 def SearchSelectQuestionByPath(database, path_id):
 	handler = database.cursor()
 	query = "SELECT * FROM SelectQuestion WHERE SelectQuestion.Path_Id={0};".format(str(path_id))
@@ -292,6 +333,8 @@ def SearchSelectQuestionByPath(database, path_id):
 		#select_question.option.append(MyLibrary.SelectOption(6, q_option_content[5], imageList[6]))
 		#select_question.option.append(MyLibrary.SelectOption(7, q_option_content[6], imageList[7]))
 		#select_question.option.append(MyLibrary.SelectOption(8, q_option_content[7], imageList[8]))
+		solution = SearchSolution(database, q_id, q_source)
+		select_question.SetSolution(solution)
 		qList.append(select_question)
 
 		print(q_answer)

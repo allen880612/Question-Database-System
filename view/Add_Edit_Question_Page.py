@@ -100,6 +100,8 @@ class AddEditQuestionPage(QMainWindow):
 
         self.ui.button_solution.clicked.connect(self.OpenAddSolutionView)
 
+        self.Add_Solution_View.solution_signal.connect(self.CloseAddSolutionView)
+
         # 新增單元 視窗 (移到選擇路徑畫面)
         # self.ui.button_add_unit.clicked.connect(self.OpenAddUnitView)
         # self.Add_Unit_View.add_unit_signal.connect(self.GetADdUnitViewData)
@@ -109,6 +111,7 @@ class AddEditQuestionPage(QMainWindow):
         defaultString = self.model.DefaultString_NoSelect
         self.question_mode = ""
         self.ClickAddMode()
+        self.ClickFillingQuestionMode()
         self.ui.radioButton_FillingQuestion.click()
         self.ui.label_question_level.setText(MyLibrary.GetQuestionShowText(self.question_level))
         self.mode = self.MODE_ADD_QUESTION
@@ -164,6 +167,7 @@ class AddEditQuestionPage(QMainWindow):
         self.LoadQuestionList()
         self.ui.label_image_preview.clear() # 清空預覽圖片
         self.ui.button_add_question.setText("儲存題目")
+        self.solution = None # 詳解歸零
         # 取消顯示兩個radio button
         self.ui.radioButton_FillingQuestion.setVisible(False)
         self.ui.radioButton_SelectQuestion.setVisible(False)
@@ -181,6 +185,7 @@ class AddEditQuestionPage(QMainWindow):
         self.LoadQuestionList()
         self.ui.label_image_preview.clear() # 清空預覽圖片
         self.ui.button_add_question.setText("新增題目")
+        self.solution = None # 詳解歸零
         # 顯示兩個radio button
         self.ui.radioButton_FillingQuestion.setVisible(True)
         self.ui.radioButton_SelectQuestion.setVisible(True)
@@ -195,18 +200,22 @@ class AddEditQuestionPage(QMainWindow):
 
             self.ui.text_edit_question.clear()
             self.tmp_SelectQuestion = None
+            self.solution = None # 詳解歸零
+
     # 切換至選擇題模式
     def ClickSelectQuestionMode(self):
         if self.question_mode != self.MODE_SELECT_QUESTION:
             self.question_mode = self.MODE_SELECT_QUESTION
             
+            self.tmp_SelectQuestion = MyLibrary.SelectQuestion(0, "") # 重設新增選擇題題題
+
             self.ui.text_edit_question.clear()
             self.SetSelectQuestionMode()
 
             self.ui.list_weight_question.clear()
             self.ui.list_weight_question.addItem("question")
             #self.ui.list_weight_question.setCurrentRow(0)
-            self.tmp_SelectQuestion = MyLibrary.SelectQuestion(0, "") # 重設新增選擇題題題
+            self.solution = None # 詳解歸零
             self.select_question_edit_what = "question"
 
             for i in range(4):
@@ -285,19 +294,25 @@ class AddEditQuestionPage(QMainWindow):
             q_head = str(self.questionList[i].GetQuestionNumber()) + '. ' + (self.questionList[i].GetQuestion())[:20]
             self.ui.list_weight_question.addItem(q_head)
 
+        for q in self.questionList:
+            if q.GetSolution() is not None:
+                print(str(q.id) + " " + q.GetQuestion())
+
     # 真正新增題目
     def AddQuestion(self):
         # 新增填充題
         if self.question_mode == self.MODE_FILLING_QUESTION:
             newQuestion = MyLibrary.Question(0, self.ui.text_edit_question.toPlainText())
+            newQuestion.SetSolution(self.solution)
             self.model.AddFillingQuestion(newQuestion, self.question_level, self.imageList)
+            
             print("新增填充題 done")
 
         # 新增選擇題
         elif self.question_mode == self.MODE_SELECT_QUESTION:
             answer = self.GetSelectQuestionAnswerFromListWidget()
             self.tmp_SelectQuestion.SetAnswer(answer)
-
+            self.tmp_SelectQuestion.SetSolution(self.solution)
             # 跳出警示
             alert = self.GetStoreQuestionTips(self.tmp_SelectQuestion)
             if len(alert) != 0:
@@ -314,6 +329,7 @@ class AddEditQuestionPage(QMainWindow):
         self.model.CreateQDSLevel()
         self.temp_importImage = None # 清除上一題的圖片
         self.imageList = [] # 清除上一題的圖片
+        self.solution = None # 詳解歸零
     
     # 儲存題目資訊
     def StoreQuestion(self):
@@ -499,6 +515,7 @@ class AddEditQuestionPage(QMainWindow):
             # 編輯填充題
             if self.editQuestion.GetType() == "FillingQuestion":
                 self.tmp_SelectQuestion = None
+                self.solution = self.editQuestion.GetSolution() # 設置詳解
                 self.select_question_edit_what = ""
                 self.ui.label_image_preview.clear() # 清空預覽圖片
                 self.ui.text_edit_question.setPlainText(self.editQuestion.GetAnswer())
@@ -515,6 +532,7 @@ class AddEditQuestionPage(QMainWindow):
             elif self.editQuestion.GetType() == "SelectQuestion":
                 if self.tmp_SelectQuestion is None or self.tmp_SelectQuestion.id != self.editQuestion.id:
                     self.tmp_SelectQuestion = copy.deepcopy(self.editQuestion)
+                    self.solution = self.editQuestion.GetSolution() # 設置詳解
                 self.ui.list_widget_option.setCurrentRow(-1) # 選項列表取消Focus
                 self.select_question_edit_what = "question"
 
@@ -642,12 +660,29 @@ class AddEditQuestionPage(QMainWindow):
     def OpenAddSolutionView(self):
         if self.Is_solution_view_open == False:
             self.Is_solution_view_open = True
-
-
-
-            self.Add_Solution_View.SetSolution(None)
+            self.Add_Solution_View.SetSolution(self.solution)
             self.Add_Solution_View.ResetPage()
             self.Add_Solution_View.show()
 
-    def CloseAddSolutionView(self):
-        pass
+    # 離開 詳解頁後得到的參數
+    def CloseAddSolutionView(self, is_close, solution_list):
+        if is_close == True:
+            self.Is_solution_view_open = False
+            get_solution = solution_list[0]
+
+            if get_solution is not None:
+                have_Solution = True
+                if self.solution is None:
+                    have_Solution = False
+                    self.solution = MyLibrary.QDSSolution(-1, "")
+                self.Add_Solution_View.DeepCopySolution(self.solution, get_solution)
+                print(self.solution.GetContent())
+
+                if self.mode == self.MODE_EDIT_QUESTION:
+                    if have_Solution == True:
+                        self.model.UpdateSolution(self.editQuestion)
+                        print("edit mode - update solution - done")
+                    else:
+                        self.editQuestion.SetSolution(self.solution)
+                        self.model.AddSolution(self.editQuestion)
+                        print("edit mode - add solution - done")

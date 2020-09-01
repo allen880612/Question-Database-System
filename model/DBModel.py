@@ -85,8 +85,13 @@ class DBModel():
     def AddFillingQuestion(self, newQuestion, question_level, imageList):
         path_id = SQLExtend.SearchPathId(self.db, question_level)
         q_id = SQLExtend.InsertFillingQuestion(self.db, newQuestion, path_id[0])
+        newQuestion.id = q_id
+
         for qds_temp_image in imageList:
             self.AddImage(q_id, newQuestion.GetType(), qds_temp_image.GetBytes())
+
+        # 新增詳解
+        self.AddSolution(newQuestion)
 
     # 編輯填充問題
     def EditFillingQuestion(self, editQuestion):
@@ -97,7 +102,9 @@ class DBModel():
     def AddSelectQuestion(self, newQuestion, question_level):
         path_id = SQLExtend.SearchPathId(self.db, question_level)
         q_id = SQLExtend.InsertSelectQuestion(self.db, newQuestion, path_id[0])
+        newQuestion.id = q_id
         print(newQuestion.GetType())
+
         # 新增題目圖片
         for qds_temp_image in newQuestion.GetImages():
             self.AddImage(q_id, newQuestion.GetType(), qds_temp_image.GetBytes())
@@ -135,6 +142,25 @@ class DBModel():
                 elif image.IsOnServer == False and image.IsShowOnListWidget == True:
                     self.AddImage(q_id, q_type, image.GetBytes()) # 新增圖片
                     image.IsOnServer = True
+    
+    # 新增詳解
+    def AddSolution(self, question):
+        solution = question.GetSolution()
+        if solution is None:
+            return
+
+        SQLExtend.InsertSolution(self.db, question.id, question.GetType(), solution)
+        self.UpdateDBImageList(solution.GetImages(), question.id, solution.GetType())
+
+    # 更新詳解
+    def UpdateSolution(self, question):
+        solution = question.GetSolution()
+        if solution is None:
+            return
+
+        SQLExtend.UpdateSolution(self.db, question.id, question.GetType(), solution)
+        self.UpdateDBImageList(solution.GetImages(), question.id, solution.GetType())
+
 
     # 用question 得到圖片群
     def GetImagesByQuestion(self, question):

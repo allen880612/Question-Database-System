@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>669</width>
-    <height>409</height>
+    <height>385</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -68,16 +68,19 @@
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="3" column="0">
          <widget class="QLabel" name="label_preview_image">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
-            <verstretch>128</verstretch>
+            <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="minimumSize">
            <size>
-            <width>256</width>
-            <height>96</height>
+            <width>0</width>
+            <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
@@ -105,7 +108,14 @@
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QListWidget" name="list_widget_image"/>
+         <widget class="QListWidget" name="list_widget_image">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
         </item>
         <item row="2" column="0">
          <widget class="QLabel" name="label_image_preview_title">
@@ -122,7 +132,7 @@
           <item>
            <widget class="QPushButton" name="button_add_image">
             <property name="text">
-             <string>新增圖片</string>
+             <string>匯入圖片</string>
             </property>
            </widget>
           </item>

@@ -134,7 +134,7 @@ class AddEditQuestionPage_UI(object):
         self.gridLayout_3.addLayout(self.verticalLayout_questionList, 4, 1, 1, 1)
         self.list_weight_image = QtWidgets.QListWidget(self.centralwidget)
         self.list_weight_image.setEnabled(True)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.list_weight_image.sizePolicy().hasHeightForWidth())

@@ -5,6 +5,7 @@ from PyQt5.QtGui import QPixmap
 from model import MyLibrary
 from view.UI import Add_Edit_Question_UI
 from view import Add_Unit_Page
+from view import Add_Solution_Page
 import PIL
 import pathlib
 import copy
@@ -54,10 +55,18 @@ class AddEditQuestionPage(QMainWindow):
         # 編輯的問題
         self.editQuestion = None
 
+        # 詳解
+        self.solution = None
+
         #region 新增單元 視窗 變數 (移到主畫面)
         #self.Add_Unit_View = Add_Unit_Page.AddUnitPage(self.model)
         #self.Add_Unit_View.setWindowModality(Qt.ApplicationModal)
         #endregion
+
+        # 詳解視窗
+        self.Add_Solution_View = Add_Solution_Page.AddSolutionPage(self.model)
+        self.Add_Solution_View.setWindowModality(Qt.ApplicationModal)
+        self.Is_solution_view_open = False
 
         self.Initialize()
 
@@ -89,6 +98,8 @@ class AddEditQuestionPage(QMainWindow):
 
         self.ui.text_edit_question.textChanged.connect(lambda: self.InputTextEdit(self.ui.text_edit_question))
 
+        self.ui.button_solution.clicked.connect(self.OpenAddSolutionView)
+
         # 新增單元 視窗 (移到選擇路徑畫面)
         # self.ui.button_add_unit.clicked.connect(self.OpenAddUnitView)
         # self.Add_Unit_View.add_unit_signal.connect(self.GetADdUnitViewData)
@@ -102,6 +113,8 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.label_question_level.setText(MyLibrary.GetQuestionShowText(self.question_level))
         self.mode = self.MODE_ADD_QUESTION
         self.question_mode = self.MODE_FILLING_QUESTION
+
+        self.Is_solution_view_option = False
 
     # 新增按鈕是否可以按下
     def GetAddQuestionButtonEnable(self):
@@ -623,3 +636,18 @@ class AddEditQuestionPage(QMainWindow):
 
     def ShowTips(self, information):
         QMessageBox.information(self, "警告", information, QMessageBox.Yes)
+
+    ##################################
+    # 新增詳解相關函數
+    def OpenAddSolutionView(self):
+        if self.Is_solution_view_open == False:
+            self.Is_solution_view_open = True
+
+
+
+            self.Add_Solution_View.SetSolution(None)
+            self.Add_Solution_View.ResetPage()
+            self.Add_Solution_View.show()
+
+    def CloseAddSolutionView(self):
+        pass

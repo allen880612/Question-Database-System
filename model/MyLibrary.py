@@ -27,6 +27,7 @@ class Question(object):
         self.question = self.DeleteAnswer(content)
         self.question_number = qnumber
         self.id = id
+        self.Solution = None
 
     def GetAnswer(self):
         return self.answer
@@ -68,6 +69,12 @@ class Question(object):
             elif ch == '】':
                 addMode = True
         return newQuestion
+
+    def GetSolution(self):
+        return self.Solution
+
+    def SetSolution(self, solution):
+        self.Solution = solution
 
 class SelectQuestion(Question):
     def __init__(self, id, content, qnumber=0, images=[], isUpdate=True):
@@ -160,6 +167,27 @@ class QDSTempImage(object):
     # 轉換給word用的
     def GetWordImage(self):
         return BytesIO(self.GetBytes())
+
+class QDSSolution(object):
+    def __init__(self, id, content, images=[]):
+        self.Id = id
+        self.Content = content
+        self.Images = images
+    
+    def GetId(self):
+        return self.Id
+    
+    def GetContent(self):
+        return self.Content
+
+    def SetContent(self, content):
+        self.Content = content
+
+    def GetImages(self):
+        return self.Images
+
+    def SetImages(self, images):
+        self.Images = images
 
 # 依照list 取得資料夾路徑
 def GetFolderPathByList(dir_list):

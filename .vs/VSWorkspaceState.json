@@ -4,10 +4,8 @@
     "\\controller",
     "\\model",
     "\\test",
-    "\\view",
-    "\\view\\UI",
-    "\\word"
+    "\\view"
   ],
-  "SelectedNode": "\\view\\Revise_MakeQuestion_Page.py",
+  "SelectedNode": "\\test\\TestGetCopyBoardImage.py",
   "PreviewInSolutionExplorer": false
 }

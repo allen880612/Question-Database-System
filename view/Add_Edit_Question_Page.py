@@ -101,6 +101,7 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.button_solution.clicked.connect(self.OpenAddSolutionView)
 
         self.Add_Solution_View.solution_signal.connect(self.CloseAddSolutionView)
+        self.ui.text_edit_question.selectionChanged.connect(self.HandleSelect)
 
         # 新增單元 視窗 (移到選擇路徑畫面)
         # self.ui.button_add_unit.clicked.connect(self.OpenAddUnitView)
@@ -686,3 +687,12 @@ class AddEditQuestionPage(QMainWindow):
                         self.editQuestion.SetSolution(self.solution)
                         self.model.AddSolution(self.editQuestion)
                         print("edit mode - add solution - done")
+
+    # 處理題目框中選取到的文字
+    def HandleSelect(self):
+        cursor = self.ui.text_edit_question.textCursor()
+        questionContent = self.ui.text_edit_question.toPlainText()
+        selectStart = cursor.selectionStart()
+        selectEnd = cursor.selectionEnd()
+        print ("Selection start: %d end: %d" % (selectStart, selectEnd))
+        print ("Selected content : %s" % (questionContent[selectStart:selectEnd]))

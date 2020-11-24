@@ -174,6 +174,14 @@ class DBModel():
 
         return imageList
 
+
+    # 得到所有的科目 (return list)
+    def GetSubjectNameList(self):
+        subject_list = SQLExtend.GetTotalSubjectName(self.db)
+        return subject_list
+
+    # 開啟 SQL區
+
     # 開啟Proxy
     def StartProxy(self):
         exe_name = "cloud_sql_proxy.exe"

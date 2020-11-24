@@ -175,7 +175,8 @@ class AddEditQuestionPage(QMainWindow):
         temp_importImage = None
         self.LoadQuestionList()
         self.ui.label_image_preview.clear() # 清空預覽圖片
-        self.ui.button_add_question.setText("儲存題目")
+        self.ui.button_add_question.setText("儲存")
+        self.ui.label_add_edit_question.setText("修改題目")
         self.solution = None # 詳解歸零
         # 取消顯示兩個radio button
         self.ui.radioButton_FillingQuestion.setVisible(False)
@@ -193,7 +194,8 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.list_weight_question.clear()
         self.LoadQuestionList()
         self.ui.label_image_preview.clear() # 清空預覽圖片
-        self.ui.button_add_question.setText("新增題目")
+        self.ui.button_add_question.setText("新增")
+        self.ui.label_add_edit_question.setText("新增題目")
         self.solution = None # 詳解歸零
         # 顯示兩個radio button
         self.ui.radioButton_FillingQuestion.setVisible(True)

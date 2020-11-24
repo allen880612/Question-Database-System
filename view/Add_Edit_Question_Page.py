@@ -417,8 +417,12 @@ class AddEditQuestionPage(QMainWindow):
             newTempImage = MyLibrary.QDSTempImage(byte_content)
             self.temp_importImage = newTempImage
 
-            qImage = ImageQt(img)
-            pixmap = QPixmap.fromImage(qImage)
+            # PIL Image > QImage > QPixmap
+            #qImage = ImageQt(img)
+            #pixmap = QPixmap.fromImage(qImage)
+
+            pixmap = newTempImage.GetPixmap()
+            pixmap = self.FormatImage(pixmap)
 
             self.ui.label_image_preview.setPixmap(pixmap)
             self.UpdateUI() # 更新UI

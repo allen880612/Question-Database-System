@@ -313,7 +313,7 @@ class SelectQuestionPage(QMainWindow):
         newLine.setFrameShadow(QtWidgets.QFrame.Sunken)
         newLine.setObjectName("line")
         newLine.setVisible(True)
-        layout.addWidget(newLine, 0, QtCore.Qt.AlignTop)
+        layout.addWidget(newLine, 0, QtCore.Qt.AlignVCenter)
         self.space_line_dict[layout].append(newLine)
         return
 

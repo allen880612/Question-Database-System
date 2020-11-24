@@ -157,3 +157,7 @@ class QLTNode(object):
 	def AddNode(self, node):
 		self.childList.append(node)
 
+	def GetQuestionLevelExcludeSelf(self):
+		returner = copy.deepcopy(self.questionLevel)
+		returner.pop()
+		return returner

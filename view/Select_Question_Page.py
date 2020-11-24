@@ -27,6 +27,8 @@ class SelectQuestionPage(QMainWindow):
         self.checkboxDict = {}
         # verticalLayout Dict (收集checkbox)
         self.layoutDict = {self.ui.verticalLayout_lv1 : [], self.ui.verticalLayout_lv2 : [], self.ui.verticalLayout_lv3 : [], self.ui.verticalLayout_lv4 : [], self.ui.verticalLayout_lv5 : []} 
+        # 分隔線Dict
+        self.space_line_dict = {self.ui.verticalLayout_lv1 : [], self.ui.verticalLayout_lv2 : [], self.ui.verticalLayout_lv3 : [], self.ui.verticalLayout_lv4 : [], self.ui.verticalLayout_lv5 : []} 
 
         # 確定選到葉節點的 level (list of node list, no sort)
         self.checkbox_leaf_list = []
@@ -80,6 +82,13 @@ class SelectQuestionPage(QMainWindow):
         self.layoutDict[self.ui.verticalLayout_lv4] = []
         self.layoutDict[self.ui.verticalLayout_lv5] = []
 
+        self.space_line_dict = {}
+        self.space_line_dict[self.ui.verticalLayout_lv1] = []
+        self.space_line_dict[self.ui.verticalLayout_lv2] = []
+        self.space_line_dict[self.ui.verticalLayout_lv3] = []
+        self.space_line_dict[self.ui.verticalLayout_lv4] = []
+        self.space_line_dict[self.ui.verticalLayout_lv5] = []
+
         # reset checkbox dict
         self.checkboxDict = {}
         show_QTLNode_list = self.QLT.GetNodeByLevel(0)
@@ -101,11 +110,18 @@ class SelectQuestionPage(QMainWindow):
     def ResetLayout(self, layout_level):
         show_QTLNode_list = self.QLT.GetNodeByLevel(layout_level)
         layout = self.questionLevelLayout[layout_level]
+        last_question_level = []
+        last_node = None
         for node in show_QTLNode_list:
+            preList = node.GetQuestionLevelExcludeSelf()
+
+            if preList != last_question_level and (last_node is not None and last_node.isShow and node.isShow):
+                # 創立分隔線
+                self.CreateSpaceLine(layout)
+                print(node.name)
+
             if node.isShow:
                 checkbox_name = self.CreateCheckboxObjectName(layout_level)
-                preList = copy.deepcopy(node.questionLevel)
-                preList.pop()
                 self.AddCheckbox(node.name, checkbox_name, layout_level, preList, node.isCheck)
 
             if (node.isCheck) and (len(node.childList) == 0) and (node not in self.checkbox_leaf_list):
@@ -113,12 +129,23 @@ class SelectQuestionPage(QMainWindow):
             elif (node.isCheck == False) and (node in self.checkbox_leaf_list):
                 self.checkbox_leaf_list.remove(node)
 
+            last_question_level = preList
+            last_node = node
+
     # 刪除 layout 所有的element (checkbox)
     def DeleteLayoutElement(self, layout):
         del_layoutElement_list = self.layoutDict[layout]
         for del_cbox in del_layoutElement_list:
             self.DeleteCheckbox(del_cbox)
         self.layoutDict[layout].clear()
+
+        # 清除分隔線
+        del_space_line_list = self.space_line_dict[layout]
+        for space_line in del_space_line_list:
+            space_line.setVisible(False)
+            layout.removeWidget(space_line)
+            del space_line
+        self.space_line_dict[layout].clear()
 
     # Add check box (顯示文字, checkbox物件名稱, layout第幾層, 問題的層路徑, 有是否被勾選)
     def AddCheckbox(self, show_text, checkbox_name, layoutLevel, preQuestionLevel, isCheck=False):
@@ -278,6 +305,19 @@ class SelectQuestionPage(QMainWindow):
         for node in self.checkbox_leaf_list:
             leaf_strlist.append(node.questionLevel)
         return leaf_strlist
+
+    # 創立分隔線
+    def CreateSpaceLine(self, layout):
+        newLine = QtWidgets.QFrame(self.ui.centralwidget)
+        newLine.setFrameShape(QtWidgets.QFrame.HLine)
+        newLine.setFrameShadow(QtWidgets.QFrame.Sunken)
+        newLine.setObjectName("line")
+        newLine.setVisible(True)
+        layout.addWidget(newLine, 0, QtCore.Qt.AlignVCenter)
+        self.space_line_dict[layout].append(newLine)
+        return
+
+    ### 視窗區 ###
 
     # 開啟 新增單元 視窗
     def OpenAddUnitView(self):

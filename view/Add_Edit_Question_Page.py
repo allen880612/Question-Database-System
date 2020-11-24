@@ -10,6 +10,8 @@ import PIL
 import pathlib
 import copy
 import os
+from PIL.ImageQt import ImageQt
+from PIL import ImageGrab
 
 class AddEditQuestionPage(QMainWindow):
 
@@ -106,6 +108,12 @@ class AddEditQuestionPage(QMainWindow):
         # 新增單元 視窗 (移到選擇路徑畫面)
         # self.ui.button_add_unit.clicked.connect(self.OpenAddUnitView)
         # self.Add_Unit_View.add_unit_signal.connect(self.GetADdUnitViewData)
+
+    # 覆寫按鍵 event
+    def keyPressEvent(self, e):
+        if int(e.modifiers() == (Qt.ControlModifier)):
+            if e.key() == Qt.Key_V:
+                self.PasteImageFromClipboard()
 
     # 重設頁面
     def ResetPage(self):
@@ -397,8 +405,26 @@ class AddEditQuestionPage(QMainWindow):
 
         pixmap = newTempImage.GetPixmap()
         pixmap = self.FormatImage(pixmap)
+
         self.ui.label_image_preview.setPixmap(pixmap)
         self.UpdateUI() # 更新UI
+
+    # 由剪貼板貼上圖片
+    def PasteImageFromClipboard(self):
+        img = ImageGrab.grabclipboard()
+        if img:
+            byte_content = MyLibrary.ConvertPILImageToBinaryData(img) # binary data
+            newTempImage = MyLibrary.QDSTempImage(byte_content)
+            self.temp_importImage = newTempImage
+
+            qImage = ImageQt(img)
+            pixmap = QPixmap.fromImage(qImage)
+
+            self.ui.label_image_preview.setPixmap(pixmap)
+            self.UpdateUI() # 更新UI
+        else:
+            alert = '剪貼簿目前沒有內容，無法貼上!!\n請先複製Word之圖片'
+            self.ShowTips(alert)
 
     # 新增至圖片列表
     def AddToImageList(self):

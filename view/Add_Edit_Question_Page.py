@@ -10,6 +10,8 @@ import PIL
 import pathlib
 import copy
 import os
+from PIL.ImageQt import ImageQt
+from PIL import ImageGrab
 
 class AddEditQuestionPage(QMainWindow):
 
@@ -107,6 +109,12 @@ class AddEditQuestionPage(QMainWindow):
         # self.ui.button_add_unit.clicked.connect(self.OpenAddUnitView)
         # self.Add_Unit_View.add_unit_signal.connect(self.GetADdUnitViewData)
 
+    # 覆寫按鍵 event
+    def keyPressEvent(self, e):
+        if int(e.modifiers() == (Qt.ControlModifier)):
+            if e.key() == Qt.Key_V:
+                self.PasteImageFromClipboard()
+
     # 重設頁面
     def ResetPage(self):
         defaultString = self.model.DefaultString_NoSelect
@@ -167,7 +175,8 @@ class AddEditQuestionPage(QMainWindow):
         temp_importImage = None
         self.LoadQuestionList()
         self.ui.label_image_preview.clear() # 清空預覽圖片
-        self.ui.button_add_question.setText("儲存題目")
+        self.ui.button_add_question.setText("儲存")
+        self.ui.label_add_edit_question.setText("修改題目")
         self.solution = None # 詳解歸零
         # 取消顯示兩個radio button
         self.ui.radioButton_FillingQuestion.setVisible(False)
@@ -185,7 +194,8 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.list_weight_question.clear()
         self.LoadQuestionList()
         self.ui.label_image_preview.clear() # 清空預覽圖片
-        self.ui.button_add_question.setText("新增題目")
+        self.ui.button_add_question.setText("新增")
+        self.ui.label_add_edit_question.setText("新增題目")
         self.solution = None # 詳解歸零
         # 顯示兩個radio button
         self.ui.radioButton_FillingQuestion.setVisible(True)
@@ -397,8 +407,30 @@ class AddEditQuestionPage(QMainWindow):
 
         pixmap = newTempImage.GetPixmap()
         pixmap = self.FormatImage(pixmap)
+
         self.ui.label_image_preview.setPixmap(pixmap)
         self.UpdateUI() # 更新UI
+
+    # 由剪貼板貼上圖片
+    def PasteImageFromClipboard(self):
+        img = ImageGrab.grabclipboard()
+        if img:
+            byte_content = MyLibrary.ConvertPILImageToBinaryData(img) # binary data
+            newTempImage = MyLibrary.QDSTempImage(byte_content)
+            self.temp_importImage = newTempImage
+
+            # PIL Image > QImage > QPixmap
+            #qImage = ImageQt(img)
+            #pixmap = QPixmap.fromImage(qImage)
+
+            pixmap = newTempImage.GetPixmap()
+            pixmap = self.FormatImage(pixmap)
+
+            self.ui.label_image_preview.setPixmap(pixmap)
+            self.UpdateUI() # 更新UI
+        else:
+            alert = '剪貼簿目前沒有內容，無法貼上!!\n請先複製Word之圖片'
+            self.ShowTips(alert)
 
     # 新增至圖片列表
     def AddToImageList(self):

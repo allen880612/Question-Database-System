@@ -29,5 +29,12 @@ def ConvertImageToByteArray(image:Image):
 
 img = ImageGrab.grabclipboard()
 #im.save('somefile.png','PNG')
-print ( ConvertImageToByteArray( img ) )
-img.show()
+#print ( ConvertImageToByteArray( img ) )
+if img:
+	img.show()
+
+# 轉成 QPixmap
+from PIL.ImageQt import ImageQt
+
+qim = ImageQt(im)
+pix = QPixmap.fromImage(qim)

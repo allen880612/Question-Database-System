@@ -5,6 +5,7 @@ from PIL import Image, ImageQt
 from PyQt5.QtCore import Qt
 from io import BytesIO
 
+
 # 刪除串列中重複的元素 (然後照加入順序排)
 def DeleteRepeatElement(oldList):
     newList = list(set(oldList))  # 以集合刪除重複tuple
@@ -229,11 +230,18 @@ def CheckListDimension(check_list):
     return dimesion
 
 # 讀取圖片變成二進制檔
-def ConvertToBinaryData(fileName):
+def ConvertToBinaryData(fileName:str):
     # Convert digital data to binary format
     with open(fileName, 'rb') as file:
         binaryData = file.read()
     return binaryData
+
+# 將PIL image 轉換成 二進制檔
+def ConvertPILImageToBinaryData(image:Image):
+  imgByteArr = BytesIO()
+  image.save(imgByteArr, format=image.format)
+  imgByteArr = imgByteArr.getvalue()
+  return imgByteArr
 
 # 真實開啟word
 def OpenWord(file_name):

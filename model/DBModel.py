@@ -205,5 +205,5 @@ class DBModel():
 
     # 連結 SQL資料庫
     def ConnectDatabase(self):
-        #self.UseProxy()
-        self.UseSQLIP()
+        self.UseProxy()
+        #self.UseSQLIP()

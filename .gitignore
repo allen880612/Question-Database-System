@@ -4,3 +4,4 @@
 .vs/slnx.sqlite
 *.pyc
 model/__pycache__/ExcelModel.cpython-37.pyc
+*.pyc

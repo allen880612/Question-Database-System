@@ -3,6 +3,7 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 from view.UI import Revise_MakeQuestion_UI 
 from view import ComboboxView as cbview
 from model import MyLibrary
+from controller import QuestionParser
 import random
 import os
 import docx
@@ -268,6 +269,7 @@ class ReviseMakeQuestionPage(QMainWindow):
         # where am I? who am I???
         questionStyle._element.rPr.rFonts.set(docx.oxml.ns.qn("w:eastAsia"), "細明體") #設定中文字體
         # 設定凸排, su go i ne, my Python
+
         questionStyle.paragraph_format.first_line_indent = docx.shared.Pt(-24) # 設定首縮排/凸排 (正值 = 縮排, 負值 = 凸排)
         questionStyle.paragraph_format.left_indent = docx.shared.Pt(24) # ↓注意，重點來了，設定"整個段落"縮排  (正常來說應該不用設定，但是設定凸排的時候，他會順便把整個段落也往左移動，所以要他媽的移回來)
 
@@ -279,8 +281,9 @@ class ReviseMakeQuestionPage(QMainWindow):
         selectQuestionStyle.paragraph_format.first_line_indent = docx.shared.Pt(-30)
         selectQuestionStyle.paragraph_format.left_indent = docx.shared.Pt(30) 
 
-
         #新增題目 - 填充題
+        filling_question_paser = QuestionParser.QuestionParser()
+
         if self.HaveFillingQuestion(qList):
             paragraph = word.add_paragraph("一、填充題", style = "main_phase")
             count = 1
@@ -295,7 +298,13 @@ class ReviseMakeQuestionPage(QMainWindow):
                     question = (qList[i].GetAnswer())
                 else:
                     question = qList[i].Convert2WordContent(qList[i].GetQuestion())
-                paragraph = word.add_paragraph(questionIndex + question, style = "question")
+
+                #paragraph = word.add_paragraph(questionIndex + question, style = "question")
+                paragraph = word.add_paragraph( questionIndex, questionStyle )
+                filling_question_paser.Initialize( question, paragraph)
+                filling_question_paser.ParseQuestion()
+
+
                 #paragraph = word.add_paragraph(questionIndex + questionList[i], style = "question") #題號 + 題目 一題作為一個段落
                 paragraph.alignment = 0 #設定段落對齊 0 = 靠左, 1 = 置中, 2 = 靠右, 3 = 左右對齊 (WD_PARAGRAPH_ALIGNMENT)
                 try:

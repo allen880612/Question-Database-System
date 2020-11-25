@@ -16,7 +16,7 @@ def GetMathEquationByString( question_string=str ):
 	#question_string = '1. x=(-b±sqrt(b^2-4ac))/(2a), 解b'
 	
 	# -預處理 
-	question_string = PreProcessQuestion( question_string )
+	question_string = PreProcessLine( question_string )
 	question_string = question_string.replace('√', 'sqrt')
 	# -儲存線段資訊
 	line_list = GetLineList( question_string )
@@ -34,7 +34,7 @@ def GetMathEquationByString( question_string=str ):
 
 
 # 針對線段的前處理
-def PreProcessQuestion( question_str=str ):
+def PreProcessLine( question_str=str ):
 	new_question = question_str.replace( '("', '' )
 	new_question = new_question.replace( '" )', '' )
 	return new_question
@@ -101,9 +101,9 @@ def BulidFormulaDict( question_string=str, hint_str='♥' ):
  formula字典 原字串-> 對應 XML encode 函式
  線段list
 '''
-def GetMathEquationByString2( question_string=str ):
+def EncodeSourceQuestion( question_string=str, hint_str='♥' ):
 	# 預處理 
-	question_string = PreProcessQuestion( question_string )
+	question_string = PreProcessLine( question_string )
 	question_string = question_string.replace('√', 'sqrt')
 	# 儲存線段資訊
 	line_list = GetLineList( question_string )
@@ -159,7 +159,7 @@ testLineQuestionP._element.append( GetMathEquationByString( overline_question_st
 
 # 測試 跟號, 分數, 次方
 testSqrtFracPowP = document.add_paragraph("測試跟號, 分數, 次方:")
-question_string = '1.{x=(-b±√(b^2-4ac))/(2a)}, 請問 a, b = ?'
+question_string = '1.♥x=(-b±√(b^2-4ac))/(2a)♥, 請問 a, b = ?'
 testSqrtFracPowP._element.append( GetMathEquationByString( question_string ) )
 #p.add_run(' = 題目後續')
 document.save("simpleEq.docx")

@@ -1,6 +1,6 @@
 from functools import partial
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMessageBox
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QFont
 from PyQt5 import QtCore, QtWidgets
 from model import MyLibrary
 from model import QtExtend
@@ -159,7 +159,15 @@ class SelectQuestionPage(QMainWindow):
     # Add check box (顯示文字, checkbox物件名稱, layout第幾層, 問題的層路徑, 有是否被勾選)
     def AddCheckbox(self, show_text, checkbox_name, layoutLevel, preQuestionLevel, isCheck=False):
         currentLayout = self.questionLevelLayout[layoutLevel] # 目前layout
+
+        # Set Font
+        font = QFont()
+        font.setFamily("微軟正黑體")
+        font.setPointSize(15)
+
+        # Set Checkbox
         new_checkbox = QtWidgets.QCheckBox(self.ui.centralwidget)
+        new_checkbox.setFont(font)
         new_checkbox.setText(show_text)
         new_checkbox.setObjectName(checkbox_name)
         new_checkbox.setChecked(isCheck)

@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QMainWindow, QMessageBox
+from PyQt5.QtGui import QFont
 from PyQt5 import QtCore, QtWidgets, QtGui
 from view.UI import Make_Question_UI_Test as mq_UI_Test
 from view.UI import Make_Question_UI as mq_UI
@@ -98,12 +99,21 @@ class MakeQuestionPage(QMainWindow):
         current_question_number = len(self.question_label)
         add_row = current_question_number + 1 # 要新增到的列的位置
 
+        # Set Font
+        font = QFont()
+        font.setFamily("微軟正黑體")
+        font.setPointSize(15)
+
+        # Set Label
         new_label = QtWidgets.QLabel(self.ui.centralwidget)
+        new_label.setFont(font)
         new_label.setText(MyLibrary.GetQuestionShowText(add_question_strlist))
         new_label.setObjectName(self.GetNewObjectName("label"))
         self.question_layout.addWidget(new_label, add_row, 2, 1, 1)
 
+        # Set Tbox
         new_tbox = QtWidgets.QLineEdit(self.ui.centralwidget)
+        new_tbox.setFont(font)
         new_tbox.setText(str(question_number))
         new_tbox.setObjectName(self.GetNewObjectName("textbox"))
         self.question_layout.addWidget(new_tbox, add_row, 3, 1, 1)

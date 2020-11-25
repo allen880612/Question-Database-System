@@ -41,6 +41,8 @@ def Show_SelectQuestionLevelPage():
 
 # 開啟選擇科目頁面
 def Show_SelectSubjectPage():
+    SelectSubjectPage.ResetPage()
+
     MakeQuestionPage.hide()
     AddEditQuestionPage.hide()
     SelectQuestionPage.hide()
@@ -71,6 +73,8 @@ if __name__ == '__main__':
 
     MakeQuestionPage.ui.button_return.clicked.connect(Show_SelectQuestionLevelPage) # 出題 -> 選擇路徑
     AddEditQuestionPage.ui.button_return.clicked.connect(Show_SelectQuestionLevelPage) # 新增題目 -> 選擇路徑
+
+    SelectQuestionPage.ui.button_return.clicked.connect(Show_SelectSubjectPage) # 選擇題目 -> 選擇科目
 
     SelectSubjectPage.ui.button_confirm.clicked.connect(Show_SelectQuestionLevelPage) # 選擇題目 -> 繼續選擇階層
     #MakeQuestionPage.make_question_signal.connect(SelectQuestionPage.GetQuestionLevelList)

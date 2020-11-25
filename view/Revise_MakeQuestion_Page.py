@@ -270,16 +270,16 @@ class ReviseMakeQuestionPage(QMainWindow):
         questionStyle._element.rPr.rFonts.set(docx.oxml.ns.qn("w:eastAsia"), "細明體") #設定中文字體
         # 設定凸排, su go i ne, my Python
 
-        questionStyle.paragraph_format.first_line_indent = docx.shared.Pt(-24) # 設定首縮排/凸排 (正值 = 縮排, 負值 = 凸排)
-        questionStyle.paragraph_format.left_indent = docx.shared.Pt(24) # ↓注意，重點來了，設定"整個段落"縮排  (正常來說應該不用設定，但是設定凸排的時候，他會順便把整個段落也往左移動，所以要他媽的移回來)
+        questionStyle.paragraph_format.first_line_indent = docx.shared.Pt(-18) # 設定首縮排/凸排 (正值 = 縮排, 負值 = 凸排)
+        questionStyle.paragraph_format.left_indent = docx.shared.Pt(18) # ↓注意，重點來了，設定"整個段落"縮排  (正常來說應該不用設定，但是設定凸排的時候，他會順便把整個段落也往左移動，所以要他媽的移回來)
 
         # 新增選擇題題目 style
         selectQuestionStyle = word.styles.add_style("select_question", docx.enum.style.WD_STYLE_TYPE.PARAGRAPH) #新增一樣式 (樣式名稱, 樣式類型)
         selectQuestionStyle.font.size = docx.shared.Pt(12) #更改此樣式的文字大小
         selectQuestionStyle.font.name = "Times New Roman" #設定英文字體
         selectQuestionStyle._element.rPr.rFonts.set(docx.oxml.ns.qn("w:eastAsia"), "細明體") #設定中文字體
-        selectQuestionStyle.paragraph_format.first_line_indent = docx.shared.Pt(-30)
-        selectQuestionStyle.paragraph_format.left_indent = docx.shared.Pt(30) 
+        selectQuestionStyle.paragraph_format.first_line_indent = docx.shared.Pt(-26)
+        selectQuestionStyle.paragraph_format.left_indent = docx.shared.Pt(26) 
 
         #新增題目 - 填充題
         filling_question_paser = QuestionParser.QuestionParser()
@@ -289,9 +289,10 @@ class ReviseMakeQuestionPage(QMainWindow):
             count = 1
         for i in range(0, len(qList)):
             if qList[i].GetType() == "FillingQuestion":
-                questionIndex = "(" + str(count) + ") " #題號
+                #questionIndex = "(" + str(count) + ") " #題號
+                questionIndex = str(count) + ". "
                 if count < 10:
-                    questionIndex += ' '
+                    questionIndex += '  '
 
                 count += 1
                 if haveAnswer:
@@ -331,7 +332,8 @@ class ReviseMakeQuestionPage(QMainWindow):
                     answer_area = "( {0} )".format(" ".join(question.GetAnswer()))
                 else:
                     answer_area = "(      )"
-                questionIndex = "(" + str(count) + ") "
+                #questionIndex = "(" + str(count) + ") "
+                questionIndex = str(count) + ". "
                 count += 1
                 question_area = answer_area + " " + questionIndex + question.GetQuestion()
 
@@ -350,7 +352,7 @@ class ReviseMakeQuestionPage(QMainWindow):
                 option_count = 1
                 for options in question.option:
                     run.add_break()
-                    option = "(" + str(option_count) + ") " + options.GetContent()
+                    option = "(" + self.ConvertOptionNumber2English(option_count) + ") " + options.GetContent()
                     option_count += 1
                     run = paragraph.add_run(option)
                     try:
@@ -379,3 +381,8 @@ class ReviseMakeQuestionPage(QMainWindow):
             if question.GetType() == "SelectQuestion":
                 return True
         return False
+
+    # 將選項的數字轉換成英文
+    def ConvertOptionNumber2English(self, number):
+        converter = [' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+        return converter[number % 8]

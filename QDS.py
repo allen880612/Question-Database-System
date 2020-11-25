@@ -31,6 +31,9 @@ def Show_AddEditQuestionPage():
 
 # 開啟選擇題目階層視窗
 def Show_SelectQuestionLevelPage():
+    SelectQuestionPage.SetSelectSubject(SelectSubjectPage.GetSelectSubject())
+    SelectQuestionPage.ResetPage()
+
     MakeQuestionPage.hide()
     AddEditQuestionPage.hide()
     SelectQuestionPage.show()

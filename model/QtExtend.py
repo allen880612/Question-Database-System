@@ -34,6 +34,32 @@ class QLT(object):
 			head.AddNode(new_node)
 			self.AddNode(new_node, qList, depth)
 
+	# 從指定科目下建造樹
+	def CreateTreeBySubject(self, subject):
+		# 重建樹
+		self.DeleteTree()
+		noselect_list = self.QDSLevel.get("NOSELECT", False)
+
+		if (noselect_list == False):
+			self.CreateTree()
+			return
+
+		if (subject in noselect_list):
+			print("???")
+			self.head_node = QLTNode(-1, subject, False, [subject], weight=self.node_count)
+			head = self.head_node
+			subject_list = self.QDSLevel.get(subject, False)
+			depth = 0
+			# 建第一層
+			for nodename in subject_list:
+				qList = [subject, nodename]
+				self.node_count += 1
+				new_node = QLTNode(0, nodename, False, [subject, nodename], weight=self.node_count, isShow=True)
+				head.AddNode(new_node)
+				self.AddNode(new_node, qList, depth)
+		else:
+			self.CreateTree()
+
 	# 在node下 再加一個node, questionLsit, depth
 	def AddNode(self, node, questionList, depth):
 		cb_list = self.QDSLevel.get(self.GetQuestionLevelTupleKey(questionList), False)
@@ -99,7 +125,8 @@ class QLT(object):
 	
 	# 刪除此樹
 	def DeleteTree(self):
-		del self.head_node # 直接刪除首節點，我不知道這樣垃圾回收會不會做事
+		if self.head_node is None:
+			del self.head_node # 直接刪除首節點，我不知道這樣垃圾回收會不會做事
 		#self.DeleteTree_DFS(self.head_node)
 
 	# ↑ DFS

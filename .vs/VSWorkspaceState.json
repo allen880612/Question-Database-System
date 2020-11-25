@@ -4,8 +4,9 @@
     "\\controller",
     "\\model",
     "\\test",
-    "\\view"
+    "\\view",
+    "\\view\\UI"
   ],
-  "SelectedNode": "\\view\\Select_Question_Page.py",
+  "SelectedNode": "\\view\\UI\\Select_Subject_UI.py",
   "PreviewInSolutionExplorer": false
 }

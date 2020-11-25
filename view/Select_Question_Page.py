@@ -33,6 +33,9 @@ class SelectQuestionPage(QMainWindow):
         # 確定選到葉節點的 level (list of node list, no sort)
         self.checkbox_leaf_list = []
 
+        # 目前選擇的科目
+        self.current_select_subject = "NOSELECT"
+
         # Question Level Tree
         self.QLT = QtExtend.QLT(self.model.QDSLevel)
 
@@ -66,9 +69,14 @@ class SelectQuestionPage(QMainWindow):
         self.ui.gridLayout.setVerticalSpacing(18)
         #self.ui.verticalLayout_lv1.setAlignment(QtCore.Qt.AlignTop)
         self.checkbox_leaf_list = []
+
         # reset Question Level Tree
-        self.QLT.CreateTree()
+        self.QLT.CreateTreeBySubject(self.current_select_subject)
         self.QLT.DFS()
+
+        kkk = self.QLT.GetNodeByLevel(1)
+        for k in kkk:
+            print(k.name)
         
         # reset layout
         for layout in self.questionLevelLayout:
@@ -95,7 +103,8 @@ class SelectQuestionPage(QMainWindow):
         print(len(show_QTLNode_list))
         for node in show_QTLNode_list:
             checkbox_name = self.CreateCheckboxObjectName(0)
-            self.AddCheckbox(node.name, checkbox_name, 0, [])
+            #self.AddCheckbox(node.name, checkbox_name, 0, [self.current_select_subject])
+            self.AddCheckbox(node.name, checkbox_name, 0, node.GetQuestionLevelExcludeSelf())
 
         self.UpdateUI()
 
@@ -316,6 +325,10 @@ class SelectQuestionPage(QMainWindow):
         layout.addWidget(newLine, 0, QtCore.Qt.AlignVCenter)
         self.space_line_dict[layout].append(newLine)
         return
+
+    # 設置選擇的科目
+    def SetSelectSubject(self, subject):
+        self.current_select_subject = subject
 
     ### 視窗區 ###
 

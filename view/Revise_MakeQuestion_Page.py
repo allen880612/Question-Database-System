@@ -261,28 +261,40 @@ class ReviseMakeQuestionPage(QMainWindow):
         mainPhaseStyle.font.name = "Times New Roman"
         mainPhaseStyle._element.rPr.rFonts.set(docx.oxml.ns.qn("w:eastAsia"), "細明體") #??? 過了兩年我還是看不太懂
 
-        #新增題目 style
+        # 新增題目 style
         questionStyle = word.styles.add_style("question", docx.enum.style.WD_STYLE_TYPE.PARAGRAPH) #新增一樣式 (樣式名稱, 樣式類型)
         questionStyle.font.size = docx.shared.Pt(12) #更改此樣式的文字大小
         questionStyle.font.name = "Times New Roman" #設定英文字體
         # where am I? who am I???
         questionStyle._element.rPr.rFonts.set(docx.oxml.ns.qn("w:eastAsia"), "細明體") #設定中文字體
         # 設定凸排, su go i ne, my Python
-        questionStyle.paragraph_format.first_line_indent = docx.shared.Pt(-18) # 設定首縮排/凸排 (正值 = 縮排, 負值 = 凸排)
-        questionStyle.paragraph_format.left_indent = docx.shared.Pt(18) # ↓注意，重點來了，設定"整個段落"縮排  (正常來說應該不用設定，但是設定凸排的時候，他會順便把整個段落也往左移動，所以要他媽的移回來)
+        questionStyle.paragraph_format.first_line_indent = docx.shared.Pt(-24) # 設定首縮排/凸排 (正值 = 縮排, 負值 = 凸排)
+        questionStyle.paragraph_format.left_indent = docx.shared.Pt(24) # ↓注意，重點來了，設定"整個段落"縮排  (正常來說應該不用設定，但是設定凸排的時候，他會順便把整個段落也往左移動，所以要他媽的移回來)
+
+        # 新增選擇題題目 style
+        selectQuestionStyle = word.styles.add_style("select_question", docx.enum.style.WD_STYLE_TYPE.PARAGRAPH) #新增一樣式 (樣式名稱, 樣式類型)
+        selectQuestionStyle.font.size = docx.shared.Pt(12) #更改此樣式的文字大小
+        selectQuestionStyle.font.name = "Times New Roman" #設定英文字體
+        selectQuestionStyle._element.rPr.rFonts.set(docx.oxml.ns.qn("w:eastAsia"), "細明體") #設定中文字體
+        selectQuestionStyle.paragraph_format.first_line_indent = docx.shared.Pt(-30)
+        selectQuestionStyle.paragraph_format.left_indent = docx.shared.Pt(30) 
+
 
         #新增題目 - 填充題
         if self.HaveFillingQuestion(qList):
             paragraph = word.add_paragraph("一、填充題", style = "main_phase")
-        for i in range(0, len(qList)):
             count = 1
+        for i in range(0, len(qList)):
             if qList[i].GetType() == "FillingQuestion":
                 questionIndex = "(" + str(count) + ") " #題號
+                if count < 10:
+                    questionIndex += ' '
+
                 count += 1
                 if haveAnswer:
-                    question = qList[i].GetAnswer()
+                    question = (qList[i].GetAnswer())
                 else:
-                    question = qList[i].GetQuestion()
+                    question = qList[i].Convert2WordContent(qList[i].GetQuestion())
                 paragraph = word.add_paragraph(questionIndex + question, style = "question")
                 #paragraph = word.add_paragraph(questionIndex + questionList[i], style = "question") #題號 + 題目 一題作為一個段落
                 paragraph.alignment = 0 #設定段落對齊 0 = 靠左, 1 = 置中, 2 = 靠右, 3 = 左右對齊 (WD_PARAGRAPH_ALIGNMENT)
@@ -309,12 +321,12 @@ class ReviseMakeQuestionPage(QMainWindow):
                 if haveAnswer:
                     answer_area = "( {0} )".format(" ".join(question.GetAnswer()))
                 else:
-                    answer_area = "( {0} )".format(" ")
+                    answer_area = "(      )"
                 questionIndex = "(" + str(count) + ") "
                 count += 1
                 question_area = answer_area + " " + questionIndex + question.GetQuestion()
 
-                paragraph = word.add_paragraph(question_area, style = "question")
+                paragraph = word.add_paragraph(question_area, style = "select_question")
                 paragraph.alignment = 0
                 run = paragraph.add_run()
                 try:

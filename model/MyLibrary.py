@@ -77,6 +77,21 @@ class Question(object):
     def SetSolution(self, solution):
         self.Solution = solution
 
+    # Convert 字串 成為 word輸出格式 (題目+3+3空白)
+    def Convert2WordContent(self, str):
+        newQuestion = ""
+        addMode = True  # Mode = True > add a char, False > add a space
+        for ch in str:
+            if addMode == True or ch == '】':
+                newQuestion += ch
+
+            if ch == '【':
+                addMode = False
+                newQuestion += '   ' + '   '
+            elif ch == '】':
+                addMode = True
+        return newQuestion
+
 class SelectQuestion(Question):
     def __init__(self, id, content, qnumber=0, images=[], isUpdate=True):
         self.questionType = "SelectQuestion"

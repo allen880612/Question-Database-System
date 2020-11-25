@@ -51,7 +51,7 @@ class SelectSubjectPage(QMainWindow):
 
         self.subject_list = self.model.GetSubjectNameList()
 
-        #self.subject_list = ["數學", "理化", "國文", "社會"]
+        self.subject_list = ["數學", "理化", "國文", "社會"]
         self.ResetLayoutElement()
 
         self.UpdateUI()
@@ -86,7 +86,7 @@ class SelectSubjectPage(QMainWindow):
         subject_button.setStyleSheet(self.GetBlackBorderStyle())
 
         # Set Size Policy
-        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(subject_button.sizePolicy().hasHeightForWidth())
@@ -110,11 +110,20 @@ class SelectSubjectPage(QMainWindow):
 
     # 回傳 黑色邊框Style
     def GetBlackBorderStyle(self):
-        return 'border :2px solid ;border-color : black;'
+        style = 'border :2px solid ;border-color : black;'
+        padding = 'padding-top: 25px;' + 'padding-bottom: 25px;' + 'padding-left: 50px;' + 'padding-right: 50px;'
+        return style + padding
 
     # 回傳 紅色邊框Style
     def GetRedBorderStyle(self):
-        return 'border :2px solid ;border-color : red;'
+        style = 'border :2px solid ;border-color : red;'
+        padding = 'padding-top: 25px;' + 'padding-bottom: 25px;' + 'padding-left: 50px;' + 'padding-right: 50px;'
+        return style + padding
 
-
+    # 得到選擇的科目
+    def GetSelectSubject(self):
+        subject = "Unknow"
+        if self.current_button is not None:
+            subject = self.current_button.text()
+        return subject
 

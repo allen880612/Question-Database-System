@@ -153,11 +153,11 @@ class ReviseMakeQuestionPage(QMainWindow):
         level_key = self.GetLevelKey()
 
         if case == 0:
-            tmp_text = self.question_nonSelect_dict[level_key][current_row].GetAnswer()
+            tmp_text = self.question_nonSelect_dict[level_key][current_row].GetQuestion()
             self.preview_question_content.setText(tmp_text)
             self.listWidget_selected_question.setCurrentRow(-1)
         elif case == 1:
-            tmp_text = self.question_select_dict[level_key][current_row].GetAnswer()
+            tmp_text = self.question_select_dict[level_key][current_row].GetQuestion()
             self.preview_question_content.setText(tmp_text)
             self.listWidget_none_select_question.setCurrentRow(-1)
 
@@ -282,7 +282,7 @@ class ReviseMakeQuestionPage(QMainWindow):
         selectQuestionStyle.paragraph_format.left_indent = docx.shared.Pt(26) 
 
         #新增題目 - 填充題
-        filling_question_paser = QuestionParser.QuestionParser()
+        filling_question_parser = QuestionParser.QuestionParser()
 
         if self.HaveFillingQuestion(qList):
             paragraph = word.add_paragraph("一、填充題", style = "main_phase")
@@ -302,8 +302,8 @@ class ReviseMakeQuestionPage(QMainWindow):
 
                 #paragraph = word.add_paragraph(questionIndex + question, style = "question")
                 paragraph = word.add_paragraph( questionIndex, questionStyle )
-                filling_question_paser.Initialize( question, paragraph)
-                filling_question_paser.ParseQuestion()
+                filling_question_parser.Initialize( question, paragraph)
+                filling_question_parser.ParseQuestion()
 
 
                 #paragraph = word.add_paragraph(questionIndex + questionList[i], style = "question") #題號 + 題目 一題作為一個段落
@@ -323,6 +323,7 @@ class ReviseMakeQuestionPage(QMainWindow):
                     print("Insert image fail!")
         
         # 新增題目 - 選擇題
+        select_question_parser = QuestionParser.QuestionParser()
         if self.HaveSelectQuestion(qList):
             paragraph = word.add_paragraph("二、選擇題", style = "main_phase")
         count = 1
@@ -335,9 +336,12 @@ class ReviseMakeQuestionPage(QMainWindow):
                 #questionIndex = "(" + str(count) + ") "
                 questionIndex = str(count) + ". "
                 count += 1
-                question_area = answer_area + " " + questionIndex + question.GetQuestion()
-
+                question_area = answer_area + " " + questionIndex
+                
                 paragraph = word.add_paragraph(question_area, style = "select_question")
+                select_question_parser.Initialize( question.GetQuestion(), paragraph)
+                select_question_parser.ParseQuestion()
+
                 paragraph.alignment = 0
                 run = paragraph.add_run()
                 try:
@@ -352,9 +356,15 @@ class ReviseMakeQuestionPage(QMainWindow):
                 option_count = 1
                 for options in question.option:
                     run.add_break()
-                    option = "(" + self.ConvertOptionNumber2English(option_count) + ") " + options.GetContent()
+                    option = "(" + self.ConvertOptionNumber2English(option_count) + ") "
+                    paragraph.add_run(option)
+
+                    # 處理選項敘述中，可能包含的特殊符號
+                    select_question_parser.Initialize( options.GetContent(), paragraph)
+                    select_question_parser.ParseQuestion()
+
                     option_count += 1
-                    run = paragraph.add_run(option)
+                    run = paragraph.add_run('')
                     try:
                         if options.HaveImage():
                             run.add_break()

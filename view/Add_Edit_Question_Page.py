@@ -105,6 +105,8 @@ class AddEditQuestionPage(QMainWindow):
         self.Add_Solution_View.solution_signal.connect(self.CloseAddSolutionView)
         self.ui.text_edit_question.selectionChanged.connect(self.HandleSelect)
 
+        self.ui.button_delete_question.clicked.connect(self.DeleteQuestion) # 刪除題目
+
         # 新增單元 視窗 (移到選擇路徑畫面)
         # self.ui.button_add_unit.clicked.connect(self.OpenAddUnitView)
         # self.Add_Unit_View.add_unit_signal.connect(self.GetADdUnitViewData)
@@ -125,6 +127,7 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.label_question_level.setText(MyLibrary.GetQuestionShowText(self.question_level))
         self.mode = self.MODE_ADD_QUESTION
         self.question_mode = self.MODE_FILLING_QUESTION
+        self.ui.button_delete_question.hide()
 
         self.Is_solution_view_option = False
 
@@ -152,6 +155,8 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.button_edit_question_mode.setEnabled(self.GetEditButtonEnable())
         # 未引入圖片 不能新增
         self.ui.button_addToList_image.setEnabled(self.temp_importImage != None)
+        # 未選取題目，不能刪除
+        self.ui.button_delete_question.setEnabled(self.ui.list_weight_question.currentRow() > -1)
 
         # 切換模式按鈕
         self.ui.button_add_question_mode.setEnabled(self.IsAddModeButtonEnable())
@@ -181,6 +186,7 @@ class AddEditQuestionPage(QMainWindow):
         # 取消顯示兩個radio button
         self.ui.radioButton_FillingQuestion.setVisible(False)
         self.ui.radioButton_SelectQuestion.setVisible(False)
+        self.ui.button_delete_question.show()
         self.UpdateUI()
 
     # 切換至新增模式
@@ -196,6 +202,7 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.label_image_preview.clear() # 清空預覽圖片
         self.ui.button_add_question.setText("新增")
         self.ui.label_add_edit_question.setText("新增題目")
+        self.ui.button_delete_question.hide()
         self.solution = None # 詳解歸零
         # 顯示兩個radio button
         self.ui.radioButton_FillingQuestion.setVisible(True)
@@ -341,6 +348,10 @@ class AddEditQuestionPage(QMainWindow):
         self.temp_importImage = None # 清除上一題的圖片
         self.imageList = [] # 清除上一題的圖片
         self.solution = None # 詳解歸零
+
+    # 刪除題目
+    def DeleteQuestion(self):
+        print ('刪拉哪次不刪了')
     
     # 儲存題目資訊
     def StoreQuestion(self):

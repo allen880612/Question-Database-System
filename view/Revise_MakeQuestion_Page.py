@@ -24,7 +24,8 @@ class ReviseMakeQuestionPage(QMainWindow):
         self.listWidget_none_select_question = self.ui.listWidget_none_select_question
         self.listWidget_selected_question = self.ui.listWidget_selected_question
         self.preview_question_content = self.ui.textEdit_preview_question
-
+        self.tbox_search = self.ui.text_search
+        
         # 前幾層所選之題目階層 (tuple list: level, question number)
         self.question_level_tupleList = []
 
@@ -33,6 +34,9 @@ class ReviseMakeQuestionPage(QMainWindow):
 
         # 選擇到的題目dict (key: level, value: node list)
         self.question_select_dict = {}
+
+        # 搜尋條件
+        self.search_text = ""
 
         self.Initialize()
 
@@ -64,7 +68,10 @@ class ReviseMakeQuestionPage(QMainWindow):
         self.ui.button_add_question.clicked.connect(self.AddToMakeQuestionList)
         self.ui.button_remove_question.clicked.connect(self.RemoveFromMakeQuestionList)
 
+        self.ui.button_search.clicked.connect(self.InputSearch)
         self.ui.button_continue.clicked.connect(self.MakeQuestion) # Link 出題按鈕
+
+        #self.ui.text_search.textChanged.connect()
 
     # 刷新UI
     def UpdateUI(self):
@@ -82,9 +89,12 @@ class ReviseMakeQuestionPage(QMainWindow):
 
         level_key = self.GetLevelKey()
 
+        # 搜尋條件
+        question_nonSelect_list = self.GetQuestionListBySearch(self.question_nonSelect_dict[level_key], self.search_text)
+        
         # 建構 未選擇的題目
         tmp_nonSelectQuestion_list = []
-        for question in self.question_nonSelect_dict[level_key]:
+        for question in question_nonSelect_list:
             tmp_nonSelectQuestion_list.append(question.GetQuestion()[:preview_question_count])
         self.UpdateListWidget(self.listWidget_none_select_question, tmp_nonSelectQuestion_list)
 
@@ -171,7 +181,10 @@ class ReviseMakeQuestionPage(QMainWindow):
 
         level_key = self.GetLevelKey()
 
-        select_question = self.question_nonSelect_dict[level_key][current_row] # 取得題目
+        question_nonSelect_list = self.question_nonSelect_dict[level_key]
+        question_nonSelect_list = self.GetQuestionListBySearch(question_nonSelect_list, self.search_text)
+
+        select_question = question_nonSelect_list[current_row] # 取得題目
         self.question_select_dict[level_key].append(select_question) # 已選擇題目 增加一筆
         self.question_nonSelect_dict[level_key].remove(select_question) # 未選擇題目 刪除這筆
         self.listWidget_none_select_question.setCurrentRow(-1) # 取消Focus
@@ -232,6 +245,29 @@ class ReviseMakeQuestionPage(QMainWindow):
         for level, questionList in self.question_select_dict.items():
             qList += questionList
         return qList
+
+    # 搜尋框 input
+    def InputSearch(self):
+        tbox = self.tbox_search
+        self.search_text = tbox.text()
+        print(self.search_text)
+
+        self.UpdateNoneSelectQuestionListWidget()
+        self.UpdateUI()
+        
+    # 得到 question list 藉由 search
+    def GetQuestionListBySearch(self, question_list, search):
+        if search == "":
+            return question_list
+        else:
+            new_question_list = []
+            for question in question_list:
+                #print(question.GetQuestion())
+                #print(search)
+                #print(question.GetQuestion().find(search))
+                if question.GetQuestion().find(search) != -1:
+                    new_question_list.append(question)
+            return new_question_list
 
     ###################################################################################
     #出題

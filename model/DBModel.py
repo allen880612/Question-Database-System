@@ -124,7 +124,14 @@ class DBModel():
         self.UpdateDBImageList(question.GetImages(), question.id, question.GetType())
         for v in question.option:
             self.UpdateDBImageList(v.GetImages(), question.id, v.GetType())
-        
+
+    # 刪除題目
+    def DeleteQuestion(self, question):
+        if question.GetType() == "FillingQuestion":
+            SQLExtend.DeleteFillingQuestion(self.db, question)
+        elif question.GetType() == "SelectQuestion":
+            SQLExtend.DeleteSelectQuestion(self.db, question)
+            
     # 新增圖片
     def AddImage(self, question_id, source, image_blob):
         SQLExtend.InsertImage(self.db, question_id, source, image_blob)

@@ -1,0 +1,9 @@
+pandas
+python-docx
+pyQt5
+pyqt5-tools
+xlrd
+Pillow
+pymysql
+lxml
+asciitomathml

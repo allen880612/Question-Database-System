@@ -1,5 +1,0 @@
-pandas (numpy)
-python_docx
-pyQt5
-pyqt5-tools
-xlrd

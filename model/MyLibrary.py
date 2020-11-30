@@ -77,7 +77,7 @@ class Question(object):
     def SetSolution(self, solution):
         self.Solution = solution
 
-    # Convert 字串 成為 word輸出格式 (題目+3+3空白)
+    # Convert 字串 成為 word輸出格式 (題目+6+6空白)
     def Convert2WordContent(self, str):
         newQuestion = ""
         addMode = True  # Mode = True > add a char, False > add a space
@@ -87,7 +87,7 @@ class Question(object):
 
             if ch == '【':
                 addMode = False
-                newQuestion += '   ' + '   '
+                newQuestion += '      ' + '      '
             elif ch == '】':
                 addMode = True
         return newQuestion

@@ -284,6 +284,7 @@ class ReviseMakeQuestionPage(QMainWindow):
         self.BulidWord(qList, "answer", True)  # 建造word 保留答案
         self.BulidWord(qList, "question", False)  # 建造word 刪除答案
         MyLibrary.OpenWord("answer.docx")
+        MyLibrary.OpenWord("question.docx")
         print("done")
         #excel
 
@@ -314,8 +315,8 @@ class ReviseMakeQuestionPage(QMainWindow):
         selectQuestionStyle.font.size = docx.shared.Pt(12) #更改此樣式的文字大小
         selectQuestionStyle.font.name = "Times New Roman" #設定英文字體
         selectQuestionStyle._element.rPr.rFonts.set(docx.oxml.ns.qn("w:eastAsia"), "細明體") #設定中文字體
-        selectQuestionStyle.paragraph_format.first_line_indent = docx.shared.Pt(-26)
-        selectQuestionStyle.paragraph_format.left_indent = docx.shared.Pt(26) 
+        selectQuestionStyle.paragraph_format.first_line_indent = docx.shared.Pt(-42)
+        selectQuestionStyle.paragraph_format.left_indent = docx.shared.Pt(42) 
 
         #新增題目 - 填充題
         filling_question_parser = QuestionParser.QuestionParser()
@@ -368,7 +369,7 @@ class ReviseMakeQuestionPage(QMainWindow):
                 if haveAnswer:
                     answer_area = "( {0} )".format(" ".join(question.GetAnswer()))
                 else:
-                    answer_area = "(      )"
+                    answer_area = "(            )"
                 #questionIndex = "(" + str(count) + ") "
                 questionIndex = str(count) + ". "
                 count += 1

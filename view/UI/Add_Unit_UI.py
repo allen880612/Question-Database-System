@@ -78,6 +78,7 @@ class AddUnitPage_UI(object):
         font.setPointSize(15)
         self.textBox_lv3.setFont(font)
         self.textBox_lv3.setObjectName("textBox_lv3")
+        self.textBox_lv3.setAlignment(QtCore.Qt.AlignCenter)
         self.gridLayout_3.addWidget(self.textBox_lv3, 2, 2, 1, 1)
         self.horizontalLayout_3.addLayout(self.gridLayout_3)
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()

@@ -36,6 +36,9 @@ class AddEditQuestionPage(QMainWindow):
 
         self.model = _model
 
+        # 問題List widget
+        self.questionList = []
+
         # 上一層所選的level的list
         self.question_level_list = []
         
@@ -166,6 +169,9 @@ class AddEditQuestionPage(QMainWindow):
             self.ui.button_remove_option.setEnabled(self.ui.list_widget_option.currentRow() > -1)
         if self.ui.button_add_option.isVisible() == True:
             self.ui.button_add_option.setEnabled(self.ui.list_widget_option.count() < self.MAX_OPTION_COUNT)
+
+        # 選到問題才能山
+        self.ui.button_delete_question.setEnabled(self.editQuestion is not None)
 
     # 每次切換操作後，重設UI
     def ResetUI(self):
@@ -351,7 +357,47 @@ class AddEditQuestionPage(QMainWindow):
 
     # 刪除題目
     def DeleteQuestion(self):
-        print ('刪拉哪次不刪了')
+        delete_question = self.editQuestion
+        result = QMessageBox.information(self, "警告", "是否刪除題目?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+        # No -> 不做事 給我回去
+        if result == QMessageBox.No:
+            return
+
+        if delete_question is not None:
+            self.questionList.remove(delete_question) # question list 移除問題
+            
+            # 清除ui
+            self.ui.text_edit_question.clear()
+            self.ui.list_weight_image.clear()
+            self.temp_importImage = None # 清除上一題的圖片
+            self.imageList = [] # 清除上一題的圖片
+            self.solution = None # 詳解歸零
+
+            # 回歸填充題
+            self.ui.label.setVisible(False)
+            self.ui.list_widget_option.setVisible(False)
+            self.ui.button_add_option.setVisible(False)
+            self.ui.button_remove_option.setVisible(False)
+
+            # 重建Question List Number
+            number = 1
+            for question in self.questionList:
+                question.question_number = number
+                number += 1
+
+            # 重建list_weight
+            self.ui.list_weight_question.clear()
+            for i in range(len(self.questionList)):
+                q_head = str(self.questionList[i].GetQuestionNumber()) + '. ' + (self.questionList[i].GetQuestion())[:20]
+                self.ui.list_weight_question.addItem(q_head)
+                
+            self.model.DeleteQuestion(delete_question)
+            print("delete: " + str(delete_question.id))
+            print('刪拉哪次不刪了')
+            # 還有哪些要回歸初始值沒回歸的嗎? 我不知道
+
+            self.UpdateUI()
     
     # 儲存題目資訊
     def StoreQuestion(self):

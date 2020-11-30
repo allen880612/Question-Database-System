@@ -124,7 +124,31 @@ class DBModel():
         self.UpdateDBImageList(question.GetImages(), question.id, question.GetType())
         for v in question.option:
             self.UpdateDBImageList(v.GetImages(), question.id, v.GetType())
-        
+
+    # 刪除題目
+    def DeleteQuestion(self, question):
+        if question.GetType() == "FillingQuestion":
+            # 刪除圖片
+            for image in question.GetImages():
+                self.DeleteImage(image)
+            # 刪除詳解
+            self.DeleteSolution(question)
+            # 刪除題目
+            SQLExtend.DeleteFillingQuestion(self.db, question)
+
+        elif question.GetType() == "SelectQuestion":
+            # 刪除圖片
+            for image in question.GetImages():
+                self.DeleteImage(image)
+            # 刪除選項的圖片
+            for option in question.option:
+                for image in option.GetImages():
+                    self.DeleteImage(image)
+            # 刪除詳解
+            self.DeleteSolution(question)
+            # 刪除題目
+            SQLExtend.DeleteSelectQuestion(self.db, question)
+            
     # 新增圖片
     def AddImage(self, question_id, source, image_blob):
         SQLExtend.InsertImage(self.db, question_id, source, image_blob)
@@ -161,6 +185,17 @@ class DBModel():
         SQLExtend.UpdateSolution(self.db, question.id, question.GetType(), solution)
         self.UpdateDBImageList(solution.GetImages(), question.id, solution.GetType())
 
+    # 刪除詳解
+    def DeleteSolution(self, question):
+        solution = question.GetSolution()
+        if solution is None:
+            return
+
+        for image in solution.GetImages():
+            self.DeleteImage(image)
+
+        SQLExtend.DeleteSolution(self.db, solution)
+        question.SetSolution(None)
 
     # 用question 得到圖片群
     def GetImagesByQuestion(self, question):

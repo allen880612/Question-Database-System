@@ -145,6 +145,28 @@ def GetLevel1Id(database, level1_name):
 def GetLevel2Id(database, level2_name):
 	return GetIdFromTable(database, "Level2", level2_name)
 
+# 刪除 填充題
+def DeleteFillingQuestion(database, question):
+	q_id = question.id
+	cursor = database.cursor()
+	query = "DELETE FROM `FillingQuestion` WHERE `Id`={0};".format(q_id)
+	ExecuteAlterCommand(database, cursor, query)
+
+# 刪除 選擇題
+def DeleteSelectQuestion(database, question):
+	q_id = question.id
+	cursor = database.cursor()
+	query = "DELETE FROM `SelectQuestion` WHERE `Id`={0};".format(q_id)
+	ExecuteAlterCommand(database, cursor, query)
+
+# 刪除 詳解
+def DeleteSolution(database, solution):
+	if solution is not None:
+		s_id = solution.Id
+		cursor = database.cursor()
+		query = "DELETE FROM `Solution` WHERE `Id`={0};".format(s_id)
+		ExecuteAlterCommand(database, cursor, query)
+
 # 更新 Subject 的名字
 def UpdateLevel1Name(database, id, subject):
 	cursor = database.cursor()

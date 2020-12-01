@@ -62,6 +62,9 @@ class AddSolutionPage(QMainWindow):
         self.ui.button_delete_image.clicked.connect(self.DeleteImage)
         self.ui.list_widget_image.currentItemChanged.connect(self.SelectImage)
 
+        self.ui.button_symbol.clicked.connect(self.MarkSymbolPart)
+        self.ui.textEdit_solution.selectionChanged.connect(self.HandleSelect)
+
     # 更新UI
     def UpdateUI(self):
         self.ui.button_add_list.setEnabled(self.temp_importImage is not None)
@@ -185,3 +188,42 @@ class AddSolutionPage(QMainWindow):
             self.solution_signal.emit(is_close, [self.Solution])
         else:
             self.solution_signal.emit(is_close, [None])
+
+    '''
+    處理符號
+    '''
+    # 處理題目框中選取到的文字
+    def HandleSelect(self):
+        selectStart, selectEnd = self.GetSelectedBeginEnd()
+        # 未選取 or 選取中已有符號，不能標記
+        self.ui.button_symbol.setEnabled(self.IsSymbolButtonEnable())
+
+        questionContent = self.ui.textEdit_solution.toPlainText()
+        print ("Selection start: %d end: %d" % (selectStart, selectEnd))
+        print ("Selected content : %s" % (questionContent[selectStart:selectEnd]))
+
+    # 數學符號 按鈕 是否可以按下
+    # 當無選取 或 選取範圍中 已經有特殊符號時 enable = false
+    def IsSymbolButtonEnable(self, hint_str='♥'):
+        selectStart, selectEnd = self.GetSelectedBeginEnd()
+        questionContent = self.ui.textEdit_solution.toPlainText()
+        selectedText = questionContent[selectStart:selectEnd]
+
+        return (selectStart != selectEnd) and ( hint_str not in selectedText)
+
+    # 獲取題目 反白的 開頭 & 結束位置
+    def GetSelectedBeginEnd(self):
+        cursor = self.ui.textEdit_solution.textCursor()
+        return cursor.selectionStart(), cursor.selectionEnd()
+
+    #  點擊 符號
+    def MarkSymbolPart(self):
+        selectStart, selectEnd = self.GetSelectedBeginEnd()
+        symbolfyText = self.GetMarkSymbolPart(self.ui.textEdit_solution.toPlainText(), selectStart, selectEnd)
+        print (symbolfyText)
+        self.ui.textEdit_solution.setPlainText(symbolfyText)
+
+     # 將選中的字 前後加上特定符號，標示為特殊符號段落
+    def GetMarkSymbolPart( self, content=str, start=int, end=int, hint_str='♥'):
+        new_content = hint_str.join( (content[:start], content[start:end], content[end:]) )
+        return new_content

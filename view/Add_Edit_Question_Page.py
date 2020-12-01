@@ -347,6 +347,8 @@ class AddEditQuestionPage(QMainWindow):
             self.tmp_SelectQuestion = MyLibrary.SelectQuestion(0, "")
             print("新增選擇題 done")
 
+        self.ShowTips('新增題目完成')
+
         self.ui.text_edit_question.clear()
         self.ui.list_weight_image.clear()
         self.model.CreateQDSLevel()
@@ -435,6 +437,8 @@ class AddEditQuestionPage(QMainWindow):
             # 更新原題目
             self.DeepCopySelectQuestion(self.editQuestion, nowEditQuestion)
             print("編輯選擇題 done")
+
+        self.ShowTips('題目修改完成')
 
     # 取得題號
     def GetQuestionIndex(self):
@@ -742,7 +746,7 @@ class AddEditQuestionPage(QMainWindow):
         return []
 
     def ShowTips(self, information):
-        QMessageBox.information(self, "警告", information, QMessageBox.Yes)
+        QMessageBox.information(self, "警告", information, QMessageBox.Close)
 
     ##################################
     # 新增詳解相關函數

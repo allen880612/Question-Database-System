@@ -176,6 +176,19 @@
          </spacer>
         </item>
         <item>
+         <widget class="QPushButton" name="button_symbol">
+          <property name="font">
+           <font>
+            <family>微軟正黑體</family>
+            <pointsize>14</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>數學符號</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="button_solution">
           <property name="font">
            <font>

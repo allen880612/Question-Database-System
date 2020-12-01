@@ -109,6 +109,7 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.text_edit_question.selectionChanged.connect(self.HandleSelect)
 
         self.ui.button_delete_question.clicked.connect(self.DeleteQuestion) # 刪除題目
+        self.ui.button_symbol.clicked.connect(self.MarkSymbolPart) # 標示特殊符號區塊
 
         # 新增單元 視窗 (移到選擇路徑畫面)
         # self.ui.button_add_unit.clicked.connect(self.OpenAddUnitView)
@@ -158,8 +159,6 @@ class AddEditQuestionPage(QMainWindow):
         self.ui.button_edit_question_mode.setEnabled(self.GetEditButtonEnable())
         # 未引入圖片 不能新增
         self.ui.button_addToList_image.setEnabled(self.temp_importImage != None)
-        # 未選取題目，不能刪除
-        self.ui.button_delete_question.setEnabled(self.ui.list_weight_question.currentRow() > -1)
 
         # 切換模式按鈕
         self.ui.button_add_question_mode.setEnabled(self.IsAddModeButtonEnable())
@@ -776,12 +775,39 @@ class AddEditQuestionPage(QMainWindow):
                         self.editQuestion.SetSolution(self.solution)
                         self.model.AddSolution(self.editQuestion)
                         print("edit mode - add solution - done")
-
+    
     # 處理題目框中選取到的文字
     def HandleSelect(self):
-        cursor = self.ui.text_edit_question.textCursor()
+        selectStart, selectEnd = self.GetSelectedBeginEnd()
+        # 未選取 or 選取中已有符號，不能標記
+        self.ui.button_symbol.setEnabled(self.IsSymbolButtonEnable())
+
         questionContent = self.ui.text_edit_question.toPlainText()
-        selectStart = cursor.selectionStart()
-        selectEnd = cursor.selectionEnd()
         print ("Selection start: %d end: %d" % (selectStart, selectEnd))
         print ("Selected content : %s" % (questionContent[selectStart:selectEnd]))
+
+    # 數學符號 按鈕 是否可以按下
+    # 當無選取 或 選取範圍中 已經有特殊符號時 enable = false
+    def IsSymbolButtonEnable(self, hint_str='♥'):
+        selectStart, selectEnd = self.GetSelectedBeginEnd()
+        questionContent = self.ui.text_edit_question.toPlainText()
+        selectedText = questionContent[selectStart:selectEnd]
+
+        return (selectStart != selectEnd) and ( hint_str not in selectedText)
+
+    # 獲取題目 反白的 開頭 & 結束位置
+    def GetSelectedBeginEnd(self):
+        cursor = self.ui.text_edit_question.textCursor()
+        return cursor.selectionStart(), cursor.selectionEnd()
+
+    #  點擊 數學符號
+    def MarkSymbolPart(self):
+        selectStart, selectEnd = self.GetSelectedBeginEnd()
+        symbolfyText = self.GetMarkSymbolPart(self.ui.text_edit_question.toPlainText(), selectStart, selectEnd)
+        print (symbolfyText)
+        self.ui.text_edit_question.setPlainText(symbolfyText)
+
+     # 將選中的字 前後加上特定符號，標示為特殊符號段落
+    def GetMarkSymbolPart( self, content=str, start=int, end=int, hint_str='♥'):
+        new_content = hint_str.join( (content[:start], content[start:end], content[end:]) )
+        return new_content

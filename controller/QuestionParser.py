@@ -6,37 +6,48 @@ import asciitomathml.asciitomathml
 使用流程
 1. 建立 QuestionParserf 的Instance，必須要呼叫 Initialize後才可使用
 2. Initialize 傳入 [原始題目字串，該題目段落，(包夾特殊算是的字元)]
-3. 呼叫 GetMathEquationParagraph()，取得處理好的 paragraph
+3. 呼叫 ParseQuestion()
 
 註：建立一次後，2, 3可重複呼叫使用，但注意3 一定要在呼叫 2後使用
 '''
 
 class QuestionParser():
 	def __init__(self):
-		pass
 		# 注意，必須要初始化才能使用
+		self.symbolDict = {
+			'mm':'mm^',
+			'cm':'cm^',
+			'm' :'m^',
+			'km':'km^'
+			}
 
 	# 初始化
-	def Initialize(self, src_string=str, paragraph=None, hint_str='♥'):
-		self.Src_str = src_string
+	def Initialize(self, src_content=str, paragraph=None, hint_str='♥'):
+		self.Source_content = self.__PreProcessSource(src_content, hint_str)
 		self.Paragraph = paragraph
 		self.Hint_str = hint_str
 
+	def __PreProcessSource(self, question_str=str, hint_str='♥️'):
+		def PreProcessPower( question_str=str, hint_str='♥️' ):
+			new_question = question_str
+			for key, value in self.symbolDict.items():
+				new_question = new_question.replace( key+'2', hint_str + value+'2' + hint_str )
+				new_question = new_question.replace( key+'3', hint_str + value+'3' + hint_str )
+			return new_question
+
+		question_str = PreProcessPower(question_str, hint_str)
+		return question_str
+
 	def Reset(self):
-		self.Src_str = ''
+		self.Source_content = ''
 		self.Paragraph = None
 		self.Hint_str = '♥'
-
-	def GetMathEquationParagraph(self):
-		self.ParseQuestion()
-		return self.Paragraph
-
 
 	def ParseQuestion(self):
 		isSymbolPart = False
 		temp_symbol_string = ''
 
-		for ch in self.Src_str:
+		for ch in self.Source_content:
 			if isSymbolPart:
 				if ch == self.Hint_str:
 					# 結束算式(特殊符號)區域 > encode > append to paragraph
@@ -64,7 +75,7 @@ class QuestionParser():
 		#question_string = '1. x=(-b±sqrt(b^2-4ac))/(2a), 解b'
 	
 		# -預處理 
-		equation_string = self.__PreProcess( equation_string )
+		equation_string = self.__PreProcessSymbol( equation_string )
 		
 		# -儲存線段資訊
 		line_list = self.__GetLineList( equation_string )
@@ -93,7 +104,7 @@ class QuestionParser():
 		return new_dom.getroot()
 
 	@classmethod
-	def __PreProcess(clc, equation_string=str):
+	def __PreProcessSymbol(clc, equation_string=str):
 		def PreProcessLine( question_str=str ):
 			new_question = question_str.replace( '("', '' )
 			new_question = new_question.replace( '" )', '' )

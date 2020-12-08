@@ -77,6 +77,7 @@ class AddUnitPage(QMainWindow):
 
             # 防呆 - 5個都有值 - 且未有單元 - 可正常關閉
             if not_have_unit:
+                QMessageBox.information(self, "提醒", "新增成功!", QMessageBox.Yes)
                 self.is_click_button = True
                 is_close = self.close()
                 self.add_unit_signal.emit(is_close, tBoxStr_list)
@@ -116,6 +117,7 @@ class AddUnitPage(QMainWindow):
         # add level
         self.level.append(newLabel)
         self.tBoxlevel.append(newtBox)
+        
         self.UpdateUI()
 
     # 刪除階層
@@ -146,3 +148,6 @@ class AddUnitPage(QMainWindow):
         if self.is_click_button == False:
             is_close = True
             self.add_unit_signal.emit(is_close, [])
+
+    def ShowTips(self, information):
+        QMessageBox.information(self, "警告", information, QMessageBox.Close)

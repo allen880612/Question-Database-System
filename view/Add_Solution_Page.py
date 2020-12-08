@@ -162,6 +162,7 @@ class AddSolutionPage(QMainWindow):
         self.Is_store = True
         self.Solution.SetContent(self.ui.textEdit_solution.toPlainText())
         self.Solution.Images = copy.deepcopy(self.imageList)
+        self.ShowTips("儲存詳解成功", "提醒")
 
     # 深層複製 b -> a
     def DeepCopySolution(self, a, b):
@@ -188,6 +189,9 @@ class AddSolutionPage(QMainWindow):
             self.solution_signal.emit(is_close, [self.Solution])
         else:
             self.solution_signal.emit(is_close, [None])
+
+    def ShowTips(self, information, alert = "警告"):
+        QMessageBox.information(self, alert, information, QMessageBox.Close)
 
     '''
     處理符號

@@ -397,6 +397,7 @@ class AddEditQuestionPage(QMainWindow):
             print("delete: " + str(delete_question.id))
             print('刪拉哪次不刪了')
             # 還有哪些要回歸初始值沒回歸的嗎? 我不知道
+            self.ShowTips("刪除題目成功") # 刪除成功訊息
 
             self.UpdateUI()
     

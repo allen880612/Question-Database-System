@@ -10,7 +10,7 @@ import docx
 
 class ReviseMakeQuestionPage(QMainWindow):
 
-    revise_make_question_signal = QtCore.pyqtSignal(bool) # set 信號
+    revise_make_question_signal = QtCore.pyqtSignal(bool, bool) # set 信號
     TEMPLATE_WORD_PATH = "database/default.docx"
 
     def __init__(self, _model):
@@ -19,6 +19,7 @@ class ReviseMakeQuestionPage(QMainWindow):
         self.ui.setupUi(self)
         self.model = _model
         self.is_click_button = False # 是否透過button關閉視窗
+        self.is_return_mainpage = False # 是否回到首頁
         # ui層
         self.listWidget_question_level = self.ui.listWidget_make_question_level
         self.listWidget_none_select_question = self.ui.listWidget_none_select_question
@@ -48,6 +49,7 @@ class ReviseMakeQuestionPage(QMainWindow):
     # 重設頁面
     def ResetPage(self):
         self.is_click_button = False
+        self.is_return_mainpage = False
 
         level_list = [level[0] for level in self.question_level_tupleList]
         number_list = [number[1] for number in self.question_level_tupleList]
@@ -230,14 +232,16 @@ class ReviseMakeQuestionPage(QMainWindow):
     def ClosePage(self):
         self.is_click_button = True
         is_close = self.close()
-        self.revise_make_question_signal.emit(is_close)
+        is_return_mainpage = self.is_return_mainpage
+        self.revise_make_question_signal.emit(is_close, is_return_mainpage)
 
     # 關閉視窗事件
     def closeEvent(self, event):
         self.question_level_tupleList = []
         if self.is_click_button == False:
             is_close = True
-            self.revise_make_question_signal.emit(is_close)
+            is_return_mainpage = self.is_return_mainpage
+            self.revise_make_question_signal.emit(is_close, is_return_mainpage)
     
     # 得到Question List
     def GetQuestionList(self):
@@ -286,6 +290,9 @@ class ReviseMakeQuestionPage(QMainWindow):
         MyLibrary.OpenWord("answer.docx")
         MyLibrary.OpenWord("question.docx")
         print("done")
+        self.is_return_mainpage = True
+        self.ClosePage()
+        # return to index
         #excel
 
     def BulidWord(self, qList, fileName, haveAnswer):

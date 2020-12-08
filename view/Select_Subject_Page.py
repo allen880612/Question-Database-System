@@ -51,7 +51,7 @@ class SelectSubjectPage(QMainWindow):
 
         self.subject_list = self.model.GetSubjectNameList()
 
-        self.subject_list = ["數學", "理化", "國文", "社會"]
+        #self.subject_list = ["數學", "理化", "國文", "社會"]
         self.ResetLayoutElement()
 
         self.UpdateUI()
@@ -127,3 +127,5 @@ class SelectSubjectPage(QMainWindow):
             subject = self.current_button.text()
         return subject
 
+    #def closeEvent(self, event):
+    #    self.model.db.close()

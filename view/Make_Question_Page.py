@@ -12,6 +12,9 @@ from functools import partial
 
 class MakeQuestionPage(QMainWindow):
 
+    # 返回首頁Signal
+    return_mainpage_signal = QtCore.pyqtSignal(bool) # set 信號
+
     #region 變數宣告
     TEMPLATE_WORD_PATH = "database/default.docx"
     comboboxSelectOption = []
@@ -292,12 +295,17 @@ class MakeQuestionPage(QMainWindow):
             self.Revise_MakeQuestion_View.SetQuestionLevelTupleData(list(tuple_list))
             self.Revise_MakeQuestion_View.ResetPage()
             self.Revise_MakeQuestion_View.show()
-            
+
+            self.hide()
     
-    # 接收 調整題目頁面 的資料 之函數 (有幾個參數就接幾個) (bool)
-    def GetReviseMakeQuestionViewData(self, is_close):
+    # 接收 調整題目頁面 的資料 之函數 (有幾個參數就接幾個) (bool, bool)
+    def GetReviseMakeQuestionViewData(self, is_close, is_return_mainpage = False):
         if is_close == True:
             self.Is_revise_question_view_open = False
+            if is_return_mainpage == False: # 不回到首頁
+                self.show()
+            else: # 回到首頁
+                self.return_mainpage_signal.emit(True)
 
     #####################################################
     #def showEvent(self, event):

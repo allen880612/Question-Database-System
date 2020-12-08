@@ -48,6 +48,11 @@ def Show_SelectSubjectPage():
     SelectQuestionPage.hide()
     SelectSubjectPage.show()
 
+# 返回首頁
+def ReturnMainPage(is_return_mainpage):
+    if is_return_mainpage == True:
+        Show_SelectSubjectPage()
+
 # 開啟視窗
 if __name__ == '__main__':
     app = QApplication(sys.argv)
@@ -77,7 +82,11 @@ if __name__ == '__main__':
     SelectQuestionPage.ui.button_return.clicked.connect(Show_SelectSubjectPage) # 選擇題目 -> 選擇科目
 
     SelectSubjectPage.ui.button_confirm.clicked.connect(Show_SelectQuestionLevelPage) # 選擇題目 -> 繼續選擇階層
+
     #MakeQuestionPage.make_question_signal.connect(SelectQuestionPage.GetQuestionLevelList)
+
+    # 註冊 返回首頁之信號
+    MakeQuestionPage.return_mainpage_signal.connect(ReturnMainPage)
 
     #Show_MakeQuestionPage()
     #Show_AddEditQuestionPage()

@@ -8,6 +8,8 @@ import random
 import os
 import docx
 from docx.shared import Cm
+from docx.enum.text import WD_UNDERLINE
+
 
 class ReviseMakeQuestionPage(QMainWindow):
 
@@ -330,8 +332,8 @@ class ReviseMakeQuestionPage(QMainWindow):
         selectQuestionStyle.font.size = docx.shared.Pt(12) #更改此樣式的文字大小
         selectQuestionStyle.font.name = "Times New Roman" #設定英文字體
         selectQuestionStyle._element.rPr.rFonts.set(docx.oxml.ns.qn("w:eastAsia"), "細明體") #設定中文字體
-        selectQuestionStyle.paragraph_format.first_line_indent = docx.shared.Pt(-42)
-        selectQuestionStyle.paragraph_format.left_indent = docx.shared.Pt(42) 
+        selectQuestionStyle.paragraph_format.first_line_indent = docx.shared.Pt(-18)
+        selectQuestionStyle.paragraph_format.left_indent = docx.shared.Pt(18) 
 
         #新增題目 - 填充題
         filling_question_parser = QuestionParser.QuestionParser()
@@ -381,14 +383,15 @@ class ReviseMakeQuestionPage(QMainWindow):
         count = 1
         for question in qList:
             if question.GetType() == "SelectQuestion":
-                if haveAnswer:
-                    answer_area = "( {0} )".format(" ".join(question.GetAnswer()))
-                else:
-                    answer_area = "(            )"
+                #if haveAnswer:
+                #    answer_area = "( {0} )".format(" ".join(question.GetAnswer()))
+                #else:
+                #    answer_area = "(            )"
                 #questionIndex = "(" + str(count) + ") "
+
                 questionIndex = str(count) + ". "
                 count += 1
-                question_area = answer_area + " " + questionIndex
+                question_area = questionIndex
                 
                 paragraph = word.add_paragraph(question_area, style = "select_question")
                 select_question_parser.Initialize( question.GetQuestion(), paragraph)
@@ -406,10 +409,23 @@ class ReviseMakeQuestionPage(QMainWindow):
 
                 # 新增選項
                 option_count = 1
+                assert len(question.GetAnswer()) != 0, '題目內容錯誤：沒有答案'
                 for options in question.option:
                     run.add_break()
-                    option = "(" + self.ConvertOptionNumber2English(option_count) + ") "
-                    paragraph.add_run(option)
+
+                    optionChar = self.ConvertOptionNumber2English(option_count)
+                    option = "(" + optionChar + ")"
+                    run = paragraph.add_run(option)
+                    
+                    if haveAnswer:
+                        if optionChar in question.GetAnswer():
+                            # 為答案的選項，加底線標示為答案
+                            font = run.font
+                            font.underline = WD_UNDERLINE.DOUBLE
+
+                    # 避免標示底線的答案選項，後方的空格也被底線標示
+                    paragraph.add_run(' ')
+
 
                     # 處理選項敘述中，可能包含的特殊符號
                     select_question_parser.Initialize( options.GetContent(), paragraph)

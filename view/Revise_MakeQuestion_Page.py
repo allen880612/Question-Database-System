@@ -7,6 +7,7 @@ from controller import QuestionParser
 import random
 import os
 import docx
+from docx.shared import Cm
 
 class ReviseMakeQuestionPage(QMainWindow):
 
@@ -285,8 +286,8 @@ class ReviseMakeQuestionPage(QMainWindow):
         qList = self.GetQuestionList() # 要給Word建構的題目列表
         random.shuffle(qList)
 
-        self.BulidWord(qList, "answer", True)  # 建造word 保留答案
-        self.BulidWord(qList, "question", False)  # 建造word 刪除答案
+        self.BuildWord(qList, "answer", True)  # 建造word 保留答案
+        self.BuildWord(qList, "question", False)  # 建造word 刪除答案
         MyLibrary.OpenWord("answer.docx")
         MyLibrary.OpenWord("question.docx")
         print("done")
@@ -295,10 +296,17 @@ class ReviseMakeQuestionPage(QMainWindow):
         # return to index
         #excel
 
-    def BulidWord(self, qList, fileName, haveAnswer):
+    def BuildWord(self, qList, fileName, haveAnswer):
         word = docx.Document(docx=self.TEMPLATE_WORD_PATH)  # 另一個坑，為了讓封裝後也能抓到default.docx，必須指定
         heading = " - ".join(self.question_level_tupleList[0][0])
         word.add_heading(heading, 0) #新增那個醜醜藍字
+
+        #調整邊界
+        section = word.sections[0]
+        section.left_margin   = Cm(2.54)
+        section.right_margin  = Cm(2.54)
+        section.top_margin    = Cm(1.6)
+        section.bottom_margin = Cm(1.6)
 
         #新增大題 style
         mainPhaseStyle = word.styles.add_style("main_phase", docx.enum.style.WD_STYLE_TYPE.PARAGRAPH)
@@ -362,7 +370,7 @@ class ReviseMakeQuestionPage(QMainWindow):
                         run = imageParagraph.add_run()
                         #run.add_break() #不換段換行
                         for image in qList[i].GetImages():
-                            run.add_picture(image.GetWordImage(), height=docx.shared.Cm(2.6))
+                            run.add_picture(image.GetWordImage(), height=Cm(2.6))
                 except:
                     print("Insert image fail!")
         
@@ -392,7 +400,7 @@ class ReviseMakeQuestionPage(QMainWindow):
                     if question.HaveImage():
                         run.add_break()
                         for image in question.GetImages():
-                            run.add_picture(image.GetWordImage(), height=docx.shared.Cm(2.6))
+                            run.add_picture(image.GetWordImage(), height=Cm(2.6))
                 except:
                     print("Insert select image fail!")
 
@@ -413,7 +421,7 @@ class ReviseMakeQuestionPage(QMainWindow):
                         if options.HaveImage():
                             run.add_break()
                             for image in options.GetImages():
-                                run.add_picture(image.GetWordImage(), height=docx.shared.Cm(2.6))
+                                run.add_picture(image.GetWordImage(), height=Cm(2.6))
                     except Exception as e:
                         print("Insert option image fail!")
                         print(e)

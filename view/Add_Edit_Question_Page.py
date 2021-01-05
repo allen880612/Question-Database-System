@@ -137,7 +137,14 @@ class AddEditQuestionPage(QMainWindow):
 
     # 新增按鈕是否可以按下
     def GetAddQuestionButtonEnable(self):
-        return len(self.ui.text_edit_question.toPlainText()) != 0
+        # 對選擇題 選像為空時之處理
+        isSelection = self.question_mode == "SelectQuestion_Mode"
+        if isSelection:
+            return self.tmp_SelectQuestion != None and len(self.tmp_SelectQuestion.GetQuestion()) != 0
+
+        # 非選擇題時，仍要判斷題目是否為空
+        isEmpty = len(self.ui.text_edit_question.toPlainText()) == 0
+        return not isEmpty
 
     # 編輯按鈕是否可以按下
     def GetEditButtonEnable(self):

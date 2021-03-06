@@ -236,9 +236,9 @@ class DBModel():
 
     # 使用SQL 連線
     def UseSQLIP(self):
-        self.db = mysql.connect(host="35.194.198.56",port=3306,user="user01",passwd="user01",db="QuestionDatabase")
+        self.db = mysql.connect(host="35.239.126.119",port=3306,user="user01",passwd="user01",db="QDS")
 
     # 連結 SQL資料庫
     def ConnectDatabase(self):
-        self.UseProxy()
-        #self.UseSQLIP()
+        #self.UseProxy()
+        self.UseSQLIP()

@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QListWidgetItem
 from PyQt5 import QtCore, QtWidgets, QtGui
 from view.UI import Revise_MakeQuestion_UI 
 from view import ComboboxView as cbview
@@ -84,9 +84,18 @@ class ReviseMakeQuestionPage(QMainWindow):
         self.ui.button_add_question.setEnabled(self.listWidget_none_select_question.currentRow() > -1)
 
     # 更新 listwidget
-    def UpdateListWidget(self, list_widget, data_list):
+    def UpdateListWidget(self, list_widget, data_list, colorMask=None):
         list_widget.clear()
-        list_widget.addItems(data_list)
+
+        if colorMask:
+            # 用不同顏色區分：填空題 & 選擇題 
+            for question, color in zip(data_list, colorMask):
+                item = QListWidgetItem(question)
+                if color:
+                    item.setForeground(QtCore.Qt.blue)
+                list_widget.addItem(item)
+        else:
+            list_widget.addItems(data_list)
 
     # 更新 未選擇題目的 list widget
     def UpdateNoneSelectQuestionListWidget(self):
@@ -97,23 +106,40 @@ class ReviseMakeQuestionPage(QMainWindow):
         # 搜尋條件
         question_nonSelect_list = self.GetQuestionListBySearch(self.question_nonSelect_dict[level_key], self.search_text)
         
+        if not question_nonSelect_list:
+            return
+
+        # 標記選擇題
+        colorQuestionMask = None
+        if question_nonSelect_list:
+            colorQuestionMask = [q.GetType() == 'SelectQuestion' for q in question_nonSelect_list]
+
         # 建構 未選擇的題目
-        tmp_nonSelectQuestion_list = []
+        tmp_nonSelectQuestion_list = [question_nonSelect_list]
         for question in question_nonSelect_list:
             tmp_nonSelectQuestion_list.append(question.GetQuestion()[:preview_question_count])
-        self.UpdateListWidget(self.listWidget_none_select_question, tmp_nonSelectQuestion_list)
+        self.UpdateListWidget(self.listWidget_none_select_question, tmp_nonSelectQuestion_list, colorQuestionMask)
 
     # 更新 已選擇題目的 list widget
     def UpdateSelectQuestionListWidget(self):
         preview_question_count = 15
 
         level_key = self.GetLevelKey()
+        selectQuestion_list = self.question_select_dict[level_key]
+
+        if not selectQuestion_list:
+            return
+
+        # 標記選擇題
+        colorQuestionMask = None
+        if selectQuestion_list:
+            colorQuestionMask = [q.GetType() == 'SelectQuestion' for q in selectQuestion_list]
 
         # 建構 已選擇的題目
         tmp_selectQuestion_list = []
-        for question in self.question_select_dict[level_key]:
+        for question in selectQuestion_list:
             tmp_selectQuestion_list.append(question.GetQuestion()[:preview_question_count])
-        self.UpdateListWidget(self.listWidget_selected_question, tmp_selectQuestion_list)
+        self.UpdateListWidget(self.listWidget_selected_question, tmp_selectQuestion_list, colorQuestionMask)
 
     # 初始化字典
     def InitializeDict(self):
@@ -278,7 +304,8 @@ class ReviseMakeQuestionPage(QMainWindow):
 
     ###################################################################################
     #出題
-    #region 函式區
+
+    # 函式區
     def MakeQuestion(self):
         #excel
         if not MyLibrary.IskWordOpen("word/answer.docx") or not MyLibrary.IskWordOpen("word/question.docx"):
@@ -346,7 +373,7 @@ class ReviseMakeQuestionPage(QMainWindow):
                 #questionIndex = "(" + str(count) + ") " #題號
                 questionIndex = str(count) + ". "
                 if count < 10:
-                    questionIndex += '  '
+                    questionIndex =  ' ' + questionIndex
 
                 count += 1
                 if haveAnswer:
@@ -390,6 +417,8 @@ class ReviseMakeQuestionPage(QMainWindow):
                 #questionIndex = "(" + str(count) + ") "
 
                 questionIndex = str(count) + ". "
+                if count < 10:
+                    questionIndex =  ' ' + questionIndex
                 count += 1
                 question_area = questionIndex
                 
@@ -444,7 +473,7 @@ class ReviseMakeQuestionPage(QMainWindow):
 
         savePath = "word/" + fileName + ".docx"
         word.save(savePath) #存檔 (存在word資料夾)
-    #endregion
+    
 
     # 檢查有沒有填充題
     def HaveFillingQuestion(self, qList):

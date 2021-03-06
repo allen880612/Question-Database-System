@@ -181,9 +181,11 @@ if __name__ == '__main__':
 	p = d.add_paragraph("")
 
 	q1 = '1.♥x=(-b±√(b^2-4ac))/(2a)♥, 請問 a, b = ?'
+	q1 = '1.♥A/Z♥CL , 請問 a, b = ?'
 	q2 = '2.若♥¯BD：¯CD♥＝2：5，♥¯("AE" )：¯("DE" )♥＝1：4，則△ABE面積：△CDE面積＝【 1：10 】'
 
-	qp = QuestionParser(q1, p)
+	qp = QuestionParser()
+	qp.Initialize(q1, p)
 	qp.ParseQuestion()
 
 	p2 = d.add_paragraph("")
